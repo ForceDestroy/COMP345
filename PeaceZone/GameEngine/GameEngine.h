@@ -39,17 +39,21 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const State& State);
 };
 
-//class Transition{
-//public:
-//    // Data Members
-//    std::string name;
-//    State currentState;
-//
-//    // Constructors
-//    Transition();
-//    Transition(std::string name, State currentState);
-//    Transition(const Transition &t1);
-//    ~Transition();
-//
-//};
+class Transition{
+public:
+    // Data Members
+    std::string name;
+    State currentState;
+
+    // Constructors
+    Transition();
+    Transition(std::string name, State currentState);
+    Transition(const Transition &t1);
+    ~Transition();
+
+    // Methods
+    Transition& operator=(const Transition&);
+    friend std::ostream& operator<<(std::ostream& out, const Transition& transition);
+
+};
 

@@ -1,6 +1,7 @@
 #include "GameEngine.h"
+#include "GameEngineDriver.h";
 
-State* testGameStates()
+State* GameEngineDriver::testGameStates()
 {
     std::string command1 = "load map";
     std::string command2 = "validate map";
@@ -9,11 +10,11 @@ State* testGameStates()
     std::vector<Command*> validCommands = {com1, com2};
     std::string start="start";
     State* s1=new State(start, validCommands);
-
-    delete com1;
-    delete com2; 
+    
 
     return s1;
 
+   delete com1;
+   delete com2; 
 
 }

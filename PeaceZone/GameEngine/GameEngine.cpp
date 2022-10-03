@@ -29,7 +29,7 @@ Command& Command::operator=(const Command& c1)
 
 std::ostream& operator<<(std::ostream& out, const Command& command)
 {
-    out << "{ Name: " << command.name << " }";
+    out << "[" << command.name << " ]";
 
     return out;
 }
@@ -69,10 +69,50 @@ State &State::operator=(const State &s1)
 
 std::ostream &operator<<(std::ostream &out, const State &state)
 {
-    out << "{ Name: " << state.name << ", valid commands: ";
-    out << "{ validCommands: \n";
+    out << "{ Name: " << state.name << ", ";
+    out << "validCommands: ";
     for (int i = 0; i < state.validCommands.size(); i++)
-        out << state.validCommands[i] << "\n";
+        out << *state.validCommands[i] << " ";
+    out <<  "}";
+    return out;
+}
+
+#pragma endregion
+
+#pragma region Transition
+// Default Constructor - Transition
+Transition::Transition() = default;
+
+// Destructor - Transition
+Transition::~Transition() = default;
+
+//Constructor - Transition
+Transition::Transition(std::string name, State currentState)
+{
+    this->name = name;
+    this->currentState = currentState;
+}
+
+//Copy constructor - Transition
+Transition::Transition(const Transition& c1)
+{
+    this->name = c1.name;
+    this->currentState = currentState;
+}
+
+// Assignment Operator - Transition
+Transition& Transition::operator=(const Transition& t1)
+{
+    this->name = t1.name;
+    this->currentState = currentState;
+
+    return *this;
+}
+
+std::ostream& operator<<(std::ostream& out, const Transition& transition)
+{
+    out << "{ Transition name: " << transition.name << ",}";
+
     return out;
 }
 

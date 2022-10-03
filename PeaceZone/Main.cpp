@@ -1,16 +1,15 @@
 #include <iostream>
-#include "GameEngine/GameEngineDriver.cpp"
+#include "GameEngine/GameEngineDriver.h"
 
 
 int main()
 {
     std::cout << "Hello World!\n";
 
-    //GameEngineDriver
-    State* s1 = testGameStates();
+    State* s2=GameEngineDriver::testGameStates();
+    
+    std::cout << *s2;
 
-    std::cout << s1;
-
-    delete s1;
+    delete s2;
 
 }
