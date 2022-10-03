@@ -6,8 +6,7 @@
 #pragma region Card
 
 //Destructor - Card
-Card::~Card()
-{
+Card::~Card(){
 	delete order;
 }
 
@@ -35,7 +34,7 @@ Card& Card::operator=(const Card& c) {
 }
 
 //Play function removes card from hand, returns it to deck and creates a new order to be added to player's list
-Orders* Card::Play( Hand& h) {
+Orders* Card::Play(Hand& h) {
 	h.Remove(this);
 	deck->Insert(this);
 
@@ -198,7 +197,7 @@ Hand::Hand() {
 Hand::Hand(const Hand& hand) {
 	listOfCards = new std::vector<Card*>();
 
-	for(Card * c : *hand.listOfCards)
+	for(Card* c : *hand.listOfCards)
 	{
 		listOfCards->push_back(new Card(*c));
 	}
@@ -228,7 +227,12 @@ void Hand::Insert(Card* c) {
 
 //Remove a card from the hand
 void Hand::Remove(Card* c) {
-	listOfCards->pop_back();
+	auto cardToRemove = std::find(listOfCards->begin(), listOfCards->end(), c);
+	if (cardToRemove != listOfCards->end())
+		listOfCards->erase(cardToRemove);
+	else {
+		std::cout << "Invalid function call, you are trying to remove a card from a Hand in which it was not contained.";
+	}
 }
 
 //OsStream Operator - Hand
