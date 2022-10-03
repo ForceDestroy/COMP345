@@ -7,5 +7,10 @@ int main()
     std::cout << "Hello World!\n";
 
     //GameEngineDriver
-    testGameStates();
+    State* s1 = testGameStates();
+
+    std::cout << s1;
+
+    delete s1;
+
 }
