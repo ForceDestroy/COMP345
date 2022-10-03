@@ -1,7 +1,12 @@
 #include <iostream>
 #include <list>
 #include <memory>
-#include <Map.h>
+#include <sstream>
+#include <string>
+#include <algorithm>
+#include <regex>
+
+#include "Map.h"
 
 #pragma region Territory
 
@@ -282,7 +287,7 @@ bool Map::Validate()
         return false;
 
     // Check that each continent is a subgraph
-    int continentNum = 1;
+    int continentNum = 0;
     for (Continent *cont : continents)
     {
         // Check that each continent has a territory
@@ -300,7 +305,7 @@ bool Map::Validate()
     }
 
     // Check that each territory belongs to one and only one continent
-    continentNum = 1;
+    continentNum = 0;
     for (Continent *cont : continents)
     {
         // Check that no territories already marked
@@ -328,6 +333,13 @@ bool Map::Validate()
 MapLoader::MapLoader()
 {
     // Read all maps in the directory
+}
+
+// Destructor - MapLoader
+MapLoader::~MapLoader() {
+    for (Map* m : maps) {
+        delete m;
+    }
 }
 
 // Copy Constructor - MapLoader
@@ -359,21 +371,188 @@ MapLoader &MapLoader::operator=(const MapLoader &ml1)
 void MapLoader::Load(const std::string &fileName)
 {
     // Start map object to populate
-    Map *map(new Map);
+    Map *map = new Map();
+    bool parsedMap = false;
 
-    // Open map file
-    std::ifstream input(fileName);
+    try {
+        size_t lastdot = fileName.find_last_of(".");
+        size_t lastslash = fileName.find_last_of("\\");
+        if (lastdot == std::string::npos) {
+            map->name = fileName;
+        }
+        else {
+            map->name = fileName.substr(lastslash + 1, lastdot);
+        }
 
-    // Read the file
+        prepareMapFile(fileName);
 
-    // Close the file
-    input.close();
+        // Open map file
+        std::fstream input(fileName);
+
+        // Read the file
+        std::string line;
+
+        // Skip the header
+        while (std::getline(input, line))
+        {
+            if (!line.compare("[Continents]"))
+            {
+                break;
+            }
+        }
+
+        std::vector<std::string> continentNames;
+
+        // Read the continents
+        while (std::getline(input, line))
+        {
+            if (!line.compare("[Territories]"))
+            {
+                break;
+            }
+
+            std::vector<std::string> vec = split(line, '=');
+            std::string name = vec[0];
+            int bonus = std::stoi(vec[1]);
+
+            Continent* continent = new Continent();
+            continent->name = name;
+            continent->bonus = bonus;
+
+            map->continents.push_back(continent);
+            continentNames.push_back(name);
+        }
+
+        std::vector<std::string> territoryNames;
+
+        // Read the territories - No Neighbors
+        int territoryId = 0;
+        while (std::getline(input, line))
+        {
+            if (!line.compare(""))
+            {
+                while (std::getline(input, line))
+                {
+                    if (!line.compare(""))
+                    {
+                        break;
+                    }
+                }
+            }
+
+            std::vector<std::string> vec = split(line, ',');
+            std::string name = vec[0];
+            int id = territoryId;
+            int continentId = findIndex(continentNames, vec[3]);
+
+            Territory* territory = new Territory();
+            territory->id = territoryId;
+            territory->name = name;
+            territory->continent = continentId;
+
+            map->territories.push_back(territory);
+            territoryNames.push_back(name);
+
+            territoryId++;
+        }
+
+        // Open map file again - for the neighbors
+        std::fstream input2(fileName);
+
+        // Skip everything until Territories
+        while (std::getline(input2, line))
+        {
+            if (!line.compare("[Territories]"))
+            {
+                break;
+            }
+        }
+
+        // Read the territories - For the Neighbors + Continent
+        territoryId = 0;
+        while (std::getline(input2, line))
+        {
+            std::vector<std::string> vec = split(line, ',');
+            Territory* cur = map->territories[territoryId];
+
+            Continent* cnt = map->continents[cur->continent];
+            cnt->territories.push_back(cur);
+
+            for (int j = 4; j < vec.size(); j++)
+            {
+                std::string neighbordName = vec[j];
+                int neighborId = findIndex(territoryNames, neighbordName);
+                cur->neighbors.push_back(map->territories[neighborId]);
+            }
+
+            territoryId++;
+        }
+
+        parsedMap = true;
+    }
+    catch (std::invalid_argument e) {
+        parsedMap = false;
+    }
+
+    if (!parsedMap) {
+        std::cout << map->name << " is not a valid map: Parser Error" << std::endl;
+        delete map;
+
+        return;
+    }
 
     // Validate the map before adding
-    if (map->Validate())
+    if (map->Validate()) {
         maps.push_back(map);
-    else
+        std::cout << map->name << " is a valid map" << std::endl;
+    }
+    else {
+        std::cout << map->name << " is not a valid map: Validation Error" << std::endl;
         delete map;
+    }
+
 }
+
+// Helper - Delete all empty lines in the file to create a uniform format
+void MapLoader::prepareMapFile(const std::string& FilePath)
+{
+    std::ifstream in(FilePath);
+    std::string line, text;
+    while (std::getline(in, line)) {
+        if (!(line.empty() || line.find_first_not_of(' ') == std::string::npos))
+        {
+            std::regex r("\\s+");
+            line = std::regex_replace(line, r, "");
+            text += line + "\n";
+        }
+    }
+    in.close();
+    std::ofstream out(FilePath);
+    out << text;
+}
+
+// Helper - Split a string into a vector of strings using a delimeter
+std::vector<std::string> MapLoader::split(std::string text, char delim)
+{
+    std::string line;
+    std::vector<std::string> vec;
+    std::stringstream ss(text);
+    while (std::getline(ss, line, delim)) {
+        vec.push_back(line);
+    }
+    return vec;
+}
+
+// Helper - Find the index of the item in a vector of string
+int MapLoader::findIndex(std::vector<std::string> vec, std::string item)
+{
+    auto it = std::find(vec.begin(), vec.end(), item);
+    if (it == vec.end())
+    {
+        throw std::invalid_argument("ParserError");
+    }
+    return std::distance(vec.begin(), it);
+}
+
 
 #pragma endregion
