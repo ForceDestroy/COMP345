@@ -43,11 +43,11 @@ class Transition{
 public:
     // Data Members
     std::string name;
-    State currentState;
+    State* currentState;
 
     // Constructors
     Transition();
-    Transition(std::string name, State currentState);
+    Transition(std::string name, State* currentState);
     Transition(const Transition &t1);
     ~Transition();
 

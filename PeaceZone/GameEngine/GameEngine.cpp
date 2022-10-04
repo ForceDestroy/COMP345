@@ -87,7 +87,7 @@ Transition::Transition() = default;
 Transition::~Transition() = default;
 
 //Constructor - Transition
-Transition::Transition(std::string name, State currentState)
+Transition::Transition(std::string name, State* currentState)
 {
     this->name = name;
     this->currentState = currentState;
