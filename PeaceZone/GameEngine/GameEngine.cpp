@@ -200,7 +200,7 @@ std::ostream &operator<<(std::ostream &out, const Transition &transition)
 			  //NO TRANSITION - SAME STATE
 		  }
 
-          if (input._Equal("endexecorder")) {
+          if (input._Equal("endexecorders")) {
               //TRANSITION TO ASSIGN REINFORCEMENT STATE
               gameEngine->currentState = gameEngine->gameStates[4];
           }
