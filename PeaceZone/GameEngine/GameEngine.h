@@ -8,6 +8,9 @@
 #include <regex>
 #include <map>
 
+#ifdef _DEBUG
+#define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
 
 
 class Command {
@@ -92,19 +95,25 @@ private:
     
 };
 
-
+// Free function for game state testings
 static void testGameStates(GameEngine* gameEngine);
 
+// State enums for handling 
 static enum stateNames;
 
+// Map for enums for state handling
 static std::map<std::string, stateNames> stateEnumToStringMap;
 
+// Function to initialize the map for enums for state handling
+void initializeEnumToStringMap();
+
+// Function to call the map to convert the string to corresponding enum position
+int enumToStringMapHandling(std::string input);
+
+//Helper function used to unify strings
 extern std::string stringUnifier(std::string input);
 
 
-void initializeEnumToStringMap();
-
-int enumToStringMapHandling(std::string input);
 
 
 

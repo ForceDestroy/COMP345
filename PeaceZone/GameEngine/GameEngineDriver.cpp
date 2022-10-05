@@ -1,4 +1,10 @@
 #include "GameEngine.h"
+#define _DEBUG
+#ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#include <stdlib.h>
+#endif
 
 void testGameStates(GameEngine* gameEngine) 
 { 
@@ -22,8 +28,8 @@ void testGameStates(GameEngine* gameEngine)
 
 		} while (!transitionSuccess);
 		std::cout << "Transition succeeded! You've transitioned to the state " << gameEngine->currentState->name << ".\n";
-
-        if (gameEngine->currentState->name._Equal("endState")) {
+        // If the user reached the end of the game
+        if (gameEngine->currentState->name._Equal("End")) {
             std::cout << "You have reached the end of the game, thank you for testing! Goodbye! ";
             break;
 
@@ -46,34 +52,17 @@ void testGameStates(GameEngine* gameEngine)
 
     } while (!gameEngine->currentState->name._Equal("endState"));
 
-    
-
-  
-
 }
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    //map<string, pair<string, string> > myMap;
-    
-
+    std::cout << "Hello User! Welcome to PeaceZone!" << std::endl;
 
     GameEngine* gameEngine = new GameEngine();
 
-
-    
-
-
-    /*std::cout << "Current state of the game: " << *gameEngine->currentState << "\n";*/
-
-    
-
-
-
     testGameStates(gameEngine);
-
 
     delete gameEngine;
 }

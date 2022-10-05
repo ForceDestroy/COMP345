@@ -119,7 +119,7 @@ std::ostream &operator<<(std::ostream &out, const Transition &transition)
 
     return out;
 }
-
+// Transition State Method
  void transitionState(GameEngine* gameEngine, int stateNumber, std::string input )
  {
 
@@ -195,7 +195,7 @@ std::ostream &operator<<(std::ostream &out, const Transition &transition)
 
       case 6:
 		  // Execute Orders state
-		  if (input._Equal("execorders"))
+		  if (input._Equal("execorder"))
 		  {
 			  //NO TRANSITION - SAME STATE
 		  }
@@ -289,7 +289,7 @@ GameEngine::GameEngine()
     State* issueOrders=new State("Issue orders", issueOrdersValidCommands);
     State* executeOrders=new State("Execute orders", executeOrdersValidCommands);
     State* win=new State("Win", winValidCommands);
-    State* endState = new State("end", endValidCommands);
+    State* endState = new State("End", endValidCommands);
 
 
     //creating a vector of states
@@ -360,12 +360,12 @@ bool GameEngine::checkCommandValidity(std::string input) {
         }
     }
     if (count != 1) {
-        std::cout << "The entered command is invalid for the current state: " << this->currentState->name << "\n";
+        std::cout << "The entered command is invalid for the current state: " << this->currentState->name << std::endl;
         return false;
     }
-   std::cout << "The entered command is valid!\n";
+   std::cout << "The entered command is valid!" << std::endl;
    
-   // Callind the map to get the number of the state
+   // Calling the map to get the number of the state
    stateNumber=enumToStringMapHandling(stringUnifier(this->currentState->name));
 
    // Checking if the state number is found in map
@@ -390,16 +390,17 @@ static const enum stateNames { start, maploaded, mapvalidated, playersadded, ass
 //Helper function used to unify strings
 extern std::string stringUnifier(std::string input) 
 {
-
+    // To lower case
     std::for_each(input.begin(), input.end(), [](char& c) {
         c = ::tolower(c);
         });
     std::regex r("\\s+");
+    // Remove spaces
     input = std::regex_replace(input, r, "");
     return input;
 
 }
-
+// Initializing the enum to string map
 void initializeEnumToStringMap()
 {
     // Map to associate the strings with the enum values
@@ -414,13 +415,8 @@ void initializeEnumToStringMap()
     stateEnumToStringMap["endState"] = endState;
 
 
-  /*  std::cout << "stateEnumToStringMap contains: "
-        << stateEnumToStringMap.size()
-        << " entries. " << std::endl;*/
-
-
 }
-
+// Handling the map 
  int enumToStringMapHandling(std::string input)
 {
      return (stateEnumToStringMap[input]);
