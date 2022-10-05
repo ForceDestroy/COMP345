@@ -2,37 +2,53 @@
 
 void testGameStates(GameEngine* gameEngine) 
 { 
+    std::string continueInput;
+    do{
+		bool transitionSuccess = false;
+        //A loop asking the user to enter a command as long as the command is not valid
+		do {
+            //**let the user know the state**
+			std::cout << "Please enter a valid command for the current state : " << std::endl;
+			std::string input;
+			std::getline(std::cin, input);
+
+
+			// String manipulation
+
+			std::string cleanInput = stringUnifier(input);
+
+			// Command Filtering
+			transitionSuccess = gameEngine->checkCommandValidity(cleanInput);
+
+		} while (!transitionSuccess);
+		std::cout << "Transition succeeded! You've transitioned to the state " << gameEngine->currentState->name << ".\n";
+
+        if (gameEngine->currentState->name._Equal("endState")) {
+            std::cout << "You have reached the end of the game, thank you for testing! Goodbye! ";
+            break;
+
+        }
+        //A loop asking the user to answer "yes" to continue to test and "no" to stop the testing
+        do{
+			std::cout << "Would you like to continue testing the game states? You are currently at state "
+				<< gameEngine->currentState->name
+				<< ". Write \"yes\" to continue or \"no\" to exit:" << std::endl;
+			std::getline(std::cin, continueInput);
+            continueInput = stringUnifier(continueInput);
+        } while (!continueInput._Equal("yes") && !continueInput._Equal("no"));
+
+        if (continueInput._Equal("no")){
+            std::cout << "Thank you for testing our game states :) Goodbye!";
+			break;
+
+        }
+            
+
+    } while (!gameEngine->currentState->name._Equal("endState"));
+
     
 
-    Transition* newTransition = NULL;
-    do {
-
-        std::cout << "Please enter a valid command: " << std::endl;
-        std::string input;
-        std::getline(std::cin, input);
-
-
-        // String manipulation
-        std::for_each(input.begin(), input.end(), [](char& c) {
-            c = ::tolower(c);
-            });
-        std::regex r("\\s+");
-        input = std::regex_replace(input, r, "");
-
-        // Command Filtering
-        newTransition = gameEngine->checkCommandValidity(input);
-
-    } while (newTransition == NULL);
-
-    std::cout << "Transition succeeded!";
-
-    //debug
-    /*
-    State* newState = newTransition->currentState;
-    return newState;*/
-
-   //delete com1;
-   //delete com2; 
+  
 
 }
 
@@ -40,19 +56,19 @@ int main()
 {
     std::cout << "Hello World!\n";
 
+    //map<string, pair<string, string> > myMap;
+    
+
+
     GameEngine* gameEngine = new GameEngine();
+
 
     
 
 
-    //std::cout << *gameEngine->currentState;
-    //State start = new State("start",)
+    /*std::cout << "Current state of the game: " << *gameEngine->currentState << "\n";*/
 
-    /*std::string command1 = "loadmap";
-    Command* com1 = new Command(command1);
-    std::vector<Command*> validCommands = { com1 };
-    std::string start = "start";
-    State* s1 = new State(start, validCommands);*/
+    
 
 
 
@@ -60,6 +76,4 @@ int main()
 
 
     delete gameEngine;
-
 }
-    //std::cout << *state;

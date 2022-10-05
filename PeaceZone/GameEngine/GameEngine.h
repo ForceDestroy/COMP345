@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm>
 #include <regex>
+#include <map>
+
 
 
 class Command {
@@ -42,6 +44,27 @@ public:
     friend std::ostream &operator<<(std::ostream &out, const State &State);
 };
 
+class GameEngine {
+public:
+    // Data Members
+    State* currentState;
+    std::vector<State*> gameStates;
+    std::vector<Command*> gameCommands;
+
+
+    // Constructors
+    GameEngine();
+    GameEngine(const GameEngine& g1);
+    ~GameEngine();
+
+    // Methods
+    GameEngine& operator=(const GameEngine&);
+    friend std::ostream& operator<<(std::ostream& out, const GameEngine& gameEngine);
+    bool checkCommandValidity(std::string input);
+
+
+};
+
 class Transition{
 public:
     // Data Members
@@ -62,38 +85,26 @@ public:
 private:
     // Transition methods for testGameStates
     //Transition to go to the next state
-    void transitionState(GameEngine* gameEngine);
+    
+    void transitionState(GameEngine* gameEngine, int stateNumber, std::string input);
 
 
     
 };
 
-class GameEngine{
-public:
-    // Data Members
-    State* currentState;
-    std::vector<State*> gameStates;
-    std::vector<Command*> gameCommands;
-
-
-    // Constructors
-    GameEngine();
-    GameEngine(const GameEngine &g1);
-    ~GameEngine();
-
-    // Methods
-    GameEngine &operator=(const GameEngine &);
-    friend std::ostream &operator<<(std::ostream &out, const GameEngine &gameEngine);
-    Transition* checkCommandValidity(std::string input);
-
-   
-};
 
 static void testGameStates(GameEngine* gameEngine);
 
-static std::string stringUnifier(std::string input);
-
-stateNames stateEnumConverter(std::string input);
-
 static enum stateNames;
+
+static std::map<std::string, stateNames> stateEnumToStringMap;
+
+extern std::string stringUnifier(std::string input);
+
+
+void initializeEnumToStringMap();
+
+int enumToStringMapHandling(std::string input);
+
+
 
