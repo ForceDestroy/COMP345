@@ -63,6 +63,7 @@ public:
     // Methods
     GameEngine& operator=(const GameEngine&);
     friend std::ostream& operator<<(std::ostream& out, const GameEngine& gameEngine);
+    //Checks the validity of a command input
     bool checkCommandValidity(std::string input);
 
 
@@ -72,12 +73,11 @@ class Transition{
 public:
     // Data Members
     std::string name;
-    State* currentState;
     
 
     // Constructors
     Transition();
-    Transition(std::string name, State* currentState);
+    Transition(std::string name);
     Transition(const Transition &t1);
     ~Transition();
 
@@ -86,9 +86,7 @@ public:
     friend std::ostream &operator<<(std::ostream &out, const Transition &transition);
     
 private:
-    // Transition methods for testGameStates
-    //Transition to go to the next state
-    
+    //Transition method that changes the current state of the game
     void transitionState(GameEngine* gameEngine, int stateNumber, std::string input);
 
 

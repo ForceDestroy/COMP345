@@ -27,6 +27,7 @@ Command &Command::operator=(const Command &c1)
     return *this;
 }
 
+// Stream Insertion Operator - Command
 std::ostream &operator<<(std::ostream &out, const Command &command)
 {
     out << "[" << command.name << " ]";
@@ -67,6 +68,7 @@ State &State::operator=(const State &s1)
     return *this;
 }
 
+// Stream Insertion Operator - State
 std::ostream &operator<<(std::ostream &out, const State &state)
 {
     out << "{ Name: " << state.name << ", ";
@@ -90,24 +92,21 @@ Transition::Transition() = default;
 Transition::~Transition() = default;
 
 //Constructor - Transition
-Transition::Transition(std::string name, State* currentState)
+Transition::Transition(std::string name)
 {
     this->name = name;
-    this->currentState = currentState;
 }
 
 //Copy constructor - Transition
 Transition::Transition(const Transition &c1)
 {
     this->name = c1.name;
-    this->currentState = currentState;
 }
 
 // Assignment Operator - Transition
 Transition &Transition::operator=(const Transition &t1)
 {
     this->name = t1.name;
-    this->currentState = currentState;
 
     return *this;
 }
@@ -119,8 +118,8 @@ std::ostream &operator<<(std::ostream &out, const Transition &transition)
 
     return out;
 }
-// Transition State Method
- void transitionState(GameEngine* gameEngine, int stateNumber, std::string input )
+//Transition method that changes the current state of the game using the command and the current state
+void transitionState(GameEngine* gameEngine, int stateNumber, std::string input )
  {
 
     switch(stateNumber) {
@@ -218,7 +217,7 @@ std::ostream &operator<<(std::ostream &out, const Transition &transition)
 		  if (input._Equal("end"))
 		  {
 			  //TRANSITION TO END STATE
-              std::cout << "Congratulations! You won!";
+              std::cout << "Congratulations! You won! ";
               gameEngine->currentState = gameEngine->gameStates[++stateNumber];
 		  }
           if (input._Equal("play")) {
@@ -310,11 +309,12 @@ GameEngine::GameEngine()
 // Destructor - GameEngine
 GameEngine::~GameEngine()
 {
-    //Deleting the State and Command objects
+    //Deleting the Command objects
     for (Command* c : gameCommands) {
         delete c;
     }
 
+    //Deleting the State objects
     for (State* s : gameStates) {
         delete s;
     }

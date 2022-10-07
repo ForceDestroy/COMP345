@@ -13,14 +13,13 @@ void testGameStates(GameEngine* gameEngine)
 		bool transitionSuccess = false;
         //A loop asking the user to enter a command as long as the command is not valid
 		do {
-            //**let the user know the state**
+            //Ask the user command
 			std::cout << "Please enter a valid command for the current state : " << std::endl;
 			std::string input;
 			std::getline(std::cin, input);
 
 
 			// String manipulation
-
 			std::string cleanInput = stringUnifier(input);
 
 			// Command Filtering
