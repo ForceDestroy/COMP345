@@ -4,12 +4,12 @@
 Player::Player()
 {
     territories = new std::vector<Territory*>();
-    handOfCards = new std::vector<Cards*>();
-    listOfOrders = new std::vector<Orders*>();
+    handOfCards = new Hand();
+    listOfOrders = new OrdersList();
 }
 
 //Parameterized constructor
-Player::Player(std::vector<Territory*>* territories, std::vector<Cards*>* handOfCards, std::vector<Orders*>* listOfOrders)
+Player::Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersList* listOfOrders)
 {
     this->territories = territories;
     this->handOfCards = handOfCards;
@@ -24,24 +24,16 @@ Player::~Player()
     delete listOfOrders;
 }
 
-//copy constructor
+//Copy constructor
 Player::Player(const Player& player)
 {
     territories = new std::vector<Territory*>();
-    handOfCards = new std::vector<Cards*>();
-    listOfOrders = new std::vector<Orders*>();
-    //Copying the values into the new object
-    for (Territory* territory : *player.territories)
+    handOfCards = player.handOfCards;
+    listOfOrders = player.listOfOrders;
+
+    for (int i = 0; i < player.territories->size(); i++)
     {
-        territories->push_back(territory);
-    }
-    for (Cards* card : *player.handOfCards)
-    {
-        handOfCards->push_back(card);
-    }
-    for (Orders* order : *player.listOfOrders)
-    {
-        listOfOrders->push_back(order);
+        territories->push_back(player.territories->at(i));
     }
 }
 
@@ -49,18 +41,27 @@ Player::Player(const Player& player)
 void Player::toAttack()
 {
     std::cout << "Player is attacking" << std::endl;
+    for (int i = 0; i < territories->size(); i++)
+    {
+        std::cout << territories->at(i)->getName() << std::endl;
+    }
     // get adjacent enemy territories
 }
 //Defend method
 void Player::toDefend()
 {
     std::cout << "Player is defending" << std::endl;
+    for (int i = 0; i < territories->size(); i++)
+    {
+        std::cout << territories->at(i)->getName() << std::endl;
+    }
     // get adjacent friendly territories
 }
 //Issue order method
-void Player::issueOrder()
+void Player::issueOrder(Order* order)
 {
-    std::cout << "Player is issuing order" << std::endl;
+    std::cout << "Player is issuing an order" << std::endl;
+    listOfOrders->add(order);
 }
 
 //operator assignment
@@ -68,9 +69,9 @@ Player& Player::operator=(const Player& p)
 {
     if (this != &p)
     {
-        territories = p.territories;
-        handOfCards = p.handOfCards;
-        listOfOrders = p.listOfOrders;
+        this->territories = p.territories;
+        this->handOfCards = p.handOfCards;
+        this->listOfOrders = p.listOfOrders;
     }
     return *this;
 }
@@ -82,19 +83,8 @@ std::ostream& operator<<(std::ostream& os, const Player& p)
     for (Territory* territory : *p.territories)
     {
         //os << *territory << std::endl;
-        // Waiting on Territories << overload
     }
-    os << "Player's cards: " << std::endl;
-    for (Cards* card : *p.handOfCards)
-    {
-        //os << *card << std::endl;
-        // Waiting on Card << overload
-    }
-    os << "Player's listOfOrders: " << std::endl;
-    for (Orders* order : *p.listOfOrders)
-    {
-        //os << *order << std::endl;
-        // Waiting on Orders << overload
-    }
+    // os << "Player's hand of cards: " << *p.handOfCards << std::endl;
+    // os << "Player's list of orders: " << *p.listOfOrders <<std::endl;
     return os;
 }

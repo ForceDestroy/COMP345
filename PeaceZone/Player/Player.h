@@ -10,25 +10,26 @@
 //TODO Add comments to explain the class
 //TODO change these to include headers later
 class Territory;
-class Cards;
-class Orders;
+class Hand;
+class OrdersList;
+class Order;
 
 //Player class
 class Player
 {
 private:
     std::vector<Territory*>* territories;
-    std::vector<Cards*>* handOfCards;
-    std::vector<Orders*>* listOfOrders;
+    Hand* handOfCards;
+    OrdersList* listOfOrders;
 public:
     Player();
-    Player(std::vector<Territory*>* territories, std::vector<Cards*>* handOfCards, std::vector<Orders*>* listOfOrders);
+    Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersList* listOfOrders);
     Player(const Player& player);
     ~Player();
     Player& operator=(const Player& p);
     void toAttack();
     void toDefend();
-    void issueOrder();
+    void issueOrder( Order* order );
     
     friend std::ostream& operator<<(std::ostream& out, const Player& p);
 };
