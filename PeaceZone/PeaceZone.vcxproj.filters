@@ -22,6 +22,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameEngine\GameEngineDriver.cpp">
+          <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\MapDriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
