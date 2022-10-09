@@ -102,7 +102,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -127,12 +127,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameEngine\GameEngine.cpp" />
+    <ClCompile Include="GameEngine\GameEngineDriver.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Player\PlayerDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\Player.h" />
+    <ClCompile Include="Map\Map.cpp" />
+    <ClCompile Include="Map\MapDriver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Map\Map.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Users\Sango\Downloads\Alabama.map" />
+    <None Include="Map\ConquestMaps\India.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameEngine\GameEngine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

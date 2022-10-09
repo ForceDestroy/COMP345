@@ -22,11 +22,22 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Player\PlayerDriver.cpp">
+    <ClCompile Include="GameEngine\GameEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\GameEngineDriver.cpp">
+          <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\MapDriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\Player.h">
+    <ClInclude Include="GameEngine\GameEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
