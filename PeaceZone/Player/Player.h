@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "../Map/Map.h"
 
 #ifdef _DEBUG
 #define new new( _NORMAL_BLOCK , __FILE__ , __LINE__ )
@@ -9,7 +10,7 @@
 
 //TODO Add comments to explain the class
 //TODO change these to include headers later
-class Territory;
+
 class Hand;
 class OrdersList;
 class Order;

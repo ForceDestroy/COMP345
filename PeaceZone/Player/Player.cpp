@@ -43,7 +43,7 @@ void Player::toAttack()
     std::cout << "Player is attacking" << std::endl;
     for (int i = 0; i < territories->size(); i++)
     {
-        std::cout << territories->at(i)->getName() << std::endl;
+        std::cout << territories->at(i)->name << std::endl;
     }
     // get adjacent enemy territories
 }
@@ -53,7 +53,7 @@ void Player::toDefend()
     std::cout << "Player is defending" << std::endl;
     for (int i = 0; i < territories->size(); i++)
     {
-        std::cout << territories->at(i)->getName() << std::endl;
+        std::cout << territories->at(i)->name << std::endl;
     }
     // get adjacent friendly territories
 }
