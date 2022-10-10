@@ -364,7 +364,7 @@ negotiateOrder& negotiateOrder::operator=(const negotiateOrder &ord)
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &out, const negotiateOrder& orders)
+std::ostream& operator<<(std::ostream &out, negotiateOrder& orders)
 {
     out << orders.describe() << std::endl;
     return out;

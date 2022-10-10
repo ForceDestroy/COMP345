@@ -7,18 +7,18 @@
 
 //Destructor - Card
 Card::~Card(){
-	delete order;
+
 }
 
 //Constructor - Card
-Card::Card(Orders* order, Deck* deck) {
-	this->order = order;
+Card::Card(CardType type, Deck* deck) {
+	this->type = type;
 	this->deck = deck;
 }
 
 //Copy Constructor - Card
 Card::Card(const Card& c) {
-	order = c.order;
+	type = c.type;
 	deck = c.deck;
 }
 
@@ -26,7 +26,7 @@ Card::Card(const Card& c) {
 Card& Card::operator=(const Card& c) {
 
 	if (this != &c) {
-		order = c.order;
+		type = c.type;
 		deck = c.deck;
 	}
 
@@ -34,23 +34,78 @@ Card& Card::operator=(const Card& c) {
 }
 
 //Play function removes card from hand, returns it to deck and creates a new order to be added to player's list
-Orders* Card::Play(Hand& h) {
+void Card::Play(Hand& h, OrdersList& o) {
 	h.Remove(this);
 	deck->Insert(this);
 
-	//Order will be deleted when it is executed
-	// TODO Order implementation
-	//return new Orders(order);
+	switch (type)
+	{
+	case bomb:
+	{
+		o.add(new bombOrder());
+		break;
+	}
+	case blockade:
+	{
+		o.add(new blockadeOrder());
+		break;
+	}
+	case airlift:
+	{
+		o.add(new airliftOrder());
+		break;
+	}
+	case diplomacy:
+	{
+		o.add(new negotiateOrder());
+		break;
+	}
+	case reinforcement:
+	{
+		//Add more reinforcements to the player
+			break;
+	}
+	default:
+		break;
+	}
 	
 }
 
 //OSstream operator - Card
 std::ostream& operator<<(std::ostream& os, const Card& c) {
 
-	os << "Card: " << std::endl;
+	os << "Card: ";
 
-	//Waiting for Order
-	//out << *order << std::endl;
+	switch (c.type)
+	{
+	case bomb:
+		{
+			os << "Bomb" << std::endl;
+			break;
+		}
+	case blockade:
+	{
+		os << "Blockade" << std::endl;
+		break;
+	}
+	case airlift:
+	{
+		os << "Airlift" << std::endl;
+		break;
+	}
+	case diplomacy:
+	{
+		os << "Diplomacy" << std::endl;
+		break;
+	}
+	case reinforcement:
+	{
+		os << "Reinforcement" << std::endl;
+		break;
+	}
+	default:
+		break;
+	}
 
 	return os;
 }
@@ -72,59 +127,34 @@ Deck::Deck() {
 void Deck::PopulateDeck() {
 	//Create all the cards for the deck
 
-	//Orders are deleted when Card containing them is deleted	
-	//TODO use specific order constructor
-	//Orders* deployOrder = new Orders;
-
-	for (int i = 0; i < NUMBER_DEPLOY_CARDS; i++) {
-
-		//Cards are deleted when Deck or Hand containing them is deleted
-		//listOfCards->push_back(new Card(deployOrder));
-	}
-
-	//TODO use specific order constructor
-	//Orders* advanceOrder = new Orders;
-
-	for (int i = 0; i < NUMBER_ADVANCE_CARDS; i++) {
-
-		//Cards are deleted when Deck or Hand containing them is deleted
-		//listOfCards->push_back(new Card(advanceOrder));
-	}
-
-	//TODO use specific order constructor
-	//Orders* bombOrder = new Orders;
-
 	for (int i = 0; i < NUMBER_BOMB_CARDS; i++) {
 
 		//Cards are deleted when Deck or Hand containing them is deleted
-		//listOfCards->push_back(new Card(bombOrder));
+		listOfCards->push_back(new Card(bomb, this));
 	}
-
-	//TODO use specific order constructor
-	//Orders* blockadeOrder = new Orders;
 
 	for (int i = 0; i < NUMBER_BLOCKADE_CARDS; i++) {
 
 		//Cards are deleted when Deck or Hand containing them is deleted
-		//listOfCards->push_back(new Card(blockadeOrder));
+		listOfCards->push_back(new Card(blockade, this));
 	}
-
-	//TODO use specific order constructor
-	//Orders* airliftOrder = new Orders;
 
 	for (int i = 0; i < NUMBER_AIRLIFT_CARDS; i++) {
 
 		//Cards are deleted when Deck or Hand containing them is deleted
-		//listOfCards->push_back(new Card(airliftOrder));
+		listOfCards->push_back(new Card(airlift, this));
 	}
 
-	//TODO use specific order constructor
-	//Orders* negotiateOrder = new Orders;
-
-	for (int i = 0; i < NUMBER_NEGOTIATE_CARDS; i++) {
+	for (int i = 0; i < NUMBER_DIPLOMACY_CARDS; i++) {
 
 		//Cards are deleted when Deck or Hand containing them is deleted
-		//listOfCards->push_back(new Card(negotiateOrder));
+		listOfCards->push_back(new Card(diplomacy, this));
+	}
+
+	for (int i = 0; i < NUMBER_REINFORCEMENT_CARDS; i++) {
+
+		//Cards are deleted when Deck or Hand containing them is deleted
+		listOfCards->push_back(new Card(reinforcement, this));
 	}
 }
 
@@ -180,7 +210,7 @@ std::ostream& operator<<(std::ostream& os, const Deck& d) {
 	os << "Deck contains the following cards:\n"<< std::endl;
 	for(Card* c : *d.listOfCards)
 	{
-		os << c << "\n" << std::endl;
+		os << *c;
 	}
 	return os;
 }
@@ -241,7 +271,7 @@ std::ostream& operator<<(std::ostream& os, const Hand& h) {
 
 	for (Card* c : *h.listOfCards)
 	{
-		os << c << "\n" << std::endl;
+		os << *c;
 	}
 	return os;
 }
