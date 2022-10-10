@@ -30,4 +30,8 @@ inline void testCards() {
 	std::cout << *h << std::endl;
 	std::cout << *o << std::endl;
 
+	delete d;
+	delete h;
+	delete o;
+
 }

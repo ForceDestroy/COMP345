@@ -132,6 +132,11 @@
     <ClCompile Include="GameEngine\GameEngine.cpp" />
     <ClCompile Include="GameEngine\GameEngineDriver.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Player\Player.cpp" />
+    <ClCompile Include="Player\PlayerDriver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Player\Player.h" />
     <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Map\MapDriver.cpp" />
     <ClCompile Include="Orders\Orders.cpp" />

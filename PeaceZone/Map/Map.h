@@ -8,13 +8,15 @@
 #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
 
+class Player;
+
 class Territory
 {
 public:
     // Data Members
     int id;
     std::string name;
-    int owner;
+    Player* owner;
     int continent;
     int armyCount;
     std::vector<Territory *> neighbors;

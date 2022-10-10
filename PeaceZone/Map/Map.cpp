@@ -34,6 +34,11 @@ Territory::Territory(const Territory &t1)
     this->continent = t1.continent;
     this->armyCount = t1.armyCount;
     this->visited = t1.visited;
+    for (Territory *t : t1.neighbors)
+    {
+        auto *copy(new Territory(*t));
+        this->neighbors.push_back(copy);
+    }
 }
 
 // Assignment Operator - Territory
@@ -79,6 +84,11 @@ Continent::Continent(const Continent &c1)
 {
     this->name = c1.name;
     this->bonus = c1.bonus;
+    for (Territory *t : c1.territories)
+    {
+        auto *copy(new Territory(*t));
+        this->territories.push_back(copy);
+    }
 }
 
 // Assignment Operator - Continent

@@ -18,6 +18,10 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Player\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\PlayerDriver.cpp">
     <ClCompile Include="Cards\Cards.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,6 +46,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Player\Player.h">
     <ClInclude Include="Cards\Cards.h">
       <Filter>Header Files</Filter>
     </ClInclude>
