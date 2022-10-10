@@ -226,7 +226,7 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
           }
           break;
       default:
-          std::cout << "Oh no! T.T Something went terribly wrong!";
+          std::cout << "Oh no! T.T Something went terribly wrong!" << std::endl;
           break;
         
         
@@ -340,7 +340,7 @@ GameEngine &GameEngine::operator=(const GameEngine &c1)
 // Stream Insertion Operator - GameEngine
 std::ostream &operator<<(std::ostream &out, const GameEngine &gameEngine)
 {
-    out << "[Current state of the game:" << gameEngine.currentState << " ]";
+    out << "[Current state of the game:" << gameEngine.currentState << " ]" << std::endl;
 
     return out;
 }
