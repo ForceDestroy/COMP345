@@ -18,6 +18,10 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cards\Cards.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cards\CardsDriver.cpp">
     <ClCompile Include="GameEngine\GameEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -38,6 +42,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cards\Cards.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="GameEngine\GameEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
