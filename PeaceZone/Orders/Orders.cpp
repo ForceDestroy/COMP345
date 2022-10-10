@@ -62,11 +62,6 @@ deployOrder::deployOrder()
     std::cout << "Deploy order has been created";
 }
 
-deployOrder::deployOrder(bool validSelected, bool validTarget, bool validTroopNumber)
-{
-    std::cout << "Deploy order has been created.";
-}
-
 deployOrder::deployOrder(const deployOrder& ord)
 {
     valid = ord.valid;
@@ -117,11 +112,6 @@ std::ostream& operator<<(std::ostream &out, const deployOrder &orders)
 advanceOrder::advanceOrder()
 {
     std::cout << "Advance order has been created";
-}
-
-advanceOrder::advanceOrder(bool validSelected, bool validTarget, bool validTroopNumber)
-{
-    std::cout << "Advance order has been created.";
 }
 
 advanceOrder::advanceOrder(const advanceOrder& ord)
@@ -176,11 +166,6 @@ bombOrder::bombOrder()
     std::cout << "Bomb order has been created";
 }
 
-bombOrder::bombOrder(bool hasCard, bool validTarget)
-{
-    std::cout << "Bomb order has been created.";
-}
-
 bombOrder::bombOrder(const bombOrder& ord)
 {
     valid = ord.valid;
@@ -231,11 +216,6 @@ std::ostream& operator<<(std::ostream &out, const bombOrder &orders)
 blockadeOrder::blockadeOrder()
 {
     std::cout << "Blockade order has been created";
-}
-
-blockadeOrder::blockadeOrder(bool hasCard, bool validSelected)
-{
-    std::cout << "Blockade order has been created.";
 }
 
 blockadeOrder::blockadeOrder(const blockadeOrder& ord)
@@ -290,11 +270,6 @@ airliftOrder::airliftOrder()
     std::cout << "Airlift order has been created";
 }
 
-airliftOrder::airliftOrder(bool selectedPlayerHasCard, bool validSelectedTerritory, bool validTargetTerritory, bool validTroopNumber)
-{
-    std::cout << "Airlift order has been created.";
-}
-
 airliftOrder::airliftOrder(const airliftOrder& ord)
 {
     valid = ord.valid;
@@ -345,11 +320,6 @@ std::ostream& operator<<(std::ostream &out, const airliftOrder &orders)
 negotiateOrder::negotiateOrder()
 {
     std::cout << "Negotiate order has been created";
-}
-
-negotiateOrder::negotiateOrder(bool selectedPlayerHasCard, bool validPlayerName)
-{
-    std::cout << "Negotiate order has been created.";
 }
 
 negotiateOrder::negotiateOrder(const negotiateOrder& ord)
@@ -427,14 +397,19 @@ void OrdersList::add(Orders* order)
     std::cout << "An order has been added";
 }
 
-void OrdersList::remove(int position)
+void OrdersList::remove(Orders* order)
 {
-    Orders* order = (*ordersList)[position];
-    ordersList->erase(ordersList->begin() + position);
-    delete order;
-    std::cout << "An order has been removed";
+    for (int i = 0; i < ordersList->size(); i++)
+    {
+        if (ordersList->at(i) == order)
+        {
+            Orders *temp = ordersList->at(i);
+            ordersList->erase(ordersList->begin() + i);
+            delete temp;
+            std::cout << "An order has been removed";
+        }
+    }
 }
-
 void OrdersList::move(Orders* order, int position)
 {
     std::vector<Orders*>::iterator itr1 = ordersList->begin();
@@ -462,3 +437,7 @@ std::ostream& operator<<(std::ostream &out, const OrdersList &orders)
     }
     return out;
 }
+Orders* OrdersList::operator [](int ItemKey) {
+    return (*ordersList)[ItemKey];
+}
+

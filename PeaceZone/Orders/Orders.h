@@ -26,7 +26,6 @@ class deployOrder : public Orders
     public:
         // Constructors
         deployOrder();
-        deployOrder(bool validSelected, bool validTarget, bool validTroopNumber);
         deployOrder(const deployOrder& ord);
         ~deployOrder();
 
@@ -44,8 +43,6 @@ class advanceOrder : public Orders
     public:
         // Constructors
         advanceOrder();
-        // check if player issuing order owns selected and target territory, check if troop number is not over available troops
-        advanceOrder(bool validSelected, bool validTarget, bool validTroopNumber);
         advanceOrder(const advanceOrder& ord);
         ~advanceOrder();
 
@@ -62,8 +59,6 @@ class bombOrder : public Orders
     public:
         // Constructors
         bombOrder();
-        // check if player has bomb card, check if target territory is next to owned territory
-        bombOrder(bool hasCard, bool validTarget);
         bombOrder(const bombOrder& ord);
         ~bombOrder();
 
@@ -81,8 +76,6 @@ class blockadeOrder : public Orders
     public:
         // Constructors
         blockadeOrder();
-        // check if player has card and owns selected territory
-        blockadeOrder(bool hasCard, bool validSelected);
         blockadeOrder(const blockadeOrder& ord);
         ~blockadeOrder();
 
@@ -100,8 +93,6 @@ class airliftOrder : public Orders
     public:
         // Constructors
         airliftOrder();
-        //check player using has airlift card, check if selected territory and target territory is owned by player, check if number of troops being moved exceeds available troops in selected territory
-        airliftOrder(bool selectedPlayerHasCard, bool validSelectedTerritory, bool validTargetTerritory, bool validTroopNumber);
         airliftOrder(const airliftOrder& ord);
         ~airliftOrder();
 
@@ -119,8 +110,6 @@ class negotiateOrder : public Orders
     public:
         // Constructors
         negotiateOrder();
-        //need to check if player issuing order has the negotiate card, and target player is a real player still in the game
-        negotiateOrder(bool selectedPlayerHasCard, bool validPlayerName);
         negotiateOrder(const negotiateOrder& ord);
         ~negotiateOrder();
 
@@ -145,10 +134,11 @@ class OrdersList
 
         // Methods
         void add(Orders* order);
-        void remove(int position);
+        void remove(Orders* order);
         void move(Orders* order, int position);
 
         //Operators
         OrdersList& operator=(const OrdersList &ord);
         friend std::ostream& operator<<(std::ostream &out, const OrdersList &orders);
+        Orders* operator[](int itemKey);
 };
