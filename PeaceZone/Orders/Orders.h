@@ -38,7 +38,7 @@ class deployOrder : public Orders
         void execute() override;
         void validate() override;
         std::string describe() override;
-        deployOrder& operator=(const deployOrder &);
+        deployOrder& operator=(const deployOrder& ord);
         friend std::ostream& operator<<(std::ostream &out, const deployOrder &orders);
 };
 
@@ -55,7 +55,7 @@ class advanceOrder : public Orders
         void execute();
         void validate();
         std::string describe();
-        advanceOrder& operator=(const advanceOrder &);
+        advanceOrder& operator=(const advanceOrder& ord);
         friend std::ostream& operator<<(std::ostream &out, const advanceOrder &orders);
 };
 // bomb checks for valid: selected player, target territory (adjacent to owned territory), card availability
@@ -71,7 +71,7 @@ class bombOrder : public Orders
         void execute();
         void validate();
         std::string describe();
-        bombOrder& operator=(const bombOrder &);
+        bombOrder& operator=(const bombOrder& ord);
         friend std::ostream& operator<<(std::ostream &out, const bombOrder &orders);
 };
 
@@ -88,7 +88,7 @@ class blockadeOrder : public Orders
         void execute();
         void validate();
         std::string describe();
-        blockadeOrder& operator=(const blockadeOrder &);
+        blockadeOrder& operator=(const blockadeOrder& ord);
         friend std::ostream& operator<<(std::ostream &out, const blockadeOrder &orders);
 };
 
@@ -105,7 +105,7 @@ class airliftOrder : public Orders
         void execute();
         void validate();
         std::string describe();
-        airliftOrder& operator=(const airliftOrder &);
+        airliftOrder& operator=(const airliftOrder& ord);
         friend std::ostream& operator<<(std::ostream &out, const airliftOrder &orders);
 };
 
@@ -122,7 +122,7 @@ class negotiateOrder : public Orders
         void execute();
         void validate();
         std::string describe();
-        negotiateOrder& operator=(const negotiateOrder &);
+        negotiateOrder& operator=(const negotiateOrder& ord);
         friend std::ostream& operator<<(std::ostream &out, const negotiateOrder &orders);
 };
 
