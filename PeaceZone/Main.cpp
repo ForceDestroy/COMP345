@@ -24,17 +24,16 @@ int main()
     //Orders Tester
     testOrdersList();
     
-    //GameEngine Tester
-    GameEngine* gameEngine = new GameEngine();
-
-    testGameStates(gameEngine);
-
-    delete gameEngine;
-
     //Card Tester
     testCards();
 
     //Player Tester
     testPlayer();
 
+    //GameEngine Tester
+    GameEngine* gameEngine = new GameEngine();
+
+    testGameStates(gameEngine);
+
+    delete gameEngine;
 }
