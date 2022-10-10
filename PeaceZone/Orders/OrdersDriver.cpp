@@ -40,6 +40,10 @@ inline void testOrdersList()
 
 	std::cout << *orderList << std::endl;
 
+	orderList->remove(negotiate);
+
+	std::cout << *orderList << std::endl;
+
 	delete orderList;
 
 }

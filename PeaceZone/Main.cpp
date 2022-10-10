@@ -11,25 +11,30 @@
 #include "GameEngine/GameEngineDriver.cpp"
 #include "Cards/CardsDriver.cpp"
 #include "Map/MapDriver.cpp"
-
+#include "Player/PlayerDriver.cpp"
 #include "Orders/OrdersDriver.cpp"
 
 int main()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     
-    // Map Tester
-    //testLoadMaps();
+    //Map Tester
+    testLoadMaps();
 
-    // Orders Tester
-    //testOrdersList();
+    //Orders Tester
+    testOrdersList();
     
-    // GameEngine Tester
-    //GameEngine* gameEngine = new GameEngine();
+    //GameEngine Tester
+    GameEngine* gameEngine = new GameEngine();
 
-    //testGameStates(gameEngine);
+    testGameStates(gameEngine);
 
-    //delete gameEngine;
+    delete gameEngine;
 
+    //Card Tester
     testCards();
+
+    //Player Tester
+    testPlayer();
+
 }

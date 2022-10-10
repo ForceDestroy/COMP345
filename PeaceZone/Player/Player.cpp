@@ -41,7 +41,7 @@ Player::Player(const Player& player)
 void Player::toAttack()
 {
     //getting neighbors of the territories to attack
-    std::cout << "Player is attacking" << std::endl;
+    std::cout << "Player is now attacking" << std::endl;
     for (int i = 0; i < territories->size(); i++)
     {
         for (int j = 0; j < territories->at(i)->neighbors.size(); j++)
@@ -57,7 +57,7 @@ void Player::toAttack()
 void Player::toDefend()
 {
     //get all the territories to defend that the player owns
-    std::cout << "Player is defending" << std::endl;
+    std::cout << "Player is now defending" << std::endl;
     for (int i = 0; i < territories->size(); i++)
     {
         std::cout << territories->at(i)->name << std::endl;
@@ -68,50 +68,42 @@ void Player::issueOrder(std::string order)
 {
     std::cout << "Player is issuing an order" << std::endl;
     Orders* o;
-    bool validOrder = false;
     //checking if the order is valid and creates the appropriate order
     if ( order == "deploy" )
     {
         o = new deployOrder();
-        validOrder = true;
+        listOfOrders->add(o);
     }
     else if ( order == "advance" )
     {
         o = new advanceOrder();
-        validOrder = true;
+        listOfOrders->add(o);
     }
     else if ( order == "bomb" )
     {
         o = new bombOrder();
-        validOrder = true;
+        listOfOrders->add(o);
     }
     else if ( order == "blockade" )
     {
         o = new blockadeOrder();
-        validOrder = true;
+        listOfOrders->add(o);
     }
     else if ( order == "airlift" )
     {
         o = new airliftOrder();
-        validOrder = true;
+        listOfOrders->add(o);
     }
     else if ( order == "negotiate" )
     {
         o = new negotiateOrder();
-        validOrder = true;
+        listOfOrders->add(o);
     }
     else
     {
         std::cout << "Invalid order" << std::endl;
     }
-    //if the order is valid, add it to the list of orders
-    if ( validOrder )
-    {
-        listOfOrders->add(o);
-    }
-    else {
-        delete o;
-    }
+
 }
 
 //operator assignment
@@ -134,7 +126,7 @@ std::ostream& operator<<(std::ostream& os, const Player& p)
     {
         os << *territory << std::endl;
     }
-    // os << "Player's hand of cards: " << *p.handOfCards << std::endl;
+    os << "Player's hand of cards: " << *p.handOfCards << std::endl;
     os << "Player's list of orders: " << *p.listOfOrders <<std::endl;
     return os;
 }
