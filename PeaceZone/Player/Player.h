@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+
 #include "../Map/Map.h"
 
 #ifdef _DEBUG
@@ -19,18 +20,24 @@ class Order;
 class Player
 {
 private:
+    //variables for the player
     std::vector<Territory*>* territories;
     Hand* handOfCards;
     OrdersList* listOfOrders;
 public:
+    //Constructor
     Player();
     Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersList* listOfOrders);
+    //Copy constructor
     Player(const Player& player);
+    //Destructor
     ~Player();
-    Player& operator=(const Player& p);
+    //Player methods
     void toAttack();
     void toDefend();
-    void issueOrder( Order* order );
+    void issueOrder(std::string order);
     
+    //Overloaded operators
+    Player& operator=(const Player& p);
     friend std::ostream& operator<<(std::ostream& out, const Player& p);
 };

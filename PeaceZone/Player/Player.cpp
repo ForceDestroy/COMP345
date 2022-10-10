@@ -40,28 +40,78 @@ Player::Player(const Player& player)
 //Attack method
 void Player::toAttack()
 {
+    //getting neighbors of the territories to attack
     std::cout << "Player is attacking" << std::endl;
     for (int i = 0; i < territories->size(); i++)
     {
-        std::cout << territories->at(i)->name << std::endl;
+        for (int j = 0; j < territories->at(i)->neighbors.size(); j++)
+        {
+            if (territories->at(i)->neighbors.at(j)->name != territories->at(i)->name)
+            {
+                std::cout << "Player is attacking " << territories->at(i)->neighbors.at(j)->name << " from " << territories->at(i)->name << std::endl;
+            }
+        }
     }
-    // get adjacent enemy territories
 }
 //Defend method
 void Player::toDefend()
 {
+    //get all the territories to defend that the player owns
     std::cout << "Player is defending" << std::endl;
     for (int i = 0; i < territories->size(); i++)
     {
         std::cout << territories->at(i)->name << std::endl;
     }
-    // get adjacent friendly territories
 }
 //Issue order method
-void Player::issueOrder(Order* order)
+void Player::issueOrder(std::string order)
 {
     std::cout << "Player is issuing an order" << std::endl;
-    listOfOrders->add(order);
+    Order* o;
+    bool validOrder = false;
+    //checking if the order is valid and creates the appropriate order
+    if ( order == "deploy" )
+    {
+        o = new deploy();
+        validOrder = true;
+    }
+    else if ( order == "advance" )
+    {
+        o = new advance();
+        validOrder = true;
+    }
+    else if ( order == "bomb" )
+    {
+        o = new bomb();
+        validOrder = true;
+    }
+    else if ( order == "blockade" )
+    {
+        o = new blockade();
+        validOrder = true;
+    }
+    else if ( order == "airlift" )
+    {
+        o = new airlift();
+        validOrder = true;
+    }
+    else if ( order == "negotiate" )
+    {
+        o = new negotiate();
+        validOrder = true;
+    }
+    else
+    {
+        std::cout << "Invalid order" << std::endl;
+    }
+    //if the order is valid, add it to the list of orders
+    if ( validOrder )
+    {
+        listOfOrders->add(o);
+    }
+    else {
+        delete o;
+    }
 }
 
 //operator assignment
@@ -82,7 +132,7 @@ std::ostream& operator<<(std::ostream& os, const Player& p)
     os << "Player's territories: " << std::endl;
     for (Territory* territory : *p.territories)
     {
-        //os << *territory << std::endl;
+        os << *territory << std::endl;
     }
     // os << "Player's hand of cards: " << *p.handOfCards << std::endl;
     // os << "Player's list of orders: " << *p.listOfOrders <<std::endl;
