@@ -1,5 +1,10 @@
+#pragma once
 #include <iostream>
 #include <vector>
+
+#ifdef _DEBUG
+#define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
 
 class Orders
 {
@@ -13,7 +18,7 @@ class Orders
         // Methods
         virtual void execute();
         virtual void validate();
-        virtual void describe();
+        virtual std::string describe();
         void setValid(bool isValid);
         Orders& operator=(const Orders &);
         friend std::ostream& operator<<(std::ostream &out, const Orders &orders);
@@ -30,9 +35,9 @@ class deployOrder : public Orders
         ~deployOrder();
 
         // Methods
-        void execute();
-        void validate();
-        void describe();
+        void execute() override;
+        void validate() override;
+        std::string describe() override;
         deployOrder& operator=(const deployOrder &);
         friend std::ostream& operator<<(std::ostream &out, const deployOrder &orders);
 };
@@ -49,7 +54,7 @@ class advanceOrder : public Orders
         // Methods
         void execute();
         void validate();
-        void describe();
+        std::string describe();
         advanceOrder& operator=(const advanceOrder &);
         friend std::ostream& operator<<(std::ostream &out, const advanceOrder &orders);
 };
@@ -65,7 +70,7 @@ class bombOrder : public Orders
         // Methods
         void execute();
         void validate();
-        void describe();
+        std::string describe();
         bombOrder& operator=(const bombOrder &);
         friend std::ostream& operator<<(std::ostream &out, const bombOrder &orders);
 };
@@ -82,7 +87,7 @@ class blockadeOrder : public Orders
         // Methods
         void execute();
         void validate();
-        void describe();
+        std::string describe();
         blockadeOrder& operator=(const blockadeOrder &);
         friend std::ostream& operator<<(std::ostream &out, const blockadeOrder &orders);
 };
@@ -99,7 +104,7 @@ class airliftOrder : public Orders
         // Methods
         void execute();
         void validate();
-        void describe();
+        std::string describe();
         airliftOrder& operator=(const airliftOrder &);
         friend std::ostream& operator<<(std::ostream &out, const airliftOrder &orders);
 };
@@ -116,7 +121,7 @@ class negotiateOrder : public Orders
         // Methods
         void execute();
         void validate();
-        void describe();
+        std::string describe();
         negotiateOrder& operator=(const negotiateOrder &);
         friend std::ostream& operator<<(std::ostream &out, const negotiateOrder &orders);
 };
@@ -137,8 +142,11 @@ class OrdersList
         void remove(Orders* order);
         void move(Orders* order, int position);
 
-        //Operators
+        // Operators
         OrdersList& operator=(const OrdersList &ord);
         friend std::ostream& operator<<(std::ostream &out, const OrdersList &orders);
         Orders* operator[](int itemKey);
+
+        // Helpers
+        int findOrderIndex(std::vector<Orders*> vec, Orders* item);
 };

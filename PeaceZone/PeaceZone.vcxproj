@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Cards\Cards.cpp" />
+    <ClCompile Include="Cards\CardsDriver.cpp" />
     <ClCompile Include="GameEngine\GameEngine.cpp" />
     <ClCompile Include="GameEngine\GameEngineDriver.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -150,6 +152,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngine\GameEngine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Cards\Cards.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
