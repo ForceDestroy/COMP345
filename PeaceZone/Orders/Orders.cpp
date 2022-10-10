@@ -3,7 +3,7 @@
 Orders::Orders()
 {
     valid = false;
-    std::cout << "An order has been created";
+    std::cout << "An order has been created" << std::endl;
 }
 
 Orders::Orders(const Orders& ord)
@@ -13,7 +13,7 @@ Orders::Orders(const Orders& ord)
 
 Orders::~Orders()
 {
-    std::cout << "Order has been destroyed";
+    std::cout << "Order has been destroyed" << std::endl;
 }
 
 void Orders::setValid(bool isValid)
@@ -21,27 +21,27 @@ void Orders::setValid(bool isValid)
     valid = isValid;
 }
 
-void Orders::describe()
+std::string Orders::describe()
 {
-    std::cout << "This is a generic order.";
+    return "Generic Order";
 }
 
 void Orders::validate()
 {
     setValid(true);
-    std::cout << "Default validation statement";
+    std::cout << "Default validation statement" << std::endl;
 }
 void Orders::execute()
 {
     validate();
             if (valid)
             {
-                std::cout << "Blank order execute";
+                std::cout << "Blank order execute" << std::endl;
                 describe();
             }
             else
             {
-                std::cout << "This order is not valid.";
+                std::cout << "This order is not valid." << std::endl;
             }
 }
 
@@ -51,15 +51,16 @@ Orders& Orders::operator=(const Orders &ord)
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &out, const Orders &orders)
+std::ostream& operator<<(std::ostream &out, Orders &orders)
 {
-    out << "This is a generic order.";
+    
+    out << orders.describe() << std::endl;
     return out;
 }
 
 deployOrder::deployOrder()
 {
-    std::cout << "Deploy order has been created";
+    std::cout << "Deploy order has been created" << std::endl;
 }
 
 deployOrder::deployOrder(const deployOrder& ord)
@@ -69,18 +70,18 @@ deployOrder::deployOrder(const deployOrder& ord)
 
 deployOrder::~deployOrder()
 {
-    std::cout << "Deploy order has been destroyed";
+    std::cout << "Deploy order has been destroyed" << std::endl;
 }
 
-void deployOrder::describe()
+std::string deployOrder::describe()
 {
-    std::cout << "This order adds troops from reserves to selected owned territories.";
+    return "Deploy Order";
 }
 
 void deployOrder::validate()
 {
     setValid(true);
-    std::cout << "Deploy order validation statement";
+    std::cout << "Deploy order validation statement" << std::endl;
 }
 
 void deployOrder::execute()
@@ -88,12 +89,12 @@ void deployOrder::execute()
     validate();
     if (valid)
     {
-        std::cout << "Deploy order execute";
+        std::cout << "Deploy order execute" << std::endl;
         describe();
     }
     else
     {
-        std::cout << "This order is not valid.";
+        std::cout << "This order is not valid." << std::endl;
     }
 }
 
@@ -103,15 +104,15 @@ deployOrder& deployOrder::operator=(const deployOrder &ord)
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &out, const deployOrder &orders)
+std::ostream& operator<<(std::ostream &out, deployOrder &orders)
 {
-    out << "This order adds troops from reserves to selected owned territories.";
+    out << orders.describe() << std::endl;
     return out;
 }
 
 advanceOrder::advanceOrder()
 {
-    std::cout << "Advance order has been created";
+    std::cout << "Advance order has been created" << std::endl;
 }
 
 advanceOrder::advanceOrder(const advanceOrder& ord)
@@ -121,18 +122,18 @@ advanceOrder::advanceOrder(const advanceOrder& ord)
 
 advanceOrder::~advanceOrder()
 {
-    std::cout << "Advance order has been destroyed";
+    std::cout << "Advance order has been destroyed" << std::endl;
 }
 
-void advanceOrder::describe()
+std::string advanceOrder::describe()
 {
-    std::cout << "This order will move troop to selected adjacent territory. If this territory is owned by an enemy, attack that territory";
+    return "Advance Order";
 }
 
 void advanceOrder::validate()
 {
     setValid(true);
-    std::cout << "Advance order is validated.";
+    std::cout << "Advance order is validated." << std::endl;
 }
 
 void advanceOrder::execute()
@@ -140,12 +141,12 @@ void advanceOrder::execute()
     validate();
     if (valid)
     {
-        std::cout << "Advance order is executed";
+        std::cout << "Advance order is executed" << std::endl;
         describe();
     }
     else
     {
-        std::cout << "This order is not valid.";
+        std::cout << "This order is not valid." << std::endl;
     }
 }
 
@@ -155,15 +156,15 @@ advanceOrder& advanceOrder::operator=(const advanceOrder &ord)
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &out, const advanceOrder &orders)
+std::ostream& operator<<(std::ostream &out, advanceOrder &orders)
 {
-    out << "This order will move troop to selected adjacent territory. If this territory is owned by an enemy, attack that territory";
+    out << orders.describe() << std::endl;
     return out;
 }
 
 bombOrder::bombOrder()
 {
-    std::cout << "Bomb order has been created";
+    std::cout << "Bomb order has been created" << std::endl;
 }
 
 bombOrder::bombOrder(const bombOrder& ord)
@@ -173,18 +174,18 @@ bombOrder::bombOrder(const bombOrder& ord)
 
 bombOrder::~bombOrder()
 {
-    std::cout << "Bomb order has been destroyed";
+    std::cout << "Bomb order has been destroyed" << std::endl;
 }
 
-void bombOrder::describe()
+std::string bombOrder::describe()
 {
-    std::cout << "This order removes half the troops of the selected territory.";
+    return "Bomb Order";
 }
 
 void bombOrder::validate()
 {
     setValid(true);
-    std::cout << "Bomb order is validated.";
+    std::cout << "Bomb order is validated." << std::endl;
 }
 
 void bombOrder::execute()
@@ -192,12 +193,12 @@ void bombOrder::execute()
     validate();
     if (valid)
     {
-        std::cout << "Bomb order is executed";
+        std::cout << "Bomb order is executed" << std::endl;
         describe();
     }
     else
     {
-        std::cout << "This bomb order is not valid.";
+        std::cout << "This bomb order is not valid." << std::endl;
     }
 }
 
@@ -207,15 +208,15 @@ bombOrder& bombOrder::operator=(const bombOrder &ord)
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &out, const bombOrder &orders)
+std::ostream& operator<<(std::ostream &out, bombOrder &orders)
 {
-    out << "This order removes half the troops of the selected territory.";
+    out << orders.describe() << std::endl;
     return out;
 }
 
 blockadeOrder::blockadeOrder()
 {
-    std::cout << "Blockade order has been created";
+    std::cout << "Blockade order has been created" << std::endl;
 }
 
 blockadeOrder::blockadeOrder(const blockadeOrder& ord)
@@ -225,18 +226,18 @@ blockadeOrder::blockadeOrder(const blockadeOrder& ord)
 
 blockadeOrder::~blockadeOrder()
 {
-    std::cout << "Blockade order has been destroyed";
+    std::cout << "Blockade order has been destroyed" << std::endl;
 }
 
-void blockadeOrder::describe()
+std::string blockadeOrder::describe()
 {
-    std::cout << "This order doubles the amount of troops in selected owned territory but turns it neutral at the end of the turn";
+    return "Blockade Order";
 }
 
 void blockadeOrder::validate()
 {
     setValid(true);
-    std::cout << "Blockade order is validated.";
+    std::cout << "Blockade order is validated." << std::endl;
 }
 
 void blockadeOrder::execute()
@@ -244,12 +245,12 @@ void blockadeOrder::execute()
     validate();
     if (valid)
     {
-        std::cout << "Blockade order is executed";
+        std::cout << "Blockade order is executed" << std::endl;
         describe();
     }
     else
     {
-        std::cout << "This blockade order is not valid.";
+        std::cout << "This blockade order is not valid." << std::endl;
     }
 }
 
@@ -259,15 +260,15 @@ blockadeOrder& blockadeOrder::operator=(const blockadeOrder &ord)
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &out, const blockadeOrder &orders)
+std::ostream& operator<<(std::ostream &out, blockadeOrder &orders)
 {
-    out << "This order doubles the amount of troops in selected owned territory but turns it neutral at the end of the turn";
+    out << orders.describe() << std::endl;
     return out;
 }
 
 airliftOrder::airliftOrder()
 {
-    std::cout << "Airlift order has been created";
+    std::cout << "Airlift order has been created" << std::endl;
 }
 
 airliftOrder::airliftOrder(const airliftOrder& ord)
@@ -277,18 +278,18 @@ airliftOrder::airliftOrder(const airliftOrder& ord)
 
 airliftOrder::~airliftOrder()
 {
-    std::cout << "Airlift order has been destroyed";
+    std::cout << "Airlift order has been destroyed" << std::endl;
 }
 
-void airliftOrder::describe()
+std::string airliftOrder::describe()
 {
-    std::cout << "This order moves troops to owned territories, regardless of distance.";
+    return "Airlift Order";
 }
 
 void airliftOrder::validate()
 {
     setValid(true);
-    std::cout << "Airlift order is validated.";
+    std::cout << "Airlift order is validated." << std::endl;
 }
 
 void airliftOrder::execute()
@@ -296,12 +297,12 @@ void airliftOrder::execute()
     validate();
     if (valid)
     {
-        std::cout << "Airlift order is executed";
+        std::cout << "Airlift order is executed" << std::endl;
         describe();
     }
     else
     {
-        std::cout << "This airlift order is not valid.";
+        std::cout << "This airlift order is not valid." << std::endl;
     }
 }
 
@@ -311,15 +312,15 @@ airliftOrder& airliftOrder::operator=(const airliftOrder &ord)
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &out, const airliftOrder &orders)
+std::ostream& operator<<(std::ostream &out, airliftOrder &orders)
 {
-    out << "This order moves troops to owned territories, regardless of distance.";
+    out << orders.describe() << std::endl;
     return out;
 }
 
 negotiateOrder::negotiateOrder()
 {
-    std::cout << "Negotiate order has been created";
+    std::cout << "Negotiate order has been created" << std::endl;
 }
 
 negotiateOrder::negotiateOrder(const negotiateOrder& ord)
@@ -329,18 +330,18 @@ negotiateOrder::negotiateOrder(const negotiateOrder& ord)
 
 negotiateOrder::~negotiateOrder()
 {
-    std::cout << "Negotiate order has been destroyed";
+    std::cout << "Negotiate order has been destroyed" << std::endl;
 }
 
-void negotiateOrder::describe()
+std::string negotiateOrder::describe()
 {
-    std::cout << "This order prevents target from attacking user for 1 turn.";
+   return "Negotiate Order";
 }
 
 void negotiateOrder::validate()
 {
     setValid(true);
-    std::cout << "Negotiate order is validated.";
+    std::cout << "Negotiate order is validated." << std::endl;
 }
 
 void negotiateOrder::execute()
@@ -348,12 +349,12 @@ void negotiateOrder::execute()
     validate();
     if (valid)
     {
-        std::cout << "Negotiate order is executed";
+        std::cout << "Negotiate order is executed" << std::endl;
         describe();
     }
     else
     {
-        std::cout << "This negotiate order is not valid.";
+        std::cout << "This negotiate order is not valid." << std::endl;
     }
 }
 
@@ -363,15 +364,16 @@ negotiateOrder& negotiateOrder::operator=(const negotiateOrder &ord)
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &out, const negotiateOrder &orders)
+std::ostream& operator<<(std::ostream &out, const negotiateOrder& orders)
 {
-    out << "This order prevents target from attacking user for 1 turn.";
+    out << orders.describe() << std::endl;
     return out;
 }
 
 OrdersList::OrdersList()
 {
-    std::cout << "An order list has been created.";
+    ordersList = new std::vector<Orders*>();
+    std::cout << "An order list has been created." << std::endl;
 }
 
 OrdersList::OrdersList(const OrdersList& ord)
@@ -394,7 +396,7 @@ OrdersList::~OrdersList()
 void OrdersList::add(Orders* order)
 {
     ordersList->push_back(order);
-    std::cout << "An order has been added";
+    std::cout << "An order has been added" << std::endl;
 }
 
 void OrdersList::remove(Orders* order)
@@ -406,16 +408,18 @@ void OrdersList::remove(Orders* order)
             Orders *temp = ordersList->at(i);
             ordersList->erase(ordersList->begin() + i);
             delete temp;
-            std::cout << "An order has been removed";
+            std::cout << "An order has been removed" << std::endl;
         }
     }
 }
 void OrdersList::move(Orders* order, int position)
 {
     std::vector<Orders*>::iterator itr1 = ordersList->begin();
+    int index = findOrderIndex(*ordersList, order);
     std::advance(itr1, position);
     ordersList->emplace(itr1, order);
-    std::cout << "The order has been moved";
+    ordersList->erase(ordersList->begin() + index + 1);
+    std::cout << "The order has been moved" << std::endl;
 }
 
 OrdersList& OrdersList::operator=(const OrdersList &ord)
@@ -431,9 +435,9 @@ OrdersList& OrdersList::operator=(const OrdersList &ord)
 std::ostream& operator<<(std::ostream &out, const OrdersList &orders)
 {
     out << "The list of orders:" << std::endl;
-    for (int i = 0; i < orders.ordersList->size(); i++)
+    for(Orders* o: *orders.ordersList)
     {
-        out << "Order: "<<orders.ordersList->at(i) << std::endl;
+        out << "Order: "<< *o << std::endl;
     }
     return out;
 }
@@ -441,3 +445,13 @@ Orders* OrdersList::operator [](int ItemKey) {
     return (*ordersList)[ItemKey];
 }
 
+// Helper - Find the index of the item in a vector of string
+int OrdersList::findOrderIndex(std::vector<Orders*> vec, Orders* item)
+{
+    auto it = std::find(vec.begin(), vec.end(), item);
+    if (it == vec.end())
+    {
+        throw std::invalid_argument("CannotFindItem");
+    }
+    return std::distance(vec.begin(), it);
+}
