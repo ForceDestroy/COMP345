@@ -67,37 +67,37 @@ void Player::toDefend()
 void Player::issueOrder(std::string order)
 {
     std::cout << "Player is issuing an order" << std::endl;
-    Order* o;
+    Orders* o;
     bool validOrder = false;
     //checking if the order is valid and creates the appropriate order
     if ( order == "deploy" )
     {
-        o = new deploy();
+        o = new deployOrder();
         validOrder = true;
     }
     else if ( order == "advance" )
     {
-        o = new advance();
+        o = new advanceOrder();
         validOrder = true;
     }
     else if ( order == "bomb" )
     {
-        o = new bomb();
+        o = new bombOrder();
         validOrder = true;
     }
     else if ( order == "blockade" )
     {
-        o = new blockade();
+        o = new blockadeOrder();
         validOrder = true;
     }
     else if ( order == "airlift" )
     {
-        o = new airlift();
+        o = new airliftOrder();
         validOrder = true;
     }
     else if ( order == "negotiate" )
     {
-        o = new negotiate();
+        o = new negotiateOrder();
         validOrder = true;
     }
     else
@@ -135,6 +135,6 @@ std::ostream& operator<<(std::ostream& os, const Player& p)
         os << *territory << std::endl;
     }
     // os << "Player's hand of cards: " << *p.handOfCards << std::endl;
-    // os << "Player's list of orders: " << *p.listOfOrders <<std::endl;
+    os << "Player's list of orders: " << *p.listOfOrders <<std::endl;
     return os;
 }

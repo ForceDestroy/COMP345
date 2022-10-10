@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../Map/Map.h"
+#include "../Orders/Orders.h"
 
 #ifdef _DEBUG
 #define new new( _NORMAL_BLOCK , __FILE__ , __LINE__ )
@@ -13,8 +14,6 @@
 //TODO change these to include headers later
 
 class Hand;
-class OrdersList;
-class Order;
 
 //Player class
 class Player

@@ -1,6 +1,6 @@
 #include "Player.h"
 
-void testPlayer(){
+inline void testPlayer(){
     std::cout << "Testing Player class" << std::endl;
     std::vector<Territory*>* territories = new std::vector<Territory*>();
     //creating territories for the player for testing
