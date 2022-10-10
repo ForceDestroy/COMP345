@@ -3,6 +3,10 @@
 #include <vector>
 #include "../Orders/Orders.h"
 
+#ifdef _DEBUG
+#define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
+
 class Deck;
 class Hand;
 enum CardType
