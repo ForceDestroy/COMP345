@@ -102,6 +102,7 @@ void Player::issueOrder(std::string order)
     else
     {
         std::cout << "Invalid order" << std::endl;
+        o = nullptr;
     }
 
 }

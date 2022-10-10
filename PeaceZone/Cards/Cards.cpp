@@ -79,10 +79,10 @@ std::ostream& operator<<(std::ostream& os, const Card& c) {
 	switch (c.type)
 	{
 	case bomb:
-		{
+	{
 			os << "Bomb" << std::endl;
 			break;
-		}
+	}
 	case blockade:
 	{
 		os << "Blockade" << std::endl;
@@ -207,7 +207,7 @@ void Deck::Insert(Card* c) {
 
 //OsStream operator - Deck
 std::ostream& operator<<(std::ostream& os, const Deck& d) {
-	os << "Deck contains the following cards:\n"<< std::endl;
+	os << "\nDeck contains the following cards:"<< std::endl;
 	for(Card* c : *d.listOfCards)
 	{
 		os << *c;
@@ -261,13 +261,13 @@ void Hand::Remove(Card* c) {
 	if (cardToRemove != listOfCards->end())
 		listOfCards->erase(cardToRemove);
 	else {
-		std::cout << "Invalid function call, you are trying to remove a card from a Hand in which it was not contained.";
+		std::cout << "\nInvalid function call, you are trying to remove a card from a Hand in which it was not contained." << std::endl;
 	}
 }
 
 //OsStream Operator - Hand
 std::ostream& operator<<(std::ostream& os, const Hand& h) {
-	os << "Hand contains the following cards:\n" << std::endl;
+	os << "\nHand contains the following cards:" << std::endl;
 
 	for (Card* c : *h.listOfCards)
 	{
