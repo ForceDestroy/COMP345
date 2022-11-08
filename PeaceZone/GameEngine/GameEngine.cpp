@@ -11,28 +11,42 @@ Command::~Command() = default;
 Command::Command(std::string name)
 {
     this->name = name;
+	this->effect = "";
+}
+
+//Constructor - Command
+Command::Command(std::string name, std::string effect)
+{
+	this->name = name;
+    this->effect = effect;
 }
 
 //Copy constructor - Command
 Command::Command(const Command &c1)
 {
     this->name = c1.name;
+	this->effect = c1.effect;
 }
 
 // Assignment Operator - Command
 Command &Command::operator=(const Command &c1)
 {
     this->name = c1.name;
-
+	this->effect = c1.effect;
     return *this;
 }
 
 // Stream Insertion Operator - Command
 std::ostream &operator<<(std::ostream &out, const Command &command)
 {
-    out << "[" << command.name << " ]";
+    out << "[" << command.name << ", " << command.effect << " ]";
 
     return out;
+}
+
+void Command::saveEffect(std::string effect)
+{
+    this->effect = effect;
 }
 
 #pragma endregion

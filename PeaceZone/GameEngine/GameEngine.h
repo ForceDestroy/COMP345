@@ -17,16 +17,22 @@ class Command {
 public:
     // Data Members
     std::string name;
+    std::string effect;
 
     // Constructors
     Command();
     Command(std::string name);
+    Command(std::string name, std::string effect);
     Command(const Command &c1);
     ~Command();
 
     // Methods
     Command &operator=(const Command &);
     friend std::ostream &operator<<(std::ostream &out, const Command &Command);
+
+	//saveEffect() method
+    void saveEffect(std::string effect);
+
 
 };
 

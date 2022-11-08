@@ -129,6 +129,8 @@
   <ItemGroup>
     <ClCompile Include="Cards\Cards.cpp" />
     <ClCompile Include="Cards\CardsDriver.cpp" />
+    <ClCompile Include="CommandProcessing\CommandProcessing.cpp" />
+    <ClCompile Include="CommandProcessing\CommandProcessingDriver.cpp" />
     <ClCompile Include="GameEngine\GameEngine.cpp" />
     <ClCompile Include="GameEngine\GameEngineDriver.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -136,6 +138,7 @@
     <ClCompile Include="Player\PlayerDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommandProcessing\CommandProcessing.h" />
     <ClInclude Include="Player\Player.h" />
     <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Map\MapDriver.cpp" />
