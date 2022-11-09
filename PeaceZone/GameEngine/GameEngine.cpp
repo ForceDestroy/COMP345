@@ -1,55 +1,5 @@
 #include "GameEngine.h"
 
-#pragma region Command
-// Default Constructor - Command
-Command::Command() = default;
-
-// Destructor - Command
-Command::~Command() = default;
-
-//Constructor - Command
-Command::Command(std::string name)
-{
-    this->name = name;
-	this->effect = "";
-}
-
-//Constructor - Command
-Command::Command(std::string name, std::string effect)
-{
-	this->name = name;
-    this->effect = effect;
-}
-
-//Copy constructor - Command
-Command::Command(const Command &c1)
-{
-    this->name = c1.name;
-	this->effect = c1.effect;
-}
-
-// Assignment Operator - Command
-Command &Command::operator=(const Command &c1)
-{
-    this->name = c1.name;
-	this->effect = c1.effect;
-    return *this;
-}
-
-// Stream Insertion Operator - Command
-std::ostream &operator<<(std::ostream &out, const Command &command)
-{
-    out << "[" << command.name << ", " << command.effect << " ]";
-
-    return out;
-}
-
-void Command::saveEffect(std::string effect)
-{
-    this->effect = effect;
-}
-
-#pragma endregion
 
 #pragma region State
 // Default Constructor - State
@@ -176,9 +126,9 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
           {
 			  //NO TRANSITION - SAME STATE
           }
-          if (input._Equal("assigncountries"))
+          if (input._Equal("gamestart"))
           {     
-              //TRANSITION TO ASSIGN REINFORCEMENT STATE
+              //TRANSITION TO GAME START STATE
 			  gameEngine->currentState = gameEngine->gameStates[++stateNumber];
           }
           break;
@@ -259,7 +209,7 @@ GameEngine::GameEngine()
     Command* loadMap = new Command("loadmap");
     Command* validateMap = new Command("validatemap");
     Command* addPlayer = new Command("addplayer");
-    Command* assignCountries = new Command("assigncountries");
+    Command* gameStart = new Command("gamestart");
     Command* issueOrder = new Command("issueorder");
     Command* endIssueOrders = new Command("endissueorders");
     Command* execOrder = new Command("execorder");
@@ -272,7 +222,7 @@ GameEngine::GameEngine()
     this->gameCommands.push_back(loadMap);
     this->gameCommands.push_back(validateMap);
     this->gameCommands.push_back(addPlayer);
-    this->gameCommands.push_back(assignCountries);
+    this->gameCommands.push_back(gameStart);
     this->gameCommands.push_back(issueOrder);
     this->gameCommands.push_back(endIssueOrders);
     this->gameCommands.push_back(execOrder);
@@ -286,7 +236,7 @@ GameEngine::GameEngine()
     std::vector<Command*> startValidCommands = {loadMap};
     std::vector<Command*> mapLoadedValidCommands = {loadMap, validateMap};
     std::vector<Command*> mapValidatedValidCommands = {addPlayer};
-    std::vector<Command*> playersAddedValidCommands = {addPlayer, assignCountries};
+    std::vector<Command*> playersAddedValidCommands = {addPlayer, gameStart};
     std::vector<Command*> assignReinforcementValidCommands = {issueOrder};
     std::vector<Command*> issueOrdersValidCommands = {issueOrder, endIssueOrders};
     std::vector<Command*> executeOrdersValidCommands = {execOrder, endExecOrders,winCommand};
@@ -391,6 +341,40 @@ bool GameEngine::checkCommandValidity(std::string input) {
    return true;
 }
 
+//Implements a command-based user inteaction mechanism for the game start 
+void GameEngine::startupPhase() {
+    //checks for the loadmap command
+	std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
+	std::vector<std::string> mapsFileNames;
+    std::string filePathName;
+    CommandProcessor* cmdProcessor= new CommandProcessor();
+    
+	for (const auto& entry : std::experimental::filesystem::directory_iterator(mapsPath))
+	{
+        filePathName = entry.path().u8string();
+		size_t lastdot = filePathName.find_last_of(".");
+		size_t lastslash = filePathName.find_last_of("\\");
+        mapsFileNames.push_back(filePathName.substr(lastslash + 1, lastdot));
+	}
+	std::cout << "Welcome to the PeaceZone startup phase." << std::endl;
+	std::cout << "The following map files has been found in the conquestMaps directory: " << std::endl;
+	for (std::string fileName : mapsFileNames) {
+		std::cout << fileName << std::endl;
+	}
+    int count = 0;
+    //User must enter a valid fileName
+	do {
+        
+        std::cout << "Please use the loadmap <filename> command to select the map that will be loaded to the game " << std::endl;
+		std::string input;
+		std::getline(std::cin, input);
+
+        
+
+
+        count++;
+	} while (count < 5);
+}
  
 
 #pragma endregion

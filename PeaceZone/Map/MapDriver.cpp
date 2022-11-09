@@ -8,7 +8,7 @@ inline void testLoadMaps()
 {
 	MapLoader* loader = new MapLoader();
 
-	std::string path = "C:/COMP345/PeaceZone/Map/ConquestMaps";
+	std::string path = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
 	int fileCounter = 0;
 
 	for (const auto& entry : std::experimental::filesystem::directory_iterator(path))

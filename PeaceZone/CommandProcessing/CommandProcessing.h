@@ -2,22 +2,44 @@
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <string.h>
 #include <vector>
 #include <list>
-#include "../GameEngine/GameEngine.h"
-
+#include <fstream>
 
 
 #ifdef _DEBUG
 #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
 
+class Command {
+public:
+	// Data Members
+	std::string name;
+	std::string effect;
+	
+
+	// Constructors
+	Command();
+	Command(std::string name);
+	Command(std::string name, std::string effect);
+	Command(const Command& c1);
+	~Command();
+
+	// Methods
+	Command& operator=(const Command&);
+	friend std::ostream& operator<<(std::ostream& out, const Command& Command);
+
+	//saveEffect() method
+	void saveEffect(std::string effect);
+
+
+};
 
 class CommandProcessor {
 public:
     // Data Members
     std::vector<Command*> commandList;
+    std::vector<Command*> validCommands;
 
     // Constructors
     CommandProcessor();
@@ -30,16 +52,16 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const CommandProcessor& commandProcessor);
 
     //public getCommand() method
-    Command* getCommand(GameEngine* gameEngine);
+    Command* getCommand(std::vector<Command*> validCommands, std::string mode);
 
     
    
     //validate() method
-    void validate(GameEngine* gameEngine, Command* command);
+    void validate(std::vector<Command*> validCommandss, Command* command);
 
 private: 
     //private readCommand() method
-    std::string readCommand();
+    std::string readCommand(std::string mode);
 
 	//saveCommand() method
 	void saveCommand(Command* command);
@@ -51,9 +73,12 @@ private:
 class FileLineReader {
 public:
     // Data Members
+    std::string path;
+
 
     // Constructors
     FileLineReader();
+	FileLineReader(std::string name);
     FileLineReader(const FileLineReader& fileLineReader1);
     ~FileLineReader();
 
@@ -61,10 +86,11 @@ public:
     FileLineReader& operator=(const FileLineReader&);
     friend std::ostream& operator<<(std::ostream& out, const FileLineReader& fileLineReader);
 
-
+    std::string readLineFromFile();
+    void setPath(std::string path);
 };
 
-class FileCommandProcessorAdapter {
+class FileCommandProcessorAdapter :public CommandProcessor {
 public:
     // Data Members
     FileLineReader* flr;
@@ -80,18 +106,8 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const FileCommandProcessorAdapter& FileCommandProcessorAdapter);
 
     //readCommand() method
-
-
-    //getCommand() method
-
-
-    //saveCommand() method
-
-    void saveCommand();
-
-
-    //validate() method
+    std::string readCommand(std::string mode);
 };
 
 // Free function for game state testings
-static void testCommandProcessor(GameEngine* gameEngine);
+static void testCommandProcessor(std::vector<Command*> validCommands);

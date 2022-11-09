@@ -2,39 +2,18 @@
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <string.h>
 #include <vector>
 #include <algorithm>
 #include <regex>
 #include <map>
+#include <experimental/filesystem>
+#include "../CommandProcessing/CommandProcessing.h"
+
 
 #ifdef _DEBUG
 #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
 
-
-class Command {
-public:
-    // Data Members
-    std::string name;
-    std::string effect;
-
-    // Constructors
-    Command();
-    Command(std::string name);
-    Command(std::string name, std::string effect);
-    Command(const Command &c1);
-    ~Command();
-
-    // Methods
-    Command &operator=(const Command &);
-    friend std::ostream &operator<<(std::ostream &out, const Command &Command);
-
-	//saveEffect() method
-    void saveEffect(std::string effect);
-
-
-};
 
 class State{
 public:
@@ -60,7 +39,6 @@ public:
     std::vector<State*> gameStates;
     std::vector<Command*> gameCommands;
 
-
     // Constructors
     GameEngine();
     GameEngine(const GameEngine& g1);
@@ -71,6 +49,8 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const GameEngine& gameEngine);
     //Checks the validity of a command input
     bool checkCommandValidity(std::string input);
+    //Method that implements a command based user interaction mechanism to start the game 
+    void startupPhase();
 
 
 };

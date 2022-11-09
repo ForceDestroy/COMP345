@@ -44,7 +44,12 @@ int main()
     //GameEngine Tester
     std::cout << "\nTesting Game Engine" << std::endl;
     GameEngine* gameEngine = new GameEngine();
-    testCommandProcessor(gameEngine);
+    //gameEngine->startupPhase();
+    //for ever{
+        testCommandProcessor(gameEngine);
+
+    //}
+
     //testGameStates(gameEngine);
 
     delete gameEngine;
