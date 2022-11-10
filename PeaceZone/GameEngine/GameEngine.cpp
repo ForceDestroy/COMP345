@@ -162,7 +162,7 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
           {
 			  //NO TRANSITION - SAME STATE
           }
-          if (input._Equal("assigncountries"))
+          if (input._Equal("gamestart"))
           {     
               //TRANSITION TO ASSIGN REINFORCEMENT STATE
 			  gameEngine->currentState = gameEngine->gameStates[++stateNumber];
@@ -378,7 +378,98 @@ bool GameEngine::checkCommandValidity(std::string input) {
 }
 
  
+//Main Game Loop
+void GameEngine::mainGameLoop() {
 
+    while (playerList.size() > 1) {
+
+        reinforcementPhase();
+
+        //transition to issueOrderPhase
+        transitionState(this, enumToStringMapHandling(stringUnifier(this->currentState->name)), "issueorder");
+
+        issueOrdersPhase();
+
+        //transition to executeOrdersPhase
+        transitionState(this, enumToStringMapHandling(stringUnifier(this->currentState->name)), "endissueorders");
+
+        executeOrdersPhase();
+
+        //Remove all players who do not own any territories
+        for (auto it = playerList.begin(); it != playerList.end(); it++)
+        {
+            if ((*it)->hasLost())
+            {
+                auto todelete = *it;
+                playerList.erase(it--);
+
+                delete todelete;
+            }
+        }
+
+        if (playerList.size() > 1) {
+
+            //transition to reinforcementPhase
+            transitionState(this, enumToStringMapHandling(stringUnifier(this->currentState->name)), "endexecorders");
+        }
+
+        //transition to winPhase
+        transitionState(this, enumToStringMapHandling(stringUnifier(this->currentState->name)), "win");
+    }
+}
+//ReinforcementPhase
+void GameEngine::reinforcementPhase() {
+    //Loop for each player TODO roundrobin
+    for (auto p : playerList) {
+
+        //Players gain 1 reinformcement for each 3 territories, rounded down
+        int reinforcements = p->getTerritories()->size() / 3;
+
+        //Add continent bonuses when player owns all territories
+
+        //Minimum reinforcements is 3
+        if (reinforcements < 3)
+            reinforcements = 3;
+
+        p->armyUnits += reinforcements;
+
+    }
+}
+
+void GameEngine::issueOrdersPhase() {
+    int remaingPlayers = -1;
+
+    //break when all players in an interation mark themselves as done
+    while (remaingPlayers != 0) {
+        remaingPlayers = playerList.size();
+
+        //Loop for each player TODO roundrobin
+        for (auto p : playerList) {
+            //issue order and save whether player is done
+            bool done = p->issueOrder();
+
+            if (done) {
+                remaingPlayers--;
+            }
+        }
+    }
+}
+
+void GameEngine::executeOrdersPhase() {
+    //Loop for each player TODO roundrobin
+    for (auto p : playerList) {
+        //Check the player has Orders left to execute
+        if(p->getOrdersList()->getSize() != 0)
+        {
+            //Execute the first Order in the player's OrderList
+            (*p->getOrdersList())[0]->execute();
+
+            //Remove the Order
+            Orders* o = (*p->getOrdersList())[0];
+            p->getOrdersList()->remove(o);
+        }
+    }
+}
 #pragma endregion
 
 

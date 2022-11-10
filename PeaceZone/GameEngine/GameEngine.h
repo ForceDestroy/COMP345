@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <regex>
 #include <map>
+#include "../Player/Player.h"
 
 #ifdef _DEBUG
 #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
@@ -53,6 +54,7 @@ public:
     State* currentState;
     std::vector<State*> gameStates;
     std::vector<Command*> gameCommands;
+    std::vector<Player*> playerList;
 
 
     // Constructors
@@ -66,6 +68,10 @@ public:
     //Checks the validity of a command input
     bool checkCommandValidity(std::string input);
 
+    void mainGameLoop();
+    void reinforcementPhase();
+    void issueOrdersPhase();
+    void executeOrdersPhase();
 
 };
 

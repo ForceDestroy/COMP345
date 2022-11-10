@@ -141,6 +141,7 @@ class OrdersList
         void add(Orders* order);
         void remove(Orders* order);
         void move(Orders* order, int position);
+        int getSize();
 
         // Operators
         OrdersList& operator=(const OrdersList &ord);

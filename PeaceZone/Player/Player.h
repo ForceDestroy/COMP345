@@ -20,6 +20,9 @@ private:
     Hand* handOfCards;
     OrdersList* listOfOrders;
 public:
+    //variables for the player
+    int armyUnits;
+
     //Constructor
     Player();
     Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersList* listOfOrders);
@@ -31,7 +34,10 @@ public:
     void toAttack();
     void toDefend();
     void issueOrder(std::string order);
-    
+    bool hasLost();
+    std::vector<Territory*>* getTerritories();
+    OrdersList* getOrdersList();
+
     //Overloaded operators
     Player& operator=(const Player& p);
     friend std::ostream& operator<<(std::ostream& out, const Player& p);

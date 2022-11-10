@@ -491,4 +491,8 @@ int OrdersList::findOrderIndex(std::vector<Orders*> vec, Orders* item)
     }
     return std::distance(vec.begin(), it);
 }
+
+int OrdersList::getSize() {
+    return ordersList->size();
+}
 #pragma endregion

@@ -63,6 +63,12 @@ void Player::toDefend()
         std::cout << territories->at(i)->name << std::endl;
     }
 }
+
+//Check remaining number of territories and return whether player has lost
+bool Player::hasLost() {
+    return territories->size() == 0;
+}
+
 //Issue order method
 void Player::issueOrder(std::string order)
 {
@@ -107,6 +113,13 @@ void Player::issueOrder(std::string order)
 
 }
 
+std::vector<Territory*>* Player::getTerritories() {
+    return territories;
+}
+
+OrdersList* Player::getOrdersList() {
+    return listOfOrders;
+}
 //operator assignment
 Player& Player::operator=(const Player& p)
 {
