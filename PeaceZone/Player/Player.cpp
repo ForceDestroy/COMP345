@@ -145,9 +145,11 @@ void Player::issueOrder()
     if (reinforcementPool > 0)
     {
         //find a random territory to deploy to
+        std::srand((unsigned) std::time(0));
         int position = std::rand() % territoriesToDefend.size();
         //find a random number of armies to deploy
-        int armyCount = std::rand() % reinforcementPool/2 + 1;
+        std::srand((unsigned) std::time(0));
+        int armyCount = (std::rand() % reinforcementPool)/2 + 1;
 
         listOfOrders->add(new Deploy(territoriesToDefend.at(position), armyCount));
         reinforcementPool -= armyCount;
@@ -193,6 +195,7 @@ void Player::issueOrder()
             if (territoriesToAttack.size() > 0)
             {
                 //find a random territory to attack
+                std::srand((unsigned) std::time(0));
                 int position = std::rand() % territoriesToAttack.size();
                 Territory* territoryToAttack = territoriesToAttack.at(position);
                 //find a valid neighbor territory to attack from
