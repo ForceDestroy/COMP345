@@ -52,25 +52,26 @@ void Command::saveEffect(std::string effect)
 #pragma endregion
 
 #pragma region CommandProcessing
-// Default Constructor - Command
+// Default Constructor - CommandProcessor
 CommandProcessor::CommandProcessor() = default;
 
-// Destructor - Command
+// Destructor - CommandProcessor
 CommandProcessor::~CommandProcessor() = default;
 
-//Constructor - Command
-CommandProcessor::CommandProcessor(std::vector<Command*> commandList)
+//Constructor - CommandProcessor
+CommandProcessor::CommandProcessor(std::vector<Command*> commandList, std::vector<Command*> validCommands)
 {
 	this->commandList = commandList;
+	this->validCommands = validCommands;
 }
 
-//Copy constructor - Command
+//Copy constructor - CommandProcessor
 CommandProcessor::CommandProcessor(const CommandProcessor &c1)
 {
 	this->commandList = c1.commandList;
 }
 
-// Assignment Operator - Command
+// Assignment Operator - CommandProcessor
 CommandProcessor &CommandProcessor::operator=(const CommandProcessor &c1)
 {
 	this->commandList = c1.commandList;
@@ -78,21 +79,30 @@ CommandProcessor &CommandProcessor::operator=(const CommandProcessor &c1)
 	return *this;
 }
 
-// Stream Insertion Operator - Command
+// Stream Insertion Operator - CommandProcessor
 std::ostream& operator<<(std::ostream &out, const CommandProcessor &commandProcesssor)
 {
+	out << "Command list: {";
+
 	for (int i = 0; i <  commandProcesssor.commandList.size(); i++)
 		out << *commandProcesssor.commandList[i] << " ";
+	out << "}" << std::endl;
+
+	out << "Current valid commands: {";
+
+	for (int i = 0; i < commandProcesssor.validCommands.size(); i++)
+		out << *commandProcesssor.validCommands[i] << " ";
 	out << "}";
+
 	return out;
 }
 
 //public getCommand() method
-Command* CommandProcessor::getCommand(std::vector<Command*> validCommands, std::string mode)
+Command* CommandProcessor::getCommand()
 {
-	std::string commandName = readCommand(mode);
+	std::string commandName = readCommand();
 	Command* command = new Command(commandName, "");
-	validate(validCommands, command);
+	validate(command);
 	saveCommand(command);
 	return command;
 	
@@ -107,16 +117,16 @@ void CommandProcessor::saveCommand(Command* command)
 }
 
 //validate() method
-void CommandProcessor::validate(std::vector<Command*> validCommands, Command* command)
+void CommandProcessor::validate(Command* command)
 {
 	// vector comparing
 	int count = 0;
 	int stateNumber = -1;
 	std::string output = "";
 
-	for (int i = 0; i < validCommands.size(); i++)
+	for (int i = 0; i < this->validCommands.size(); i++)
 	{
-		if (validCommands[i]->name._Equal(command->name)) {
+		if (this->validCommands[i]->name._Equal(command->name)) {
 			count++;
 		}else{
 			std::string space = " ";
@@ -124,10 +134,10 @@ void CommandProcessor::validate(std::vector<Command*> validCommands, Command* co
 			std::string restOfCommand = command->name.substr(command->name.find(space) + 1, command->name.size());
 			
 			//validating commands loadmap <mapfile> and addplayer <playername> 
-			if (validCommands[i]->name._Equal(inputCommand) && (inputCommand._Equal("loadmap") && restOfCommand.find(space) == std::string::npos) ){
+			if (this->validCommands[i]->name._Equal(inputCommand) && (inputCommand._Equal("loadmap") && restOfCommand.find(space) == std::string::npos) ){
 				count++;
 			}
-			else if(inputCommand._Equal("addplayer")) {
+			else if(this->validCommands[i]->name._Equal(inputCommand) && inputCommand._Equal("addplayer")) {
 				count++;
 
 			}else if(inputCommand._Equal("loadmap") && restOfCommand.find(space) != std::string::npos) {
@@ -147,74 +157,21 @@ void CommandProcessor::validate(std::vector<Command*> validCommands, Command* co
 }
 
 //private readCommand() method
-std::string CommandProcessor::readCommand(std::string mode)
+std::string CommandProcessor::readCommand()
 {
-	if (mode._Equal("cmd")) {
-		
-		std::cout << "Please enter a valid command for the current state : " << std::endl;
+	std::cout << std::endl << "Please enter a valid command for the current state : " << std::endl;
 
-		std::string input;
-		std::getline(std::cin,input);
-		//std::string cleanInput = stringUnifier(input);
-		return input;
-	}
-
-	else {
-		return "Error";
-	}
-
-
+	std::string input;
+	std::getline(std::cin,input);
+	//std::string cleanInput = stringUnifier(input);
+	return input;
+	
 }
 
 
 
 #pragma endregion
 
-
-#pragma region FileCommandProcessorAdapter
-// Default Constructor - FileCommandProcessorAdapter
-FileCommandProcessorAdapter::FileCommandProcessorAdapter() = default;
-
-// Destructor - FileCommandProcessorAdapter
-FileCommandProcessorAdapter :: ~FileCommandProcessorAdapter() = default;
-
-// Constructor - FileCommandProcessorAdapter
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* flr) {
-	this->flr = flr;
-}
-
-// Copy constructor - FileCommandProcessorAdapter
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter& c1) {
-	this->flr = flr;
-}
-
-// Assignment Operator - FileCommandProcessorAdapter
-FileCommandProcessorAdapter& FileCommandProcessorAdapter::operator=(const FileCommandProcessorAdapter& c1) {
-	this->flr = c1.flr;
-	return *this;
-}
-
-// Stream Insertion Operator - FileCommandProcessorAdapter
-std::ostream& operator<<(std::ostream& out, const FileCommandProcessorAdapter &FileCommandProcessorAdapter)
-{
-	out << "FileCommandProcessorAdapter using the fileLineReader" << FileCommandProcessorAdapter.flr;
-	return out;
-}
-
-std::string FileCommandProcessorAdapter::readCommand(std::string mode) {
-	if (mode._Equal("file")) {
-		std::cout << "Reading commands from file: " << std::endl;
-
-		std::string input;
-		input = flr->readLineFromFile();
-		return input;
-	}
-	else {
-		return "Error";
-	}
-
-}
-#pragma endregion
 
 #pragma region FileLineReader
 // Default Constructor - FileLineReader
@@ -227,17 +184,20 @@ FileLineReader :: ~FileLineReader() = default;
 FileLineReader::FileLineReader(std::string path)
 {
 	this->path = path;
+	fileStream.open(this->path, std::ios::in); //open a file to perform read operation using file object
 }
 
 //Copy constructor - FileLineReader
 FileLineReader::FileLineReader(const FileLineReader& flr1)
 {
-	this->path = flr1.path;
+	this->path = flr1.path; 
+	fileStream.open(flr1.path, std::ios::in); //open a file to perform read operation using file object
 }
 
 // Assignment Operator - FileLineReader
 FileLineReader& FileLineReader::operator=(const FileLineReader& c1) {
 	this->path = c1.path;
+	this->fileStream.open(c1.path, std::ios::in); //open a file to perform read operation using file object
 	return *this;
 }
 
@@ -248,25 +208,97 @@ std::ostream& operator<<(std::ostream& out, const FileLineReader& fileLineReader
 	return out;
 }
 
-std::string FileLineReader::readLineFromFile() {
-	
-	std::fstream newfile;
-	std::string input;
+std::string FileLineReader::readLineFromFile()
+{
 
-	newfile.open(this->path, std::ios::in); //open a file to perform read operation using file object
-	if (newfile.is_open()) {   //checking whether the file is open
-		
-		while (getline(newfile, input)) { //read data from file object and put it into string.
-			std::cout << input << std::endl; //print the data of the string
+	std::string input;
+	int count;
+
+	if (fileStream.is_open()) {   //checking whether the file is open
+		try
+		{
+			std::getline(fileStream, input); //read data from file object and put it into string.
+			std::cout << "The following input has been read from the file : " << input << std::endl; //print the data of the string
 		}
-		newfile.close(); //close the file object.
+		catch (...)
+		{
+			std::cout << "fstream did not get line :DIESOFCRINGE:";
+		}
+	
+
 	}
+
+
 	return input;
 }
 
 void FileLineReader::setPath(std::string path)
 {
 	this->path = path;
+
+	fileStream.open(this->path, std::ios::in); //open a file to perform read operation using file object
 }
 
+#pragma endregion
+
+#pragma region FileCommandProcessorAdapter
+// Default Constructor - FileCommandProcessorAdapter
+FileCommandProcessorAdapter::FileCommandProcessorAdapter() = default;
+
+// Destructor - FileCommandProcessorAdapter
+FileCommandProcessorAdapter :: ~FileCommandProcessorAdapter() = default;
+
+// Constructor - FileCommandProcessorAdapter
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(std::vector<Command*> commandList, std::vector<Command*> validCommands, FileLineReader* theflr) : CommandProcessor(commandList, validCommands), flr(theflr)
+{
+
+}
+
+// Copy constructor - FileCommandProcessorAdapter
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter& c1) : CommandProcessor(c1)  
+{
+	this->flr = c1.flr;
+}
+
+// Assignment Operator - FileCommandProcessorAdapter
+FileCommandProcessorAdapter& FileCommandProcessorAdapter::operator=(const FileCommandProcessorAdapter& c1) 
+{
+	CommandProcessor::operator=(c1);
+	this->flr = c1.flr;
+	return *this;
+}
+
+// Stream Insertion Operator - FileCommandProcessorAdapter
+std::ostream& operator<<(std::ostream& out, const FileCommandProcessorAdapter &FileCommandProcessorAdapter)
+{
+	out << "From FileCommandProcessorAdapter:" << std::endl;
+	
+	out << "Command list: {";
+
+	for (int i = 0; i < FileCommandProcessorAdapter.commandList.size(); i++)
+		out << *FileCommandProcessorAdapter.commandList[i] << " ";
+	out << "}" << std::endl;
+	out << "Current valid commands: {";
+
+	for (int i = 0; i < FileCommandProcessorAdapter.validCommands.size(); i++)
+		out << *FileCommandProcessorAdapter.validCommands[i] << " ";
+	out << "}";
+
+	return out;
+}
+
+std::string FileCommandProcessorAdapter::readCommand(){
+	
+	std::cout << "Reading commands from file: " << std::endl;
+
+	std::string input;
+
+	input = this->flr->readLineFromFile();
+
+
+	std::cout << "Finished reading from file: " << std::endl;
+	return input;
+	
+
+}
 #pragma endregion

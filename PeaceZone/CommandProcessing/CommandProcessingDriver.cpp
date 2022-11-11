@@ -8,18 +8,23 @@
 #define ever (;;)
 
 
-void testCommandProcessor(std::vector<Command*> validCommands)
+void testCommandProcessor(CommandProcessor* cmdProcessor)
 {
-	CommandProcessor* cmdProcessor = new CommandProcessor();
-	FileLineReader* flr = new FileLineReader("Commands.txt");
-	FileCommandProcessorAdapter* fcpa = new FileCommandProcessorAdapter(flr);
+	std::string path ("C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/CommandProcessing/Commands.txt");
+
+	FileLineReader* flr = new FileLineReader(path);
+	FileCommandProcessorAdapter* fcpa = new FileCommandProcessorAdapter(cmdProcessor->commandList, cmdProcessor->validCommands, flr);
 	//for ever{
-		/*cmdProcessor->getCommand(validCommands, "cmd");
-		std::cout << "The command list: "<< *cmdProcessor << std::endl;*/
+		//cmdProcessor->getCommand();
+		//std::cout << "The command list from command processor: "<< *cmdProcessor << std::endl;
 
-		fcpa->getCommand(validCommands, "file");
-		std::cout << "The command list aloha: " << *cmdProcessor << std::endl;
+		fcpa->getCommand();
+		std::cout << "The command list from file command processor adapter: " << *fcpa << std::endl<<std::endl;
 
+		fcpa->getCommand();
+		std::cout << "The command list from file command processor adapter: " << *fcpa << std::endl << std::endl;
+
+		flr->fileStream.close();
 	//}
 	delete flr;
 	delete fcpa;

@@ -93,6 +93,8 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
           {
               //TRANSITION TO MAP LOADED STATE
 			  gameEngine->currentState = gameEngine->gameStates[++stateNumber];
+              gameEngine->updateCmdProcessor();
+
           } 
           break;
 
@@ -106,6 +108,8 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
           {
               //TRANSITION TO MAP VALIDATED STATE
               gameEngine->currentState = gameEngine->gameStates[++stateNumber];
+              gameEngine->updateCmdProcessor();
+
           }
           break;
 
@@ -115,6 +119,8 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
           {
               //TRANSITION TO PLAYERS ADDED STATE
 			  gameEngine->currentState = gameEngine->gameStates[++stateNumber];
+              gameEngine->updateCmdProcessor();
+
           }
 
 		  break;
@@ -130,6 +136,8 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
           {     
               //TRANSITION TO GAME START STATE
 			  gameEngine->currentState = gameEngine->gameStates[++stateNumber];
+              gameEngine->updateCmdProcessor();
+
           }
           break;
 
@@ -140,6 +148,8 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
               //TRANSITION TO ISSUE ORDERS STATE
 
 			  gameEngine->currentState = gameEngine->gameStates[++stateNumber];
+              gameEngine->updateCmdProcessor();
+
           }
           break;
 
@@ -153,6 +163,8 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
           {
               //TRANSITION TO EXECUTE ORDERS STATE
 			  gameEngine->currentState = gameEngine->gameStates[++stateNumber];
+              gameEngine->updateCmdProcessor();
+
           }
           break;
 
@@ -166,11 +178,15 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
           if (input._Equal("endexecorders")) {
               //TRANSITION TO ASSIGN REINFORCEMENT STATE
               gameEngine->currentState = gameEngine->gameStates[4];
+              gameEngine->updateCmdProcessor();
+
           }
 
           if (input._Equal("win")) {
               //TRANSITION TO WIN STATE
               gameEngine->currentState = gameEngine->gameStates[++stateNumber];
+              gameEngine->updateCmdProcessor();
+
           }
 
         
@@ -183,10 +199,14 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
 			  //TRANSITION TO END STATE
               std::cout << "Congratulations! You won! ";
               gameEngine->currentState = gameEngine->gameStates[++stateNumber];
+              gameEngine->updateCmdProcessor();
+
 		  }
           if (input._Equal("play")) {
               //TRANSITION TO START STATE
               gameEngine->currentState = gameEngine->gameStates[0];
+              gameEngine->updateCmdProcessor();
+
           }
           break;
       default:
@@ -267,7 +287,12 @@ GameEngine::GameEngine()
     //Initializing the stateEnumToStringMap
     initializeEnumToStringMap();
 
+    //creating the CommandProcessor
+    CommandProcessor* cmdProcessor = new CommandProcessor();
+    this->cmdProcessor = cmdProcessor;
+    updateCmdProcessor();
 
+    
 }
 
 // Destructor - GameEngine
@@ -282,8 +307,14 @@ GameEngine::~GameEngine()
     for (State* s : gameStates) {
         delete s;
     }
-        
 
+    //Deleting the player objects
+    for (Player* s : playerList) {
+        delete s;
+    }
+        
+    delete cmdProcessor;
+	delete activeMap;
 }
 
 
@@ -327,7 +358,7 @@ bool GameEngine::checkCommandValidity(std::string input) {
         std::cout << "The entered command is invalid for the current state: " << this->currentState->name << std::endl;
         return false;
     }
-   std::cout << "The entered command is valid!" << std::endl;
+   //std::cout << "The entered command is valid!" << std::endl;
    
    // Calling the map to get the number of the state
    stateNumber=enumToStringMapHandling(stringUnifier(this->currentState->name));
@@ -344,11 +375,12 @@ bool GameEngine::checkCommandValidity(std::string input) {
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
     //checks for the loadmap command
-	std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
+	std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
 	std::vector<std::string> mapsFileNames;
     std::string filePathName;
-    CommandProcessor* cmdProcessor= new CommandProcessor();
-    
+    Command* currentCommand;
+    MapLoader* mapLoader = new MapLoader();
+
 	for (const auto& entry : std::experimental::filesystem::directory_iterator(mapsPath))
 	{
         filePathName = entry.path().u8string();
@@ -359,24 +391,183 @@ void GameEngine::startupPhase() {
 	std::cout << "Welcome to the PeaceZone startup phase." << std::endl;
 	std::cout << "The following map files has been found in the conquestMaps directory: " << std::endl;
 	for (std::string fileName : mapsFileNames) {
-		std::cout << fileName << std::endl;
+		std::cout << fileName << std::endl ;
 	}
-    int count = 0;
+    
     //User must enter a valid fileName
-	do {
+    bool isValid = false;
+    bool hasActiveMap = false;
+    // Loop for map loading and validation
+    do{
+        std::cout << std::endl << "Please use the loadmap <filename> command to select the map that will be loaded to the game. " << std::endl;
+        // Loop for map loading
+        do{
+            std::cout << "You are currently in the State:" << this->currentState->name;
+            currentCommand = this->cmdProcessor->getCommand();
+            
+            //verify the syntax
+            std::string errorCheck = "Error";
         
-        std::cout << "Please use the loadmap <filename> command to select the map that will be loaded to the game " << std::endl;
-		std::string input;
-		std::getline(std::cin, input);
+            if (currentCommand->effect.find(errorCheck) != std::string::npos)
+            {
+                std::cout << currentCommand->effect << std::endl;
+                continue;
+            }
 
-        
+            if (currentCommand->name._Equal("validatemap"))
+            {
+                break;
+            }
+            
+
+            //verify if the fileName is present in directory
+            for (std::string fileName : mapsFileNames) {
+                if (currentCommand->name._Equal("loadmap " + fileName))
+                {
+                
+                    std::cout << "Command successfull, attempting to load the map..." <<std::endl;
+                    //load map
+
+                    mapLoader->Load(mapsPath + "/"+ fileName);
+                    
+                    if (mapLoader->maps.size() == 0){
+						std::cout << "Failed to load map file " << mapsPath << "/" << fileName << std::endl;
+                        currentCommand->saveEffect("Failed to load map file " + mapsPath + "/" + fileName);
+                        break;
+                    }
+                    
+				    activeMap = mapLoader->maps[0];
+                    hasActiveMap = true;
+                    
+                    currentCommand->saveEffect(fileName+" map loaded");
+                 
+                    std::cout << "Enter the command \"loadmap <filename>\" to load another map or the command \"validatemap\" to validate the current loaded map" << std::endl;
+
+                    checkCommandValidity("loadmap");
+
+                    break;
+				    
+                
+                }
+            }
+        } while (!currentCommand->name._Equal("validatemap") || !hasActiveMap);
+		
+		std::cout << "Now validating map " << activeMap->name << "..."<< std::endl;
+        //validating map
+		isValid = activeMap->Validate();
+        if (!isValid){
+			std::cout << "The map you have entered is invalid. Please try again with a different map. " << std::endl;
+            delete mapLoader->maps[0];
+            activeMap = NULL;
+            currentCommand->saveEffect("The loaded map is invalid.");
+            continue;
+        }
+		checkCommandValidity("validatemap");
+
+    } while (!isValid);
+
+    //map is validated
+
+    //ADDING PLAYERS
+	std::cout << "Map has been successfully validated! Transitioning to state " << this->currentState->name << "." << std::endl << std::endl;
+    currentCommand->saveEffect("Map has been successfully validated!");
+    std::cout << "Please use the command \"addplayer\" to add 2-6 players " << std::endl << std::endl;
+    do{
+        std::cout << "You currently have " << this->playerList.size() << " players. " << std::endl << std::endl;
+		currentCommand = this->cmdProcessor->getCommand();
+
+		//verify the syntax
+		std::string errorCheck = "Error";
+
+		if (currentCommand->effect.find(errorCheck) != std::string::npos)
+		{
+			std::cout << currentCommand->effect << std::endl;
+			std::cout << "You are currently in the State:" << this->currentState->name << std::endl << std::endl;
+			continue;
+		}
+
+		if (currentCommand->name._Equal("gamestart"))
+		{
+			continue;
+		}
+
+        //single out the name
+
+		std::string space = " ";
+		std::string inputCommand = currentCommand->name.substr(0, currentCommand->name.find(space));
+		std::string name = currentCommand->name.substr(currentCommand->name.find(space) + 1, currentCommand->name.size());
+
+        if(inputCommand._Equal("addplayer") && this->playerList.size() == 6){
+			std::cout << "You cannot add more players, since you are at " << this->playerList.size() << " players. Please use \"gamestart\" to start the game." << std::endl << std::endl;
+            continue;
+        }
 
 
-        count++;
-	} while (count < 5);
+        this->addPlayer(name);
+		
+		checkCommandValidity("addplayer");
+        currentCommand->saveEffect("Player " + name + " Added to the list of player.");
+
+		std::cout << "Enter the command \"addplayer <playername>\" to add another player or the command \"gamestart\" to start the game" << std::endl;
+		std::cout << "You are currently in the State:" << this->currentState->name << std::endl << std::endl;
+		
+    } while (!currentCommand->name._Equal("gamestart")||this->playerList.size() < 2 || this->playerList.size() > 6);
+
+    currentCommand->saveEffect("The game has started. Distributing territories and cards...");
+
+    //fairly distribute all the territories to the players 
+
+    //shuffle the territories in the map object
+    auto rng = std::default_random_engine{};
+    std::shuffle(std::begin(this->activeMap->territories), std::end(this->activeMap->territories), rng);
+
+    //Distribute territories to players
+    int numberOfTerritoriesPerPlayer = std::floor(this->activeMap->territories.size() / this->playerList.size());
+    int territoriesCount = 0;
+    
+
+    for (Player* player : this->playerList) 
+    {
+        for (int i = 0; i < numberOfTerritoriesPerPlayer; i++) 
+        {
+            player->addPlayerTerritories(this->activeMap->territories[territoriesCount++]);
+        }
+    }
+    int nbOfLeftOverTerritories = this->activeMap->territories.size() - territoriesCount;
+    //In the case of left-over territories
+    if (nbOfLeftOverTerritories>0){
+        for (int i = 0; i < nbOfLeftOverTerritories; i++) {
+
+			playerList[i]->addPlayerTerritories(this->activeMap->territories[territoriesCount++]);
+        }
+    }
+	std::cout << "Printing players' territories: " << std::endl;
+
+    for (Player* player : this->playerList) {
+        std::cout << *player << std::endl;
+    }
+
+	std::cout << "Done printing players' territories: " << std::endl;
+
+
+	checkCommandValidity("gamestart");
 }
  
+//Method that updates the commandProcessor validCommands
+void GameEngine::updateCmdProcessor() {
+    this->cmdProcessor->validCommands = this->currentState->validCommands;
 
+}
+
+//Method that adds players 
+void GameEngine::addPlayer(std::string name) 
+{
+    Player* player = new Player(name);
+
+    this->playerList.push_back(player);
+    std::cout << "Player " << name << " added to the game player list." <<std::endl;
+
+}
 #pragma endregion
 
 

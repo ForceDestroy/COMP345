@@ -3,14 +3,26 @@
 //Default constructor
 Player::Player()
 {
+    name = "";
     territories = new std::vector<Territory*>();
     handOfCards = new Hand();
     listOfOrders = new OrdersList();
 }
 
 //Parameterized constructor
+Player::Player(std::string name)
+{
+    this->name = name;
+	this->territories = new std::vector<Territory*>();
+	this->handOfCards = new Hand();
+	this->listOfOrders = new OrdersList();
+}
+
+
+//Parameterized constructor
 Player::Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersList* listOfOrders)
 {
+    this->name = "";
     this->territories = territories;
     this->handOfCards = handOfCards;
     this->listOfOrders = listOfOrders;
@@ -27,6 +39,7 @@ Player::~Player()
 //Copy constructor
 Player::Player(const Player& player)
 {
+    name = player.name;
     territories = new std::vector<Territory*>();
     handOfCards = player.handOfCards;
     listOfOrders = player.listOfOrders;
@@ -107,11 +120,27 @@ void Player::issueOrder(std::string order)
 
 }
 
+// Setter
+void Player::addPlayerTerritories(Territory* territory) {
+    territories->push_back(territory);
+    territory->owner = this;
+}
+
+void Player::setPlayerHandOfCards(Hand* handOfCards) {
+    this->handOfCards = handOfCards;
+}
+
+void Player::setPlayerListOfOrders(OrdersList* listOfOrders) {
+    this->listOfOrders = listOfOrders;
+
+}
+
 //operator assignment
 Player& Player::operator=(const Player& p)
 {
     if (this != &p)
     {
+        this->name = p.name;
         this->territories = p.territories;
         this->handOfCards = p.handOfCards;
         this->listOfOrders = p.listOfOrders;
@@ -122,12 +151,12 @@ Player& Player::operator=(const Player& p)
 //osstream operator
 std::ostream& operator<<(std::ostream& os, const Player& p)
 {
-    os << "Player's territories: " << std::endl;
+    os << p.name << "'s territories: " << std::endl;
     for (Territory* territory : *p.territories)
     {
         os << *territory << std::endl;
     }
-    os << "Player's hand of cards: " << *p.handOfCards << std::endl;
-    os << "Player's list of orders: " << *p.listOfOrders <<std::endl;
+    os << p.name << "'s hand of cards: " << *p.handOfCards << std::endl;
+    os << p.name << "'s list of orders: " << *p.listOfOrders <<std::endl;
     return os;
 }

@@ -5,6 +5,8 @@
 #include <vector>
 #include <list>
 #include <fstream>
+#include <iostream>
+
 
 
 #ifdef _DEBUG
@@ -43,7 +45,7 @@ public:
 
     // Constructors
     CommandProcessor();
-    CommandProcessor(std::vector<Command*> commandList);
+    CommandProcessor(std::vector<Command*> commandList, std::vector<Command*> validCommands);
     CommandProcessor(const CommandProcessor& c1);
     ~CommandProcessor();
 
@@ -52,16 +54,16 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const CommandProcessor& commandProcessor);
 
     //public getCommand() method
-    Command* getCommand(std::vector<Command*> validCommands, std::string mode);
+    Command* getCommand();
 
     
    
     //validate() method
-    void validate(std::vector<Command*> validCommandss, Command* command);
+    void validate( Command* command);
 
 private: 
     //private readCommand() method
-    std::string readCommand(std::string mode);
+    virtual std::string readCommand();
 
 	//saveCommand() method
 	void saveCommand(Command* command);
@@ -74,11 +76,12 @@ class FileLineReader {
 public:
     // Data Members
     std::string path;
+	std::fstream fileStream;
 
 
     // Constructors
     FileLineReader();
-	FileLineReader(std::string name);
+	FileLineReader(std::string path);
     FileLineReader(const FileLineReader& fileLineReader1);
     ~FileLineReader();
 
@@ -97,7 +100,7 @@ public:
 
     // Constructors
     FileCommandProcessorAdapter();
-    FileCommandProcessorAdapter(FileLineReader* flr);
+    FileCommandProcessorAdapter(std::vector<Command*> commandList, std::vector<Command*> validCommands, FileLineReader* theflr);
     FileCommandProcessorAdapter(const FileCommandProcessorAdapter& c1);
     ~FileCommandProcessorAdapter();
 
@@ -106,8 +109,8 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const FileCommandProcessorAdapter& FileCommandProcessorAdapter);
 
     //readCommand() method
-    std::string readCommand(std::string mode);
+    std::string readCommand() override;
 };
 
 // Free function for game state testings
-static void testCommandProcessor(std::vector<Command*> validCommands);
+static void testCommandProcessor(CommandProcessor* cmdProcessor);

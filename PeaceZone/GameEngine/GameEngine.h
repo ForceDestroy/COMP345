@@ -7,7 +7,13 @@
 #include <regex>
 #include <map>
 #include <experimental/filesystem>
+#include <algorithm>
+#include <random>
+#include <cmath> 
 #include "../CommandProcessing/CommandProcessing.h"
+#include "../Map/Map.h"
+#include "../Player/Player.h"
+#include "../Orders/Orders.h" 
 
 
 #ifdef _DEBUG
@@ -35,9 +41,12 @@ public:
 class GameEngine {
 public:
     // Data Members
+    Map* activeMap;
     State* currentState;
     std::vector<State*> gameStates;
     std::vector<Command*> gameCommands;
+    CommandProcessor* cmdProcessor;
+    std::vector<Player*> playerList;
 
     // Constructors
     GameEngine();
@@ -52,7 +61,11 @@ public:
     //Method that implements a command based user interaction mechanism to start the game 
     void startupPhase();
 
+    //Method that updates the commandProcessor validCommands
+    void updateCmdProcessor();
 
+    //Method that adds players 
+    void addPlayer(std::string playerName);
 };
 
 class Transition{
