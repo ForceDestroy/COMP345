@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <random>
 
 #include "../Map/Map.h"
 #include "../Orders/Orders.h"
@@ -23,6 +24,11 @@ private:
 public:
     //variables for the player
     int reinforcementPool;
+    bool hasPlayedCard;
+    bool hasDefended;
+    bool hasAttacked;
+    bool hasFinishedIssuingOrders;
+    std::vector<Territory*> *committedTerritories;
 
     //Constructor
     Player();
@@ -33,10 +39,11 @@ public:
     //Destructor
     ~Player();
     //Player methods
-    void toAttack();
-    void toDefend();
-    void issueOrder(std::string order);
+    std::vector<Territory*> toAttack();
+    std::vector<Territory*> toDefend();
+    void issueOrder();
     bool hasLost();
+    void resetIssueOrderPhase();
     std::vector<Territory*>* getTerritories();
     OrdersList* getOrdersList();
     
@@ -47,8 +54,6 @@ public:
     void setPlayerHandOfCards(Hand* handOfCards);
 
     void setPlayerListOfOrders(OrdersList* listOfOrders); 
-
-    void setArmyCount(int index, int armyCount);
 
     void setReinforcementPool(int reinforcementPool);
 

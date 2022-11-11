@@ -51,8 +51,8 @@ public:
 
 class Hand {
 private:
-	std::vector<Card*>* listOfCards;
 public:
+	std::vector<Card*>* listOfCards;
 	Hand();
 	Hand(const Hand& hand);
 	~Hand();
