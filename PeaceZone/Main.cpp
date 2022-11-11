@@ -13,6 +13,7 @@
 #include "Map/MapDriver.cpp"
 #include "Player/PlayerDriver.cpp"
 #include "Orders/OrdersDriver.cpp"
+#include "CommandProcessing/CommandProcessingDriver.cpp" 
 
 int main()
 {
@@ -22,29 +23,34 @@ int main()
 
     //Map Tester
     std::cout << "\nTesting Map Loader" << std::endl;
-    testLoadMaps();
+    //testLoadMaps();
     std::cout << "\n==================================================" << std::endl;
 
     //Orders Tester
     std::cout << "\nTesting Orders" << std::endl;
-    testOrdersList();
+    //testOrdersList();
     std::cout << "\n==================================================" << std::endl;
     
     //Card Tester
     std::cout << "\nTesting Cards" << std::endl;
-    testCards();
+    //testCards();
     std::cout << "\n==================================================" << std::endl;
 
     //Player Tester
     std::cout << "\nTesting Player" << std::endl;
-    testPlayer();
+    //testPlayer();
     std::cout << "\n==================================================" << std::endl;
 
     //GameEngine Tester
     std::cout << "\nTesting Game Engine" << std::endl;
     GameEngine* gameEngine = new GameEngine();
+    gameEngine->startupPhase();
+    //for ever{
+     /*   testCommandProcessor(gameEngine->cmdProcessor);*/
 
-    testGameStates(gameEngine);
+    //}
+
+    //testGameStates(gameEngine);
 
     delete gameEngine;
     std::cout << "\n==================================================" << std::endl;

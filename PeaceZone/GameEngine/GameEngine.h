@@ -2,34 +2,24 @@
 #include <iostream>
 #include <iterator>
 #include <string>
-#include <string.h>
 #include <vector>
 #include <algorithm>
 #include <regex>
 #include <map>
+#include <experimental/filesystem>
+#include <algorithm>
+#include <random>
+#include <cmath> 
+#include "../CommandProcessing/CommandProcessing.h"
+#include "../Map/Map.h"
 #include "../Player/Player.h"
+#include "../Orders/Orders.h" 
+
 
 #ifdef _DEBUG
 #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
 
-
-class Command {
-public:
-    // Data Members
-    std::string name;
-
-    // Constructors
-    Command();
-    Command(std::string name);
-    Command(const Command &c1);
-    ~Command();
-
-    // Methods
-    Command &operator=(const Command &);
-    friend std::ostream &operator<<(std::ostream &out, const Command &Command);
-
-};
 
 class State{
 public:
@@ -51,11 +41,13 @@ public:
 class GameEngine {
 public:
     // Data Members
+    Map* activeMap;
     State* currentState;
     std::vector<State*> gameStates;
     std::vector<Command*> gameCommands;
+    CommandProcessor* cmdProcessor;
     std::vector<Player*> playerList;
-
+    Deck* gameDeck;
 
     // Constructors
     GameEngine();
@@ -67,12 +59,18 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const GameEngine& gameEngine);
     //Checks the validity of a command input
     bool checkCommandValidity(std::string input);
+    //Method that implements a command based user interaction mechanism to start the game 
+    void startupPhase();
 
     void mainGameLoop();
     void reinforcementPhase();
     void issueOrdersPhase();
     void executeOrdersPhase();
+    //Method that updates the commandProcessor validCommands
+    void updateCmdProcessor();
 
+    //Method that adds players 
+    void addPlayer(std::string playerName);
 };
 
 class Transition{
