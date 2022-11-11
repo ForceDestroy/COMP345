@@ -418,13 +418,17 @@ void GameEngine::mainGameLoop() {
 }
 //ReinforcementPhase
 void GameEngine::reinforcementPhase() {
-    //Loop for each player TODO roundrobin
+    //Loop for each player 
     for (auto p : playerList) {
 
         //Players gain 1 reinformcement for each 3 territories, rounded down
         int reinforcements = p->getTerritories()->size() / 3;
 
         //Add continent bonuses when player owns all territories
+        for (auto c : activeMap->continents) {
+            if (p == activeMap->GetContinentOwner(c))
+                reinforcements += c->bonus;
+        }
 
         //Minimum reinforcements is 3
         if (reinforcements < 3)
@@ -455,10 +459,10 @@ void GameEngine::issueOrdersPhase() {
 }
 
 void GameEngine::executeOrdersPhase() {
-    //Loop for each player TODO roundrobin
+    //Loop for each player 
     for (auto p : playerList) {
         //Check the player has Orders left to execute
-        if(p->getOrdersList()->getSize() != 0)
+        if (p->getOrdersList()->getSize() != 0)
         {
             //Execute the first Order in the player's OrderList
             (*p->getOrdersList())[0]->execute();
@@ -468,6 +472,7 @@ void GameEngine::executeOrdersPhase() {
             p->getOrdersList()->remove(o);
         }
     }
+}
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
     //checks for the loadmap command

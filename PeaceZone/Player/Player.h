@@ -20,7 +20,6 @@ private:
     Hand* handOfCards;
     OrdersList* listOfOrders;
     std::string name;
-    int reinforcementPool;
 public:
     //variables for the player
     int reinforcementPool;
