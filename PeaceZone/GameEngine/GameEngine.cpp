@@ -440,22 +440,29 @@ void GameEngine::reinforcementPhase() {
 }
 
 void GameEngine::issueOrdersPhase() {
-    int remaingPlayers = -1;
+    //Reset Player trackers for new IssueOrdersPhase
+    for (auto p : playerList) {
+        p->resetIssueOrderPhase();
+    }
+
+    int remainingPlayers = -1;
 
     //break when all players in an interation mark themselves as done
-    while (remaingPlayers != 0) {
-        remaingPlayers = playerList.size();
+    while (remainingPlayers != 0) {
+        remainingPlayers = playerList.size();
 
-        //Loop for each player TODO roundrobin
+        //Loop for each player
         for (auto p : playerList) {
-            //issue order and save whether player is done
-            bool done = p->issueOrder();
-
-            if (done) {
-                remaingPlayers--;
+            //issue order if player has not finished
+            if (!p->hasFinishedIssuingOrders) {
+                p->issueOrder();
+            }
+            else {
+                remainingPlayers--;
             }
         }
     }
+
 }
 
 void GameEngine::executeOrdersPhase() {
