@@ -385,12 +385,12 @@ void GameEngine::mainGameLoop() {
         reinforcementPhase();
 
         //transition to issueOrderPhase
-        transitionState(this, enumToStringMapHandling(stringUnifier(this->currentState->name)), "issueorder");
+        checkCommandValidity( "issueorder");
 
         issueOrdersPhase();
 
         //transition to executeOrdersPhase
-        transitionState(this, enumToStringMapHandling(stringUnifier(this->currentState->name)), "endissueorders");
+        checkCommandValidity("endissueorders");
 
         executeOrdersPhase();
 
@@ -409,11 +409,11 @@ void GameEngine::mainGameLoop() {
         if (playerList.size() > 1) {
 
             //transition to reinforcementPhase
-            transitionState(this, enumToStringMapHandling(stringUnifier(this->currentState->name)), "endexecorders");
+            checkCommandValidity("endexecorders");
         }
 
         //transition to winPhase
-        transitionState(this, enumToStringMapHandling(stringUnifier(this->currentState->name)), "win");
+        checkCommandValidity("win");
     }
 }
 //ReinforcementPhase
