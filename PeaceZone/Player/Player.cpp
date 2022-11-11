@@ -72,15 +72,19 @@ Player::Player(const Player& player)
 //Attack method
 std::vector<Territory*> Player::toAttack()
 {
-    //getting neighbors of the territories to attack
     std::vector<Territory*> territoriesToAttack;
+    //To find the territories that can be attacked
     for (int i = 0; i < territories->size(); i++)
     {
+        //Go through each neighbor of the territories that the player owns
         for (int j = 0; j < territories->at(i)->neighbors.size(); j++)
         {
+            //Check if the neighbor is owned by another player
+            //Check if the neighbor is not already in the list of territories to attack
+            //Check if the army count of the territory to attack is less than the army count of the territory that is attacking to make it a valid attack
             if (territories->at(i)->neighbors.at(j)->owner != territories->at(i)->owner && 
-            std::find(territoriesToAttack.begin(), territoriesToAttack.end(), territories->at(i)) == territoriesToAttack.end() && 
-            territories->at(i)->neighbors.at(j)->armyCount <= territories->at(i)->armyCount)
+                std::find(territoriesToAttack.begin(), territoriesToAttack.end(), territories->at(i)) == territoriesToAttack.end() && 
+                territories->at(i)->neighbors.at(j)->armyCount <= territories->at(i)->armyCount)
             {
                 territoriesToAttack.push_back(territories->at(i)->neighbors.at(j));
             }
@@ -94,11 +98,17 @@ std::vector<Territory*> Player::toDefend()
 {
     //get all the territories to defend that the player owns
     std::vector<Territory*> territoriesToDefend;
+    //Setting the first territory as the strongest as default for now
     Territory* strongestTerritory = territories->at(0);
+    //To find the territories that can be defended
     for (int i = 0; i < territories->size(); i++)
     {
+        //Go through each neighbor of the territories that the player owns
         for (int j = 0; j < territories->at(i)->neighbors.size(); j++)
         {
+            //Check if the neighbor is owned by another player to warrant defending from an attack
+            //Check if the neighbor is not already in the list of territories to defend
+            //Check if the army count of the enemy neighbor is greater than the army count of the territory that is defending to give reason for defending
             if (territories->at(i)->neighbors.at(j)->owner != territories->at(i)->owner && 
                 std::find(territoriesToDefend.begin(), territoriesToDefend.end(), territories->at(i)) == territoriesToDefend.end() && 
                 territories->at(i)->neighbors.at(j)->armyCount >= territories->at(i)->armyCount)
@@ -106,6 +116,7 @@ std::vector<Territory*> Player::toDefend()
                 territoriesToDefend.push_back(territories->at(i));
             }
         }
+        //To find the strongest territory to defend
         if (territories->at(i)->armyCount > strongestTerritory->armyCount)
         {
             strongestTerritory = territories->at(i);
@@ -127,17 +138,24 @@ bool Player::hasLost() {
 //Issue order method
 void Player::issueOrder()
 {
+    //Set the territories to attack and defend
     std::vector<Territory*> territoriesToDefend = toDefend();
     std::vector<Territory*> territoriesToAttack = toAttack();
+    //If there are still reinforcements inside the pool, then keep deploying them
     if (reinforcementPool > 0)
     {
+        //find a random territory to deploy to
         int position = std::rand() % territoriesToDefend.size();
+        //find a random number of armies to deploy
         int armyCount = std::rand() % reinforcementPool/2 + 1;
+
         listOfOrders->add(new Deploy(territoriesToDefend.at(position), armyCount));
         reinforcementPool -= armyCount;
     }
+    //A player can play one card per phase
     else if (!hasPlayedCard)
     {
+        //If the player has a card, then play the first one
         if (handOfCards->listOfCards->size() > 0)
         {
             Card* cardToPlay = handOfCards->listOfCards->at(0);
@@ -146,17 +164,22 @@ void Player::issueOrder()
         hasPlayedCard = true;
     }
     else {
+        //player can attack and defend once per phase
         if (!hasDefended)
         {
+            //go through the lists of territories to defend
             for (auto defend: territoriesToDefend)
             {
+                //find the neighbor territory to provide troops to defend
                 for (auto neighbor : defend->neighbors)
                 {
+                    //check if the neighbor is not part of the list of territories to defend to get armies from in order to defend
                     if (std::find(territoriesToDefend.begin(), territoriesToDefend.end(), neighbor) == territoriesToDefend.end() && neighbor->armyCount > 1)
                     {
                         //new advance (neighbor sending units to defend)
                         listOfOrders->add(new Advance(defend, neighbor, (neighbor->armyCount)/2 +1));
                         hasDefended = true;
+                        //so that we don't defend and attack from the same territory
                         committedTerritories->push_back(neighbor);
                         return;
                     }
@@ -166,12 +189,18 @@ void Player::issueOrder()
         }
         else if (!hasAttacked)
         {
+            //only attack if there are territories to attack
             if (territoriesToAttack.size() > 0)
             {
+                //find a random territory to attack
                 int position = std::rand() % territoriesToAttack.size();
                 Territory* territoryToAttack = territoriesToAttack.at(position);
+                //find a valid neighbor territory to attack from
                 for (auto neighbor : territoryToAttack->neighbors)
                 {
+                    //check if the owner of the territory belongs to the current player attacking
+                    //check if the territory is not in the list of committed territories
+                    //check if the army count of the territory attacking is higher than the army count of the territory getting attacked to make it a valid attack
                     if (neighbor->owner == this && std::find(committedTerritories->begin(), committedTerritories->end(), neighbor) == committedTerritories->end() && neighbor->armyCount > territoryToAttack->armyCount)
                     {
                         listOfOrders->add(new Advance(territoryToAttack, neighbor, neighbor->armyCount));
@@ -181,12 +210,14 @@ void Player::issueOrder()
             }
             hasAttacked = true;
         }
+        //when the player is done with all the orders
         else
         {
             hasFinishedIssuingOrders = true;
         }
     }
 }
+//To reset the params for the next IssueOrderPhase
 void Player::resetIssueOrderPhase()
 {
     hasPlayedCard = false;

@@ -21,14 +21,16 @@ private:
     Hand* handOfCards;
     OrdersList* listOfOrders;
     std::string name;
-public:
-    //variables for the player
-    int reinforcementPool;
+    //variables for IssueOrderPhase
     bool hasPlayedCard;
     bool hasDefended;
     bool hasAttacked;
-    bool hasFinishedIssuingOrders;
     std::vector<Territory*> *committedTerritories;
+public:
+    //variable for the player
+    int reinforcementPool;
+    //variable for IssueOrderPhase
+    bool hasFinishedIssuingOrders;
 
     //Constructor
     Player();
