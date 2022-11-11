@@ -431,7 +431,7 @@ void GameEngine::reinforcementPhase() {
         if (reinforcements < 3)
             reinforcements = 3;
 
-        p->armyUnits += reinforcements;
+        p->reinforcementPool += reinforcements;
 
     }
 }

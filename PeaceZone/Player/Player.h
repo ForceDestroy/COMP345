@@ -21,7 +21,7 @@ private:
     OrdersList* listOfOrders;
 public:
     //variables for the player
-    int armyUnits;
+    int reinforcementPool;
 
     //Constructor
     Player();
