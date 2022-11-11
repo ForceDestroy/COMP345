@@ -292,6 +292,9 @@ GameEngine::GameEngine()
     this->cmdProcessor = cmdProcessor;
     updateCmdProcessor();
 
+    this->gameDeck = new Deck();
+
+
     
 }
 
@@ -315,6 +318,7 @@ GameEngine::~GameEngine()
         
     delete cmdProcessor;
 	delete activeMap;
+    delete gameDeck;
 }
 
 
@@ -513,7 +517,7 @@ void GameEngine::startupPhase() {
 		
     } while (!currentCommand->name._Equal("gamestart")||this->playerList.size() < 2 || this->playerList.size() > 6);
 
-    currentCommand->saveEffect("The game has started. Distributing territories and cards...");
+    currentCommand->saveEffect("The game has started.");
 
     //fairly distribute all the territories to the players 
 
@@ -541,14 +545,45 @@ void GameEngine::startupPhase() {
 			playerList[i]->addPlayerTerritories(this->activeMap->territories[territoriesCount++]);
         }
     }
+
+    //Print players territories
 	std::cout << "Printing players' territories: " << std::endl;
 
     for (Player* player : this->playerList) {
         std::cout << *player << std::endl;
     }
 
+
 	std::cout << "Done printing players' territories: " << std::endl;
 
+    // Determining order of players
+	auto rngOrder = std::default_random_engine{};
+	std::shuffle(std::begin(this->playerList), std::end(this->playerList), rngOrder);
+
+    // Give 50 initial army units to the players, which are placed in their respective reinforcement pool
+	for (Player* player : this->playerList)
+	{
+        player->setReinforcementPool(50);
+		
+	}
+    std::cout << "An initial reinforcement pool of 50 army unit has been given to each player " << std::endl;
+
+    //Each player is drawing 2 initial cards from the deck 
+
+    for (Player* player : this->playerList)
+    {
+        Hand* handOfCard = new Hand();
+        handOfCard->Insert(this->gameDeck->Draw());
+        handOfCard->Insert(this->gameDeck->Draw());
+        player->setPlayerHandOfCards(handOfCard);
+
+    }
+    std::cout << "Two initial cards has been given to each player.  " << std::endl;
+    std::cout << "Now let the game start! " << std::endl;
+
+    for (Player* player : this->playerList) {
+        std::cout << *player << std::endl;
+    }
 
 	checkCommandValidity("gamestart");
 }

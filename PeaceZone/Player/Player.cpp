@@ -7,6 +7,7 @@ Player::Player()
     territories = new std::vector<Territory*>();
     handOfCards = new Hand();
     listOfOrders = new OrdersList();
+    reinforcementPool = 0;
 }
 
 //Parameterized constructor
@@ -16,6 +17,7 @@ Player::Player(std::string name)
 	this->territories = new std::vector<Territory*>();
 	this->handOfCards = new Hand();
 	this->listOfOrders = new OrdersList();
+    this->reinforcementPool = 0;
 }
 
 
@@ -26,6 +28,7 @@ Player::Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersLi
     this->territories = territories;
     this->handOfCards = handOfCards;
     this->listOfOrders = listOfOrders;
+    this->reinforcementPool = 0;
 }
 
 //Destructor
@@ -43,6 +46,7 @@ Player::Player(const Player& player)
     territories = new std::vector<Territory*>();
     handOfCards = player.handOfCards;
     listOfOrders = player.listOfOrders;
+    reinforcementPool = player.reinforcementPool;
 
     for (int i = 0; i < player.territories->size(); i++)
     {
@@ -135,6 +139,15 @@ void Player::setPlayerListOfOrders(OrdersList* listOfOrders) {
 
 }
 
+void Player::setArmyCount(int index, int armyCount){
+    (*territories)[index]->armyCount = 50;
+}
+
+void Player::setReinforcementPool(int reinforcementPool) {
+    this->reinforcementPool = reinforcementPool;
+}
+
+
 //operator assignment
 Player& Player::operator=(const Player& p)
 {
@@ -158,5 +171,7 @@ std::ostream& operator<<(std::ostream& os, const Player& p)
     }
     os << p.name << "'s hand of cards: " << *p.handOfCards << std::endl;
     os << p.name << "'s list of orders: " << *p.listOfOrders <<std::endl;
+    os << p.name << "'s reinforcement pool: " << p.reinforcementPool << std::endl;
+
     return os;
 }

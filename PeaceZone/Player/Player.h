@@ -20,6 +20,7 @@ private:
     Hand* handOfCards;
     OrdersList* listOfOrders;
     std::string name;
+    int reinforcementPool;
 public:
     //Constructor
     Player();
@@ -41,6 +42,10 @@ public:
     void setPlayerHandOfCards(Hand* handOfCards);
 
     void setPlayerListOfOrders(OrdersList* listOfOrders); 
+
+    void setArmyCount(int index, int armyCount);
+
+    void setReinforcementPool(int reinforcementPool);
 
     //Overloaded operators
     Player& operator=(const Player& p);
