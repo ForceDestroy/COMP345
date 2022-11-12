@@ -55,35 +55,18 @@ void testGameStates(GameEngine* gameEngine)
 
 
 void testStartupPhase(GameEngine* gameEngine){
-    std::cout << "Would you like to test command processor through command input or a file? Type \"input\" or \"file\"" << std::endl;
-
     std::string input;
 
-
     do {
+        std::cout << "Would you like to test command processor through console or a file? Type \"console\" or \"file <filepath>\"" << std::endl;
         std::getline(std::cin, input);
 
-    } while (!input._Equal("input") && !input._Equal("file"));
+    } while (!input._Equal("console") && !(input.find("file") != std::string::npos));
 
+    gameEngine->chooseInputMode(input);
 
-    if (input._Equal("input")) {
-
-        gameEngine->startupPhase();
+    gameEngine->startupPhase();
        
-        std::cout << "End of startup phase, command processor:  " << std::endl << gameEngine->cmdProcessor << std::endl << std::endl;
-    }
+    std::cout << "End of startup phase. "<< std::endl << std::endl;
 
-    if (input._Equal("file")) {
-
-        std::string path("C:/ProjectSchool/COMP 345/COMP345/PeaceZone/GameEngine/GameStartupCommands.txt");
-
-        FileLineReader* flr = new FileLineReader(path);
-        FileCommandProcessorAdapter* fcpa = new FileCommandProcessorAdapter(gameEngine->cmdProcessor->commandList, gameEngine->cmdProcessor->validCommands, flr);
-
-        gameEngine->cmdProcessor = fcpa;
-
-        gameEngine->startupPhase();
-        
-        std::cout << "End of startup phase, file command processor adapter:  " << std::endl << *gameEngine->cmdProcessor << std::endl << std::endl;
-    }
 }

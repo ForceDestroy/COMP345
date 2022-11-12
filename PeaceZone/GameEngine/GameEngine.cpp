@@ -603,6 +603,30 @@ void GameEngine::addPlayer(std::string name)
     std::cout << "Player " << name << " added to the game player list." <<std::endl;
 
 }
+
+void GameEngine::chooseInputMode(std::string mode) {
+
+    if (mode.find("file") != std::string::npos) {
+
+        std::string space = " ";
+        std::string fileString = mode.substr(0, mode.find(space));
+        std::string path = mode.substr(mode.find(space) + 1, mode.size());
+
+        // std::string path("C:/ProjectSchool/COMP 345/COMP345/PeaceZone/GameEngine/GameStartupCommands.txt");
+
+        FileLineReader* flr = new FileLineReader(path);
+        FileCommandProcessorAdapter* fcpa = new FileCommandProcessorAdapter(this->cmdProcessor->commandList, this->cmdProcessor->validCommands, flr);
+
+        this->cmdProcessor = fcpa;
+
+        std::cout << "Game engine is now using FileCommandProcessorAdaptor." << std::endl << std::endl;
+    }
+    else if (mode._Equal("console")) 
+    {
+        std::cout << "Game engine is now using CommandProcessor." << std::endl << std::endl;
+
+    }
+}
 #pragma endregion
 
 

@@ -67,6 +67,9 @@ public:
 
     //Method that adds players 
     void addPlayer(std::string playerName);
+
+    // Method to choose between console input or file input
+    void chooseInputMode(std::string mode);
 };
 
 class Transition{
