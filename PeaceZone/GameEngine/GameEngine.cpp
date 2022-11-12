@@ -287,11 +287,12 @@ GameEngine::GameEngine()
     //Initializing the stateEnumToStringMap
     initializeEnumToStringMap();
 
-    //creating the CommandProcessor
+    //Creating the CommandProcessor and filling it's valid commands using the updateCmdProcessor() function
     CommandProcessor* cmdProcessor = new CommandProcessor();
     this->cmdProcessor = cmdProcessor;
     updateCmdProcessor();
 
+    //Creating the game deck
     this->gameDeck = new Deck();
 
 

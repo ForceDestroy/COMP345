@@ -57,7 +57,15 @@ void Command::saveEffect(std::string effect)
 CommandProcessor::CommandProcessor() = default;
 
 // Destructor - CommandProcessor
-CommandProcessor::~CommandProcessor() = default;
+CommandProcessor::~CommandProcessor(){
+	//Deleting the Command objects in the list of commands
+	for (Command* c : commandList) {
+        delete c;
+		c=NULL;
+    }
+
+	
+};
 
 //Constructor - CommandProcessor
 CommandProcessor::CommandProcessor(std::vector<Command*> commandList, std::vector<Command*> validCommands)
