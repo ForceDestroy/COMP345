@@ -107,7 +107,7 @@ public:
     // Methods
     FileCommandProcessorAdapter& operator=(const FileCommandProcessorAdapter&);
     friend std::ostream& operator<<(std::ostream& out, const FileCommandProcessorAdapter& FileCommandProcessorAdapter);
-
+    
     //readCommand() method
     std::string readCommand() override;
 };

@@ -96,6 +96,8 @@ private:
 // Free function for game state testings
 static void testGameStates(GameEngine* gameEngine);
 
+static void testStartupPhase(GameEngine* gameEngine);
+
 // State enums for handling 
 static enum stateNames;
 

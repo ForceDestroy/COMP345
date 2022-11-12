@@ -136,9 +136,13 @@ void CommandProcessor::validate(Command* command)
 			//validating commands loadmap <mapfile> and addplayer <playername> 
 			if (this->validCommands[i]->name._Equal(inputCommand) && (inputCommand._Equal("loadmap") && restOfCommand.find(space) == std::string::npos) ){
 				count++;
+				output = "Command " + command->name + " is valid for the current state";
+				command->saveEffect(output);
 			}
 			else if(this->validCommands[i]->name._Equal(inputCommand) && inputCommand._Equal("addplayer")) {
 				count++;
+				output = "Command " + command->name + " is valid for the current state";
+				command->saveEffect(output);
 
 			}else if(inputCommand._Equal("loadmap") && restOfCommand.find(space) != std::string::npos) {
 				output = "Error: Invalid loadmap <mapfile> command (" + command->name + "). Only one map file name must be entered with the command. ";
@@ -222,7 +226,7 @@ std::string FileLineReader::readLineFromFile()
 		}
 		catch (...)
 		{
-			std::cout << "fstream did not get line :DIESOFCRINGE:";
+			std::cout << "fstream did not get line";
 		}
 	
 
@@ -289,14 +293,14 @@ std::ostream& operator<<(std::ostream& out, const FileCommandProcessorAdapter &F
 
 std::string FileCommandProcessorAdapter::readCommand(){
 	
-	std::cout << "Reading commands from file: " << std::endl;
+	std::cout << std::endl << "Reading command from file... " << std::endl;
 
 	std::string input;
 
 	input = this->flr->readLineFromFile();
 
 
-	std::cout << "Finished reading from file: " << std::endl;
+	std::cout << "Finished reading from file. " << std::endl << std::endl;
 	return input;
 	
 

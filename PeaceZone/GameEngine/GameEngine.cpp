@@ -379,7 +379,7 @@ bool GameEngine::checkCommandValidity(std::string input) {
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
     //checks for the loadmap command
-	std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
+	std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
 	std::vector<std::string> mapsFileNames;
     std::string filePathName;
     Command* currentCommand;
@@ -406,7 +406,7 @@ void GameEngine::startupPhase() {
         std::cout << std::endl << "Please use the loadmap <filename> command to select the map that will be loaded to the game. " << std::endl;
         // Loop for map loading
         do{
-            std::cout << "You are currently in the State:" << this->currentState->name;
+            std::cout << "You are currently in the State: " << this->currentState->name << std::endl;
             currentCommand = this->cmdProcessor->getCommand();
             
             //verify the syntax
@@ -513,7 +513,7 @@ void GameEngine::startupPhase() {
         currentCommand->saveEffect("Player " + name + " Added to the list of player.");
 
 		std::cout << "Enter the command \"addplayer <playername>\" to add another player or the command \"gamestart\" to start the game" << std::endl;
-		std::cout << "You are currently in the State:" << this->currentState->name << std::endl << std::endl;
+		std::cout << "You are currently in the State: " << this->currentState->name << std::endl << std::endl;
 		
     } while (!currentCommand->name._Equal("gamestart")||this->playerList.size() < 2 || this->playerList.size() > 6);
 
@@ -555,7 +555,7 @@ void GameEngine::startupPhase() {
 
 
 	std::cout << "Done printing players' territories: " << std::endl;
-
+    std::cout << "=====" << std::endl << std::endl;
     // Determining order of players
 	auto rngOrder = std::default_random_engine{};
 	std::shuffle(std::begin(this->playerList), std::end(this->playerList), rngOrder);
@@ -579,7 +579,7 @@ void GameEngine::startupPhase() {
 
     }
     std::cout << "Two initial cards has been given to each player.  " << std::endl;
-    std::cout << "Now let the game start! " << std::endl;
+    std::cout << "Now let the game start! Printing players' information:" << std::endl;
 
     for (Player* player : this->playerList) {
         std::cout << *player << std::endl;
