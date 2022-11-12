@@ -44,6 +44,7 @@ std::ostream& operator<<(std::ostream& out, const Command& command)
 	return out;
 }
 
+// Save the effect of a command as a string in a Command object
 void Command::saveEffect(std::string effect)
 {
 	this->effect = effect;
@@ -97,7 +98,8 @@ std::ostream& operator<<(std::ostream &out, const CommandProcessor &commandProce
 	return out;
 }
 
-//public getCommand() method
+//Public command method that can be called by other object to get a command.
+// It reads the command, create a Command object, validate it and save it to the list of commands. 
 Command* CommandProcessor::getCommand()
 {
 	std::string commandName = readCommand();
@@ -105,18 +107,18 @@ Command* CommandProcessor::getCommand()
 	validate(command);
 	saveCommand(command);
 	return command;
-	
 }
 
 
-//private saveCommand() method
+//Saves the command object into the list of commands
 void CommandProcessor::saveCommand(Command* command)
 {
 	this->commandList.push_back(command);
 
 }
 
-//validate() method
+//Checks if a given command is valid by comparing it to the vector of valid commands. 
+//The vector of valid commands is handled by the GameEngine and is updated for every state change. 
 void CommandProcessor::validate(Command* command)
 {
 	// vector comparing
@@ -160,7 +162,7 @@ void CommandProcessor::validate(Command* command)
 
 }
 
-//private readCommand() method
+//private readCommand() method that gets a command from the console and returns it as a string. 
 std::string CommandProcessor::readCommand()
 {
 	std::cout << std::endl << "Please enter a valid command for the current state : " << std::endl;
@@ -212,6 +214,7 @@ std::ostream& operator<<(std::ostream& out, const FileLineReader& fileLineReader
 	return out;
 }
 
+//Method that use the class's fileStream to read a line from the file and returns it as a string
 std::string FileLineReader::readLineFromFile()
 {
 
@@ -236,11 +239,12 @@ std::string FileLineReader::readLineFromFile()
 	return input;
 }
 
+//Method that takes a file path and open a fileStream 
 void FileLineReader::setPath(std::string path)
 {
 	this->path = path;
-
-	fileStream.open(this->path, std::ios::in); //open a file to perform read operation using file object
+	//open a file to perform read operation using file object
+	fileStream.open(this->path, std::ios::in); 
 }
 
 #pragma endregion
@@ -291,6 +295,8 @@ std::ostream& operator<<(std::ostream& out, const FileCommandProcessorAdapter &F
 	return out;
 }
 
+//Overrides the readCommand() method of the CommandProcessor class
+//Returns the string of a command by reading a line from a file
 std::string FileCommandProcessorAdapter::readCommand(){
 	
 	std::cout << std::endl << "Reading command from file... " << std::endl;
