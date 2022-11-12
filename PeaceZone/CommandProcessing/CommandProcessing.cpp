@@ -262,7 +262,10 @@ void FileLineReader::setPath(std::string path)
 FileCommandProcessorAdapter::FileCommandProcessorAdapter() = default;
 
 // Destructor - FileCommandProcessorAdapter
-FileCommandProcessorAdapter :: ~FileCommandProcessorAdapter() = default;
+FileCommandProcessorAdapter :: ~FileCommandProcessorAdapter(){
+	delete flr;
+	flr=NULL;
+};
 
 // Constructor - FileCommandProcessorAdapter
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(std::vector<Command*> commandList, std::vector<Command*> validCommands, FileLineReader* theflr) : CommandProcessor(commandList, validCommands), flr(theflr)

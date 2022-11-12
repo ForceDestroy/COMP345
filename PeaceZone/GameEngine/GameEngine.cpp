@@ -287,7 +287,7 @@ GameEngine::GameEngine()
     //Initializing the stateEnumToStringMap
     initializeEnumToStringMap();
 
-    //Creating the CommandProcessor and filling it's valid commands using the updateCmdProcessor() function
+    //Creating the CommandProcessor and filling its valid commands using the updateCmdProcessor() method
     CommandProcessor* cmdProcessor = new CommandProcessor();
     this->cmdProcessor = cmdProcessor;
     updateCmdProcessor();
@@ -305,21 +305,27 @@ GameEngine::~GameEngine()
     //Deleting the Command objects
     for (Command* c : gameCommands) {
         delete c;
+        c=NULL;
     }
 
     //Deleting the State objects
     for (State* s : gameStates) {
         delete s;
+        s=NULL;
     }
 
     //Deleting the player objects
     for (Player* s : playerList) {
         delete s;
+        s=NULL;
     }
-        
     delete cmdProcessor;
 	delete activeMap;
     delete gameDeck;
+    currentState=NULL;
+    activeMap=NULL;
+    cmdProcessor=NULL;
+    gameDeck=NULL;
 }
 
 
@@ -363,7 +369,6 @@ bool GameEngine::checkCommandValidity(std::string input) {
         std::cout << "The entered command is invalid for the current state: " << this->currentState->name << std::endl;
         return false;
     }
-   //std::cout << "The entered command is valid!" << std::endl;
    
    // Calling the map to get the number of the state
    stateNumber=enumToStringMapHandling(stringUnifier(this->currentState->name));
@@ -379,13 +384,13 @@ bool GameEngine::checkCommandValidity(std::string input) {
 
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
-    //checks for the loadmap command
 	std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
 	std::vector<std::string> mapsFileNames;
     std::string filePathName;
     Command* currentCommand;
     MapLoader* mapLoader = new MapLoader();
 
+    //Getting a list of Map file names stored in the mapsPath directory
 	for (const auto& entry : std::experimental::filesystem::directory_iterator(mapsPath))
 	{
         filePathName = entry.path().u8string();
@@ -394,6 +399,8 @@ void GameEngine::startupPhase() {
         mapsFileNames.push_back(filePathName.substr(lastslash + 1, lastdot));
 	}
 	std::cout << "Welcome to the PeaceZone startup phase." << std::endl;
+
+    //Displays the map file names to the user
 	std::cout << "The following map files has been found in the conquestMaps directory: " << std::endl;
 	for (std::string fileName : mapsFileNames) {
 		std::cout << fileName << std::endl ;
@@ -413,6 +420,7 @@ void GameEngine::startupPhase() {
             //verify the syntax
             std::string errorCheck = "Error";
         
+            //Use the effect of a Command object to verify if it is invalid 
             if (currentCommand->effect.find(errorCheck) != std::string::npos)
             {
                 std::cout << currentCommand->effect << std::endl;
@@ -431,23 +439,27 @@ void GameEngine::startupPhase() {
                 {
                 
                     std::cout << "Command successfull, attempting to load the map..." <<std::endl;
-                    //load map
-
+                    
+                    //Use the map Loader to load map
                     mapLoader->Load(mapsPath + "/"+ fileName);
                     
+                    //Handles the case of a map that failed to be loaded
                     if (mapLoader->maps.size() == 0){
 						std::cout << "Failed to load map file " << mapsPath << "/" << fileName << std::endl;
                         currentCommand->saveEffect("Failed to load map file " + mapsPath + "/" + fileName);
                         break;
                     }
                     
+                    //Set the active map as the loaded map
 				    activeMap = mapLoader->maps[0];
                     hasActiveMap = true;
                     
+                    //Save the effect of the command
                     currentCommand->saveEffect(fileName+" map loaded");
                  
                     std::cout << "Enter the command \"loadmap <filename>\" to load another map or the command \"validatemap\" to validate the current loaded map" << std::endl;
 
+                    //Changes the current state of the game
                     checkCommandValidity("loadmap");
 
                     break;
@@ -455,25 +467,33 @@ void GameEngine::startupPhase() {
                 
                 }
             }
+            //While loop that stays true as long as the command is not "validatemap" or there is no active map
         } while (!currentCommand->name._Equal("validatemap") || !hasActiveMap);
 		
 		std::cout << "Now validating map " << activeMap->name << "..."<< std::endl;
-        //validating map
+        
+        //Attempting to validate the loaded map
 		isValid = activeMap->Validate();
+
+        //Checks if the map is invalid
         if (!isValid){
 			std::cout << "The map you have entered is invalid. Please try again with a different map. " << std::endl;
+            //Deletes the loaded map from the maploaded
             delete mapLoader->maps[0];
             activeMap = NULL;
+            //Save the effect of the command
             currentCommand->saveEffect("The loaded map is invalid.");
             continue;
         }
+
+        //Changes the current state of the game
 		checkCommandValidity("validatemap");
 
     } while (!isValid);
 
     //map is validated
 
-    //ADDING PLAYERS
+    //Adding players to the game
 	std::cout << "Map has been successfully validated! Transitioning to state " << this->currentState->name << "." << std::endl << std::endl;
     currentCommand->saveEffect("Map has been successfully validated!");
     std::cout << "Please use the command \"addplayer\" to add 2-6 players " << std::endl << std::endl;
@@ -507,22 +527,23 @@ void GameEngine::startupPhase() {
             continue;
         }
 
-
+        //Add player to the player list
         this->addPlayer(name);
 		
+        //Updates the current state of the game
 		checkCommandValidity("addplayer");
         currentCommand->saveEffect("Player " + name + " Added to the list of player.");
 
 		std::cout << "Enter the command \"addplayer <playername>\" to add another player or the command \"gamestart\" to start the game" << std::endl;
 		std::cout << "You are currently in the State: " << this->currentState->name << std::endl << std::endl;
 		
+        //While loop that ensures the right amount of players has been added before allowing the user to start the game
     } while (!currentCommand->name._Equal("gamestart")||this->playerList.size() < 2 || this->playerList.size() > 6);
 
     currentCommand->saveEffect("The game has started.");
 
-    //fairly distribute all the territories to the players 
-
-    //shuffle the territories in the map object
+    //Fairly distribute all the territories to the players 
+    //Shuffle the territories in the map object
     auto rng = std::default_random_engine{};
     std::shuffle(std::begin(this->activeMap->territories), std::end(this->activeMap->territories), rng);
 
@@ -530,7 +551,7 @@ void GameEngine::startupPhase() {
     int numberOfTerritoriesPerPlayer = std::floor(this->activeMap->territories.size() / this->playerList.size());
     int territoriesCount = 0;
     
-
+    //Dirtributing the same number of territories to each player
     for (Player* player : this->playerList) 
     {
         for (int i = 0; i < numberOfTerritoriesPerPlayer; i++) 
@@ -539,6 +560,7 @@ void GameEngine::startupPhase() {
         }
     }
     int nbOfLeftOverTerritories = this->activeMap->territories.size() - territoriesCount;
+    
     //In the case of left-over territories
     if (nbOfLeftOverTerritories>0){
         for (int i = 0; i < nbOfLeftOverTerritories; i++) {
@@ -557,7 +579,8 @@ void GameEngine::startupPhase() {
 
 	std::cout << "Done printing players' territories: " << std::endl;
     std::cout << "=====" << std::endl << std::endl;
-    // Determining order of players
+
+    // Determining order of players randomly by shuffling randomly the player list
 	auto rngOrder = std::default_random_engine{};
 	std::shuffle(std::begin(this->playerList), std::end(this->playerList), rngOrder);
 
@@ -570,7 +593,7 @@ void GameEngine::startupPhase() {
     std::cout << "An initial reinforcement pool of 50 army unit has been given to each player " << std::endl;
 
     //Each player is drawing 2 initial cards from the deck 
-
+    //Creates a hand for each player and draw 2 cards from the gameDeck
     for (Player* player : this->playerList)
     {
         Hand* handOfCard = new Hand();
@@ -582,20 +605,22 @@ void GameEngine::startupPhase() {
     std::cout << "Two initial cards has been given to each player.  " << std::endl;
     std::cout << "Now let the game start! Printing players' information:" << std::endl;
 
+    //Prints the players information
     for (Player* player : this->playerList) {
         std::cout << *player << std::endl;
     }
 
+    //Updates the current state of the game
 	checkCommandValidity("gamestart");
 }
  
-//Method that updates the commandProcessor validCommands
+//Method that updates the commandProcessor validCommands depending on the current state of the game
 void GameEngine::updateCmdProcessor() {
     this->cmdProcessor->validCommands = this->currentState->validCommands;
 
 }
 
-//Method that adds players 
+//Method that adds players into the player list
 void GameEngine::addPlayer(std::string name) 
 {
     Player* player = new Player(name);
@@ -605,6 +630,7 @@ void GameEngine::addPlayer(std::string name)
 
 }
 
+//Method that take the input mode as a string (either file or console) and create the CommandProcessorAdapter if the user enters the corresponding command
 void GameEngine::chooseInputMode(std::string mode) {
 
     if (mode.find("file") != std::string::npos) {
@@ -613,7 +639,6 @@ void GameEngine::chooseInputMode(std::string mode) {
         std::string fileString = mode.substr(0, mode.find(space));
         std::string path = mode.substr(mode.find(space) + 1, mode.size());
 
-        // std::string path("C:/ProjectSchool/COMP 345/COMP345/PeaceZone/GameEngine/GameStartupCommands.txt");
 
         FileLineReader* flr = new FileLineReader(path);
         FileCommandProcessorAdapter* fcpa = new FileCommandProcessorAdapter(this->cmdProcessor->commandList, this->cmdProcessor->validCommands, flr);
