@@ -56,8 +56,6 @@ public:
     //public getCommand() method
     Command* getCommand();
 
-    
-   
     //validate() method
     void validate( Command* command);
 
@@ -93,6 +91,7 @@ public:
     void setPath(std::string path);
 };
 
+//The Adapter Class FileCommandProcessorAdapter that inherits from the CommandProcessor class
 class FileCommandProcessorAdapter :public CommandProcessor {
 public:
     // Data Members
