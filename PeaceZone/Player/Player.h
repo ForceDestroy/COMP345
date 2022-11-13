@@ -24,13 +24,16 @@ private:
     bool hasPlayedCard;
     bool hasDefended;
     bool hasAttacked;
-    std::vector<Territory*> *committedTerritories;
+    std::vector<Territory*>* committedTerritories;
 public:
     //variable for the player
     std::string name;
     int reinforcementPool;
     //variable for IssueOrderPhase
     bool hasFinishedIssuingOrders;
+    //checks if player has conquered at least 1 territory this turn
+    bool hasConqTerritory;
+    std::vector<Player*>* negotiateList;
 
     //Constructor
     Player();
@@ -48,16 +51,22 @@ public:
     void resetIssueOrderPhase();
     std::vector<Territory*>* getTerritories();
     OrdersList* getOrdersList();
-    
+    bool truce(Player* player);
+
     //Add players
     void addPlayerTerritories(Territory* territorie);
-    
+
     // Setters
     void setPlayerHandOfCards(Hand* handOfCards);
 
-    void setPlayerListOfOrders(OrdersList* listOfOrders); 
+    void setPlayerListOfOrders(OrdersList* listOfOrders);
 
     void setReinforcementPool(int reinforcementPool);
+
+    void addNegotiateList(Player* player);
+
+    //Getter
+    Hand* getPlayerHandOfCards();
 
     //Overloaded operators
     Player& operator=(const Player& p);

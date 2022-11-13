@@ -28,6 +28,8 @@ Player::Player(std::string name)
     this->hasAttacked = false;
     this->hasFinishedIssuingOrders = false;
     this->committedTerritories = new std::vector<Territory*>();
+    negotiateList = new std::vector<Player*>(3);
+    hasConqTerritory = false;
 }
 
 
@@ -44,6 +46,10 @@ Player::Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersLi
     this->hasAttacked = false;
     this->hasFinishedIssuingOrders = false;
     this->committedTerritories = new std::vector<Territory*>();
+    this->negotiateList = new std::vector<Player*>(3);
+    this->hasConqTerritory = false;
+    this->negotiateList = new std::vector<Player*>(3);
+    this->hasConqTerritory = false
 }
 
 //Destructor
@@ -234,6 +240,8 @@ void Player::resetIssueOrderPhase()
     hasAttacked = false;
     hasFinishedIssuingOrders = false;
     committedTerritories->clear();
+    negotiateList->clear();
+    hasConqTerritory = false;
 }
 
 std::vector<Territory*>* Player::getTerritories() {
