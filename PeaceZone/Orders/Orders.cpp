@@ -86,9 +86,10 @@ deployOrder::deployOrder()
     std::cout << "Deploy order has been created." << std::endl;
 }
 //Parmaterized constructor
-deployOrder::deployOrder(Player* player, Territory* target, const int troopNum)
+deployOrder::deployOrder(Player* playr, Territory* target, const int troopNum)
 {
-    Orders(player);
+    this->valid = false;
+    this->player = player;
     this->target = target;
     this->troopNum = troopNum;
     std::cout << "Deploy order has been created." << std::endl;
@@ -183,7 +184,8 @@ advanceOrder::advanceOrder()
 //Parameterized constructor
 advanceOrder::advanceOrder(Player* player, Territory* source, Territory* target, const int troopNum)
 {
-    Orders(player);
+    this->valid = false;
+    this->player = player;
     this->source = source;
     this->target = target;
     this->troopNum = troopNum;
@@ -234,7 +236,7 @@ void advanceOrder::validate()
     }
 }
 //execute the order
-void advanceOrder::execute()
+void advanceOrder::execute(Deck* gameDeck)
 {
     validate();
     if (valid)
@@ -253,7 +255,7 @@ void advanceOrder::execute()
         else
         {
             std::cout << "Advance order is executed." << std::endl;
-            simulateAttack();
+            simulateAttack(gameDeck);
         }
     }
     else
@@ -291,7 +293,8 @@ void advanceOrder::simulateAttack(Deck* gameDeck)
             this->target->armyCount = this->troopNum - attackersKilled;
             if(!this->player->hasConqTerritory)
             {
-                player->setPlayerHandOfCards(player->getPlayerHandOfCards()->Insert(gameDeck->Draw()));
+                Hand* temp = player->getPlayerHandOfCards();
+                temp->Insert(gameDeck->Draw());
                 this->player->hasConqTerritory = true;
             }
             std::cout << "Attack succeeded." << std::endl;
@@ -355,9 +358,10 @@ bombOrder::bombOrder(const bombOrder& ord)
     std::cout << "Bomb order has been destroyed." << std::endl;
 }
 //Parameterized constructor
-bombOrder::bombOrder(Player* player, Territory* target)
+bombOrder::bombOrder(Player* playr, Territory* target)
 {
-    Orders(player);
+    this->valid = false;
+    this->player=  player;
     this->target = target;
     std::cout << "Bomb order has been destroyed." << std::endl;
 }
@@ -450,7 +454,8 @@ blockadeOrder::blockadeOrder(const blockadeOrder& ord)
 //Parameterized constructor
 blockadeOrder::blockadeOrder(Player* player, Territory* target)
 {
-    Orders(player);
+    this->valid = false;
+    this->player = player;
     this->target = target;
     std::cout << "Blockade order has been created." << std::endl;
 }
@@ -535,7 +540,8 @@ airliftOrder::airliftOrder(const airliftOrder& ord)
 }
 airliftOrder::airliftOrder(Player* player ,Territory* source, Territory* target, const int troopNum)
 {
-    Orders(player);
+    this->valid = false;
+    this->player = player;
     this->source = source;
     this->target = target;
     this->troopNum = troopNum;
@@ -632,7 +638,8 @@ negotiateOrder::negotiateOrder(const negotiateOrder& ord)
 //Parameterized constructor
 negotiateOrder::negotiateOrder(Player* player, Player* target)
 {
-    Orders(player);
+    this->valid = false;
+    this->player = player;
     this->target = target;
     std::cout << "Negotiate order has been created." << std::endl;
 }

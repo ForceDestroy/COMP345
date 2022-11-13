@@ -82,7 +82,7 @@ class advanceOrder : public Orders
 
         // Methods
         bool isNeighbor();
-        void execute();
+        void execute(Deck* gameDeck);
         void validate();
         void simulateAttack(Deck* gameDeck);
         std::string describe();
