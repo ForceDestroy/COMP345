@@ -44,10 +44,28 @@ inline void testLoggingObserver()
 	// Cleanup
 	command->Detach(logObserver);
 	commandProcessor->Detach(logObserver);
+	/*
+	order->Detach(logObserver);
+	ordersList->Detach(logObserver);
+	gameEngine->Detach(logObserver);
+	transition->Detach(logObserver);
+	*/
 
 	delete logObserver;
 	delete commandProcessor;
+	/*
+	delete order;
+	delete ordersList;
+	delete gameEngine;
+	delete transition;
+	*/
 
 	logObserver = NULL;
 	commandProcessor = NULL;
+	/*
+	order = NULL;
+	ordersList = NULL;
+	gameEngine = NULL;
+	transition = NULL;
+	*/
 }
