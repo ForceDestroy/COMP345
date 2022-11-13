@@ -56,7 +56,9 @@ void testGameStates(GameEngine* gameEngine)
 
 void testStartupPhase(GameEngine* gameEngine){
 
+    //Ask the user which mode to read the commands from
     gameEngine->chooseInputMode();
+
 
     gameEngine->startupPhase();
        

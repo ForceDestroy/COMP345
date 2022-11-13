@@ -1,11 +1,6 @@
-loadmap Montreal.map
+loadmap Alabama.map
 validatemap
 addplayer Maryam
 addplayer Rayane
+addplayer Sango
 gamestart
-issueorder
-issueorder
-endissueorders
-execorder
-win
-end
