@@ -387,6 +387,7 @@ bool GameEngine::checkCommandValidity(std::string input) {
 void GameEngine::mainGameLoop() {
 
     while (playerList.size() > 1) {
+        std::cout << "Starting Main Game Loop" << std::endl;
 
         reinforcementPhase();
 

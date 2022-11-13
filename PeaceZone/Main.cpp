@@ -52,6 +52,11 @@ int main()
     
     testStartupPhase(gameEngine);
     
+    std::cout << "\n==================================================" << std::endl;
+
+    std::cout << "\nTesting Game Engine Main loop" << std::endl;
+
+    testMainGameLoop(gameEngine);
     
     //testGameStates(gameEngine);
 

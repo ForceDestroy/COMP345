@@ -70,3 +70,7 @@ void testStartupPhase(GameEngine* gameEngine){
     std::cout << "End of startup phase. "<< std::endl << std::endl;
 
 }
+
+void testMainGameLoop(GameEngine* gameEngine) {
+    gameEngine->mainGameLoop();
+}
