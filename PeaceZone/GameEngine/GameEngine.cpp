@@ -405,6 +405,8 @@ void GameEngine::mainGameLoop() {
         {
             if ((*it)->hasLost())
             {
+                std::cout << "Player " << (*it)->name << " owns no territories and has been removed from the game." << std::endl;
+
                 auto todelete = *it;
                 playerList.erase(it--);
 
@@ -417,35 +419,51 @@ void GameEngine::mainGameLoop() {
             //transition to reinforcementPhase
             checkCommandValidity("endexecorders");
         }
-
-        //transition to winPhase
-        checkCommandValidity("win");
+        else
+        {
+            std::cout << "Player "<<playerList[0]->name <<" owns all territories and has won the game" << std::endl;
+            //transition to winPhase
+            checkCommandValidity("win");
+        }
     }
 }
 //ReinforcementPhase
 void GameEngine::reinforcementPhase() {
+    std::cout << "Starting Reinforcement Phase." << std::endl;
+
     //Loop for each player 
     for (auto p : playerList) {
 
+        std::cout << "Calculating reinforcements for player: "<< p->name << std::endl;
         //Players gain 1 reinformcement for each 3 territories, rounded down
+        std::cout  << p->name << " owns "<< p->getTerritories()->size() << " territories. Adding " << p->getTerritories()->size() / 3<< " reinforcements"<< std::endl;
         int reinforcements = p->getTerritories()->size() / 3;
 
         //Add continent bonuses when player owns all territories
         for (auto c : activeMap->continents) {
             if (p == activeMap->GetContinentOwner(c))
+            {
+                std::cout << p->name << " owns the continent" << c->name << ". Adding " << c->bonus << " reinforcements" << std::endl;
                 reinforcements += c->bonus;
+            }
         }
 
         //Minimum reinforcements is 3
         if (reinforcements < 3)
+        {
+            std::cout << p->name << " did not meet the minimum amount of reinforcements. Setting reinforcement count to 3" << std::endl;
             reinforcements = 3;
+        }
 
+        std::cout << "Adding a total of "<< reinforcements << " units to player " << p->name << std::endl;
         p->reinforcementPool += reinforcements;
 
     }
 }
 
 void GameEngine::issueOrdersPhase() {
+    std::cout << "Starting Issue Orders Phase." << std::endl;
+
     //Reset Player trackers for new IssueOrdersPhase
     for (auto p : playerList) {
         p->resetIssueOrderPhase();
@@ -472,6 +490,8 @@ void GameEngine::issueOrdersPhase() {
 }
 
 void GameEngine::executeOrdersPhase() {
+
+    std::cout << "Starting Execute Orders Phase." << std::endl;
     //Loop for each player 
     for (auto p : playerList) {
         //Check the player has Orders left to execute

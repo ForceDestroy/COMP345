@@ -151,8 +151,11 @@ void Player::issueOrder()
         std::srand((unsigned) std::time(0));
         int armyCount = (std::rand() % reinforcementPool)/2 + 1;
 
+        std::cout << "Player " << name << " creating Deploy Order of "<< armyCount << " units to territory "<< territoriesToDefend.at(position)->name << std::endl;
         listOfOrders->add(new Deploy(territoriesToDefend.at(position), armyCount));
         reinforcementPool -= armyCount;
+
+        std::cout << "Player " << name << " has " << reinforcementPool << " reinforcements remaining" << std::endl;
     }
     //A player can play one card per phase
     else if (!hasPlayedCard)
@@ -161,6 +164,7 @@ void Player::issueOrder()
         if (handOfCards->listOfCards->size() > 0)
         {
             Card* cardToPlay = handOfCards->listOfCards->at(0);
+            std::cout << "Player " << name << " creating Order to play the following card " << *cardToPlay << std::endl;
             cardToPlay->Play(*handOfCards, *listOfOrders);
         }
         hasPlayedCard = true;
@@ -178,6 +182,7 @@ void Player::issueOrder()
                     //check if the neighbor is not part of the list of territories to defend to get armies from in order to defend
                     if (std::find(territoriesToDefend.begin(), territoriesToDefend.end(), neighbor) == territoriesToDefend.end() && neighbor->armyCount > 1)
                     {
+                        std::cout << "Player " << name << " creating Advance Order to defend " << defend->name << " from " << neighbor->name << std::endl;
                         //new advance (neighbor sending units to defend)
                         listOfOrders->add(new Advance(defend, neighbor, (neighbor->armyCount)/2 +1));
                         hasDefended = true;
@@ -206,6 +211,7 @@ void Player::issueOrder()
                     //check if the army count of the territory attacking is higher than the army count of the territory getting attacked to make it a valid attack
                     if (neighbor->owner == this && std::find(committedTerritories->begin(), committedTerritories->end(), neighbor) == committedTerritories->end() && neighbor->armyCount > territoryToAttack->armyCount)
                     {
+                        std::cout << "Player " << name << " creating Advance Order to attack " << territoryToAttack->name << " from " << neighbor->name << std::endl;
                         listOfOrders->add(new Advance(territoryToAttack, neighbor, neighbor->armyCount));
                         break;
                     }

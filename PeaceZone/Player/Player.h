@@ -20,7 +20,6 @@ private:
     std::vector<Territory*>* territories;
     Hand* handOfCards;
     OrdersList* listOfOrders;
-    std::string name;
     //variables for IssueOrderPhase
     bool hasPlayedCard;
     bool hasDefended;
@@ -28,6 +27,7 @@ private:
     std::vector<Territory*> *committedTerritories;
 public:
     //variable for the player
+    std::string name;
     int reinforcementPool;
     //variable for IssueOrderPhase
     bool hasFinishedIssuingOrders;
