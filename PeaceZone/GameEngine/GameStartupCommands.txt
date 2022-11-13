@@ -1,0 +1,11 @@
+loadmap Montreal.map
+loadmap India.map
+loadmap Asia.map
+validatemap
+addplayer Abousateur
+addplayer maryamAez
+addplayer ForceDestroy
+addplayer FiggNewton
+addplayer JaiyD
+addplayer MinhDucVu
+gamestart

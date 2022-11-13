@@ -52,3 +52,16 @@ void testGameStates(GameEngine* gameEngine)
     } while (!gameEngine->currentState->name._Equal("endState"));
 
 }
+
+
+void testStartupPhase(GameEngine* gameEngine){
+
+    //Ask the user which mode to read the commands from
+    gameEngine->chooseInputMode();
+
+
+    gameEngine->startupPhase();
+       
+    std::cout << "End of startup phase. "<< std::endl << std::endl;
+
+}
