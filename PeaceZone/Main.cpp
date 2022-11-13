@@ -43,18 +43,19 @@ int main()
 
     //GameEngine Tester
     std::cout << "\nTesting Command Processor" << std::endl;
-    GameEngine* gameEngine = new GameEngine();
+    /*testCommandProcessor();*/
 
-    //testCommandProcessor(gameEngine->cmdProcessor);
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Game Engine Startup Phase" << std::endl;
-    
+    GameEngine* gameEngine = new GameEngine();
     testStartupPhase(gameEngine);
+    delete gameEngine;
+    gameEngine = NULL;
     
     
     //testGameStates(gameEngine);
 
-    delete gameEngine;
+ /*   delete gameEngine;*/
     std::cout << "\n==================================================" << std::endl;
 }

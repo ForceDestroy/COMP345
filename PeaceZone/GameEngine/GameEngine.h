@@ -69,7 +69,7 @@ public:
     void addPlayer(std::string playerName);
 
     // Method to choose between console input or file input
-    void chooseInputMode(std::string mode);
+    void chooseInputMode();
 };
 
 class Transition{
@@ -116,7 +116,8 @@ int enumToStringMapHandling(std::string input);
 //Helper function used to unify strings
 extern std::string stringUnifier(std::string input);
 
-
+// Free function for game state testings
+static void testCommandProcessor();
 
 
 

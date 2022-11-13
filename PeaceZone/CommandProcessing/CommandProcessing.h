@@ -111,5 +111,4 @@ public:
     std::string readCommand() override;
 };
 
-// Free function for game state testings
-static void testCommandProcessor(CommandProcessor* cmdProcessor);
+

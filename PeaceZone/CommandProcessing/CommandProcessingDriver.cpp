@@ -1,4 +1,4 @@
-#include "CommandProcessing.h"
+#include "../GameEngine/GameEngine.h"
 #define _DEBUG
 #ifdef _DEBUG
 #define _CRTDBG_MAP_ALLOC
@@ -8,38 +8,49 @@
 #define ever (;;)
 
 
-void testCommandProcessor(CommandProcessor* cmdProcessor)
+void testCommandProcessor()
 {
-	std::string path ("C:/ProjectSchool/COMP 345/COMP345/PeaceZone/CommandProcessing/CommandProcessorCommands.txt");
+	//use the following command to test CommandProcessorAdapter
+	//file C:/ProjectSchool/COMP 345/COMP345/PeaceZone/CommandProcessing/CommandProcessorCommands.txt
+	//file C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/CommandProcessing/CommandProcessorCommands.txt
 
-	FileLineReader* flr = new FileLineReader(path);
-	FileCommandProcessorAdapter* fcpa = new FileCommandProcessorAdapter(cmdProcessor->commandList, cmdProcessor->validCommands, flr);
+	GameEngine* gameEngine = new GameEngine();
 
-	std::cout << "Would you like to test command processor through command input or a file? Type \"input\" or \"file\"" << std::endl;
+	//Choosing input mode and creating the right CommandProcessor
+	gameEngine->chooseInputMode();
+	std::string continueTesting;
+	std::string errorCheck = "Error";
+	Command* currentCommand;
+	std::string commandString;
+	std::string space = " ";
 	
-	std::string input;
-
 	do {
-		std::getline(std::cin, input);
+		std::cout <<std::endl << "The current state of the game is " << gameEngine->currentState->name ;
+		currentCommand=gameEngine->cmdProcessor->getCommand();
+		commandString = currentCommand->name.substr(0, currentCommand->name.find(space));
+		//check is the command is valid
+		if (currentCommand->effect.find(errorCheck) == std::string::npos) {
+			std::string pastState = gameEngine->currentState->name;
+			//update the state if valid
+			gameEngine->checkCommandValidity(commandString);
+			//save the effect 
+			currentCommand->saveEffect("Valid Command: Updating the state "+ pastState+" to the state "+ gameEngine->currentState->name);
+		}
+		else {
 
-	} while (!input._Equal("input") && !input._Equal("file"));
+		}
+		//outputing the saved command and its effect
+		std::cout << std::endl << "The given command has been saved with the following information" << std::endl;
+		std::cout << "Name ->" << currentCommand->name << std::endl;
+		std::cout << "Effect ->" << currentCommand->effect << std::endl<< std::endl;
+
+		std::cout << "Type \"yes\" to continue testing :" << std::endl;
+		std::getline(std::cin, continueTesting);
+
+	} while (continueTesting._Equal("yes"));
 	
-	if (input._Equal("input")) {
-		cmdProcessor->getCommand();
-		std::cout << "The command list from command processor: " << *cmdProcessor << std::endl<<std::endl;
 
-	}
-
-	if (input._Equal("file")) {
-		fcpa->getCommand();
-		std::cout << "The command list from file command processor adapter: " << *fcpa << std::endl << std::endl;
-
-	}
-
-
-	flr->fileStream.close();
+	delete gameEngine;
+	gameEngine = NULL;
 	
-	delete flr;
-	delete fcpa;
-	delete cmdProcessor;
 }

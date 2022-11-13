@@ -55,15 +55,8 @@ void testGameStates(GameEngine* gameEngine)
 
 
 void testStartupPhase(GameEngine* gameEngine){
-    std::string input;
 
-    do {
-        std::cout << "Would you like to test command processor through console or a file? Type \"console\" or \"file <filepath>\"" << std::endl;
-        std::getline(std::cin, input);
-
-    } while (!input._Equal("console") && !(input.find("file") != std::string::npos));
-
-    gameEngine->chooseInputMode(input);
+    gameEngine->chooseInputMode();
 
     gameEngine->startupPhase();
        

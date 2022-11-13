@@ -384,7 +384,8 @@ bool GameEngine::checkCommandValidity(std::string input) {
 
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
-	std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
+	//std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
+    std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
 	std::vector<std::string> mapsFileNames;
     std::string filePathName;
     Command* currentCommand;
@@ -630,14 +631,26 @@ void GameEngine::addPlayer(std::string name)
 
 }
 
-//Method that take the input mode as a string (either file or console) and create the CommandProcessorAdapter if the user enters the corresponding command
-void GameEngine::chooseInputMode(std::string mode) {
+//Method that asks the user to choose between accepting commanfs from console or from file
+//and create the CommandProcessor accordingly
+void GameEngine::chooseInputMode() {
+    std::cout << "Would you like to test command processor through command input or a file? Type \"console\" or \"file <filename>\"" << std::endl;
 
-    if (mode.find("file") != std::string::npos) {
+    std::string input;
+    std::string fileCommand;
+    std::string space;
+    std::string path;
+    do {
 
-        std::string space = " ";
-        std::string fileString = mode.substr(0, mode.find(space));
-        std::string path = mode.substr(mode.find(space) + 1, mode.size());
+        std::getline(std::cin, input);
+        space = " ";
+        fileCommand = input.substr(0, input.find(space));
+        path = input.substr(input.find(space) + 1, input.size());
+    } while (!input._Equal("console") && !(input.find("file") != std::string::npos));
+
+    std::cout << "You have chosen to accept commands via " << fileCommand << std::endl << std::endl;
+
+    if (input.find("file") != std::string::npos) {
 
 
         FileLineReader* flr = new FileLineReader(path);
@@ -647,7 +660,7 @@ void GameEngine::chooseInputMode(std::string mode) {
 
         std::cout << "Game engine is now using FileCommandProcessorAdaptor." << std::endl << std::endl;
     }
-    else if (mode._Equal("console")) 
+    else if (input._Equal("console")) 
     {
         std::cout << "Game engine is now using CommandProcessor." << std::endl << std::endl;
 

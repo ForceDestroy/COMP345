@@ -1,1 +1,11 @@
 loadmap Montreal.map
+validatemap
+addplayer Maryam
+addplayer Rayane
+gamestart
+issueorder
+issueorder
+endissueorders
+execorder
+win
+end
