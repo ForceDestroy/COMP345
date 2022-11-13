@@ -7,13 +7,13 @@
 #include <fstream>
 #include <iostream>
 
-
+#include "../LoggingObserver/LoggingObserver.h"
 
 #ifdef _DEBUG
 #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
 
-class Command {
+class Command : public ILoggable, public Subject {
 public:
 	// Data Members
 	std::string name;
@@ -34,10 +34,10 @@ public:
 	//saveEffect() method
 	void saveEffect(std::string effect);
 
-
+    std::string stringToLog() override;
 };
 
-class CommandProcessor {
+class CommandProcessor : public ILoggable, public Subject {
 public:
     // Data Members
     std::vector<Command*> commandList;
@@ -59,12 +59,14 @@ public:
     //validate() method
     void validate( Command* command);
 
+	void saveCommand(Command* command);
+    std::string stringToLog() override;
+
 private: 
     //private readCommand() method
     virtual std::string readCommand();
 
 	//saveCommand() method
-	void saveCommand(Command* command);
 
    
 };
@@ -92,7 +94,7 @@ public:
 };
 
 //The Adapter Class FileCommandProcessorAdapter that inherits from the CommandProcessor class
-class FileCommandProcessorAdapter :public CommandProcessor {
+class FileCommandProcessorAdapter : public CommandProcessor {
 public:
     // Data Members
     FileLineReader* flr;

@@ -87,13 +87,8 @@ public:
     // Methods
     Transition& operator=(const Transition &);
     friend std::ostream &operator<<(std::ostream &out, const Transition &transition);
-    
-private:
     //Transition method that changes the current state of the game
     void transitionState(GameEngine* gameEngine, int stateNumber, std::string input);
-
-
-    
 };
 
 // Free function for game state testings

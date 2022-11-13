@@ -14,6 +14,7 @@
 #include "Player/PlayerDriver.cpp"
 #include "Orders/OrdersDriver.cpp"
 #include "CommandProcessing/CommandProcessingDriver.cpp" 
+#include "LoggingObserver/LoggingObserverDriver.cpp"
 
 int main()
 {
@@ -43,19 +44,23 @@ int main()
 
     //GameEngine Tester
     std::cout << "\nTesting Command Processor" << std::endl;
-    /*testCommandProcessor();*/
+    //testCommandProcessor();
 
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Game Engine Startup Phase" << std::endl;
-    GameEngine* gameEngine = new GameEngine();
-    testStartupPhase(gameEngine);
-    delete gameEngine;
-    gameEngine = NULL;
+    //GameEngine* gameEngine = new GameEngine();
+    //testStartupPhase(gameEngine);
+    //delete gameEngine;
+    //gameEngine = NULL;
     
     
     //testGameStates(gameEngine);
 
  /*   delete gameEngine;*/
+    std::cout << "\n==================================================" << std::endl;
+
+    std::cout << "\nTesting Log Observer" << std::endl;
+    testLoggingObserver();
     std::cout << "\n==================================================" << std::endl;
 }

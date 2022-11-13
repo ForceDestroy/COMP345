@@ -48,6 +48,13 @@ std::ostream& operator<<(std::ostream& out, const Command& command)
 void Command::saveEffect(std::string effect)
 {
 	this->effect = effect;
+	Notify(this);
+}
+
+std::string Command::stringToLog()
+{
+	std::string log = "LOG::Command:: Save Command Effect - " + this->effect;
+	return log;
 }
 
 #pragma endregion
@@ -122,7 +129,7 @@ Command* CommandProcessor::getCommand()
 void CommandProcessor::saveCommand(Command* command)
 {
 	this->commandList.push_back(command);
-
+	Notify(this);
 }
 
 //Checks if a given command is valid by comparing it to the vector of valid commands. 
@@ -168,6 +175,12 @@ void CommandProcessor::validate(Command* command)
 	}
 
 
+}
+
+std::string CommandProcessor::stringToLog()
+{
+	std::string log = "LOG::CommandProcessor:: Command Entered - " + this->commandList.back()->name;
+	return log;
 }
 
 //private readCommand() method that gets a command from the console and returns it as a string. 

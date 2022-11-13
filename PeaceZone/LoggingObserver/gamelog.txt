@@ -1,0 +1,2 @@
+LOG::Command:: Save Command Effect - Command loadmap is valid for the current state
+LOG::CommandProcessor:: Command Entered - loadmap
