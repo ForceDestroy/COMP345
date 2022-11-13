@@ -13,6 +13,8 @@
     <ClCompile Include="Orders\Orders.cpp" />
     <ClCompile Include="Orders\OrdersDriver.cpp" />
     <ClCompile Include="LoggingObserver\LoggingObserver.cpp" />
+    <ClCompile Include="CommandProcessing\CommandProcessing.cpp" />
+    <ClCompile Include="CommandProcessing\CommandProcessingDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\Player.h" />
@@ -23,6 +25,10 @@
     <ClInclude Include="LoggingObserver\LoggingObserver.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Map\ConquestMaps\India.map" />
+    <ClInclude Include="CommandProcessing\CommandProcessing.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CommandProcessing\CommandProcessorCommands.txt" />
+    <Text Include="GameEngine\GameStartupCommands.txt" />
   </ItemGroup>
 </Project>

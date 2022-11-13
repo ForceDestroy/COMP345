@@ -129,6 +129,8 @@
   <ItemGroup>
     <ClCompile Include="Cards\Cards.cpp" />
     <ClCompile Include="Cards\CardsDriver.cpp" />
+    <ClCompile Include="CommandProcessing\CommandProcessing.cpp" />
+    <ClCompile Include="CommandProcessing\CommandProcessingDriver.cpp" />
     <ClCompile Include="GameEngine\GameEngine.cpp" />
     <ClCompile Include="GameEngine\GameEngineDriver.cpp" />
     <ClCompile Include="LoggingObserver\LoggingObserver.cpp" />
@@ -138,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoggingObserver\LoggingObserver.h" />
+    <ClInclude Include="CommandProcessing\CommandProcessing.h" />
     <ClInclude Include="Player\Player.h" />
     <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Map\MapDriver.cpp" />
@@ -156,6 +159,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cards\Cards.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CommandProcessing\CommandProcessorCommands.txt" />
+    <Text Include="GameEngine\GameStartupCommands.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

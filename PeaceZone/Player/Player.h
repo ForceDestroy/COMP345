@@ -19,9 +19,12 @@ private:
     std::vector<Territory*>* territories;
     Hand* handOfCards;
     OrdersList* listOfOrders;
+    std::string name;
+    int reinforcementPool;
 public:
     //Constructor
     Player();
+    Player(std::string name);
     Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersList* listOfOrders);
     //Copy constructor
     Player(const Player& player);
@@ -32,6 +35,18 @@ public:
     void toDefend();
     void issueOrder(std::string order);
     
+    //Add players
+    void addPlayerTerritories(Territory* territorie);
+    
+    // Setters
+    void setPlayerHandOfCards(Hand* handOfCards);
+
+    void setPlayerListOfOrders(OrdersList* listOfOrders); 
+
+    void setArmyCount(int index, int armyCount);
+
+    void setReinforcementPool(int reinforcementPool);
+
     //Overloaded operators
     Player& operator=(const Player& p);
     friend std::ostream& operator<<(std::ostream& out, const Player& p);
