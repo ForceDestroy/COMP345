@@ -28,6 +28,7 @@
     <None Include="Map\ConquestMaps\India.map" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="CommandProcessing\Commands.txt" />
+    <Text Include="CommandProcessing\CommandProcessorCommands.txt" />
+    <Text Include="GameEngine\GameStartupCommands.txt" />
   </ItemGroup>
 </Project>

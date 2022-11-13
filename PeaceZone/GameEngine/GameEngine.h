@@ -71,6 +71,9 @@ public:
 
     //Method that adds players 
     void addPlayer(std::string playerName);
+
+    // Method to choose between console input or file input
+    void chooseInputMode(std::string mode);
 };
 
 class Transition{
@@ -99,6 +102,8 @@ private:
 
 // Free function for game state testings
 static void testGameStates(GameEngine* gameEngine);
+
+static void testStartupPhase(GameEngine* gameEngine);
 
 // State enums for handling 
 static enum stateNames;

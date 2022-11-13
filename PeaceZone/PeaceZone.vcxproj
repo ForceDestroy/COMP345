@@ -160,7 +160,8 @@
     <ClInclude Include="Cards\Cards.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="CommandProcessing\Commands.txt" />
+    <Text Include="CommandProcessing\CommandProcessorCommands.txt" />
+    <Text Include="GameEngine\GameStartupCommands.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
