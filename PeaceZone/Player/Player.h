@@ -22,7 +22,7 @@ private:
     //variables for IssueOrderPhase
     bool hasPlayedCard;
     bool hasDefended;
-    bool hasAttacked;
+    int hasAttacked;
     std::vector<Territory*>* committedTerritories;
 public:
     //variable for the player

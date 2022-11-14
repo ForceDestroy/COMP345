@@ -474,6 +474,7 @@ void MapLoader::Load(const std::string &fileName)
             territory->id = territoryId;
             territory->name = name;
             territory->continent = continentId;
+            territory->armyCount = 0;
 
             map->territories.push_back(territory);
             territoryNames.push_back(name);

@@ -24,7 +24,7 @@ public:
 	Card(const Card& c);
 	~Card();
 	Card& operator=(const Card& p);
-	void Play( Hand& h, OrdersList& o);
+	CardType Play(Hand& h);
 	friend std::ostream& operator<<(std::ostream& os, const Card& c);
 };
 

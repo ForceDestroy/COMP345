@@ -115,7 +115,7 @@ std::string deployOrder::describe()
 //validate the order
 void deployOrder::validate()
 {
-    if (target->owner == this->player && this->player->reinforcementPool >= this->troopNum)
+    if (target->owner == this->player)
     {
         setValid(true);
         std::cout << "Deploy order is valid." << std::endl;

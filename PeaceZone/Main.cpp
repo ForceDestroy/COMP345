@@ -50,22 +50,23 @@ int main()
 
     std::cout << "\nTesting Game Engine Startup Phase" << std::endl;
     GameEngine* gameEngine = new GameEngine();
+    
     testStartupPhase(gameEngine);
-    delete gameEngine;
-    gameEngine = NULL;
-    
-    std::cout << "\n==================================================" << std::endl;
 
-    std::cout << "\nTesting Game Engine Main loop" << std::endl;
-
-    testMainGameLoop(gameEngine);
-    
     //testGameStates(gameEngine);
 
- /*   delete gameEngine;*/
+    std::cout << "\n==================================================" << std::endl;
+
+    std::cout << "\nTesting Main Game Loop" << std::endl;
+
+    testMainGameLoop(gameEngine);
+
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Log Observer" << std::endl;
-//    testLoggingObserver();
+    //testLoggingObserver();
     std::cout << "\n==================================================" << std::endl;
+
+    delete gameEngine;
+    gameEngine = NULL;
 }

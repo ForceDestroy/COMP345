@@ -11,7 +11,7 @@ Player::Player()
     reinforcementPool = 0;
     hasPlayedCard = false;
     hasDefended = false;
-    hasAttacked = false;
+    hasAttacked = 3;
     hasFinishedIssuingOrders = false;
     committedTerritories = new std::vector<Territory*>();
 }
@@ -26,7 +26,7 @@ Player::Player(std::string name)
     this->reinforcementPool = 0;
     this->hasPlayedCard = false;
     this->hasDefended = false;
-    this->hasAttacked = false;
+    this->hasAttacked = 3;
     this->hasFinishedIssuingOrders = false;
     this->committedTerritories = new std::vector<Territory*>();
     this->negotiateList = new std::vector<Player*>(3);
@@ -44,7 +44,7 @@ Player::Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersLi
     this->reinforcementPool = 0;
     this->hasPlayedCard = false;
     this->hasDefended = false;
-    this->hasAttacked = false;
+    this->hasAttacked = 3;
     this->hasFinishedIssuingOrders = false;
     this->committedTerritories = new std::vector<Territory*>();
     this->negotiateList = new std::vector<Player*>(3);
@@ -170,9 +170,64 @@ void Player::issueOrder()
         //If the player has a card, then play the first one
         if (handOfCards->listOfCards->size() > 0)
         {
-            Card* cardToPlay = handOfCards->listOfCards->at(0);
+            int position = std::rand() % handOfCards->listOfCards->size();
+            Card* cardToPlay = handOfCards->listOfCards->at(position);
             std::cout << "Player " << name << " creating Order to play the following card " << *cardToPlay << std::endl;
-            cardToPlay->Play(*handOfCards, *listOfOrders);
+
+            switch (cardToPlay->Play(*handOfCards))
+            {
+            case bomb:
+            {
+                int position = std::rand() % territoriesToAttack.size();
+                Territory* territoryToBomb = territoriesToAttack.at(position);
+
+                listOfOrders->add(new bombOrder(this, territoryToBomb));
+                break;
+            }
+            case blockade:
+            {
+                int position = std::rand() % territoriesToDefend.size();
+                Territory* territoryToBlockade = territoriesToDefend.at(position);
+
+                listOfOrders->add(new blockadeOrder(this, territoryToBlockade));
+                break;
+            }
+            case airlift:
+            {
+                int position = std::rand() % territoriesToDefend.size();
+                Territory* territoryToAirlift = territoriesToDefend.at(position);
+                Territory* sourceTerritory = NULL;
+
+                for (auto territory : *territories)
+                {
+                    if (std::find(territoriesToDefend.begin(), territoriesToDefend.end(), territory) == territoriesToDefend.end() && territory->armyCount > 1)
+                    {
+                        sourceTerritory = territory;
+                        break;
+                    }
+                }
+
+                if (sourceTerritory == NULL) {
+                    sourceTerritory = territoryToAirlift;
+                }
+
+                listOfOrders->add(new airliftOrder(this, sourceTerritory, territoryToAirlift, sourceTerritory->armyCount/2+1));
+
+                break;
+            }
+            case diplomacy:
+            {
+                listOfOrders->add(new negotiateOrder(this, territoriesToAttack[0]->owner));
+                break;
+            }
+            case reinforcement:
+            {
+                //Add more reinforcements to the player
+                break;
+            }
+            default:
+                break;
+            }
         }
         hasPlayedCard = true;
     }
@@ -201,7 +256,7 @@ void Player::issueOrder()
             }
             hasDefended = true;
         }
-        else if (!hasAttacked)
+        else if (hasAttacked > 0)
         {
             //only attack if there are territories to attack
             if (territoriesToAttack.size() > 0)
@@ -224,7 +279,7 @@ void Player::issueOrder()
                     }
                 }
             }
-            hasAttacked = true;
+            hasAttacked--;
         }
         //when the player is done with all the orders
         else
@@ -238,7 +293,7 @@ void Player::resetIssueOrderPhase()
 {
     hasPlayedCard = false;
     hasDefended = false;
-    hasAttacked = false;
+    hasAttacked = 3;
     hasFinishedIssuingOrders = false;
     committedTerritories->clear();
     negotiateList->clear();

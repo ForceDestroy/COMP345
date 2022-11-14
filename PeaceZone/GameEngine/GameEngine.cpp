@@ -386,6 +386,8 @@ bool GameEngine::checkCommandValidity(std::string input) {
 //Main Game Loop
 void GameEngine::mainGameLoop() {
 
+    int iterationCounter = 0;
+
     while (playerList.size() > 1) {
         std::cout << "Starting Main Game Loop" << std::endl;
 
@@ -426,7 +428,10 @@ void GameEngine::mainGameLoop() {
             //transition to winPhase
             checkCommandValidity("win");
         }
+        iterationCounter++;
     }
+
+    std::cout << activeMap << std::endl;
 }
 //ReinforcementPhase
 void GameEngine::reinforcementPhase() {
@@ -526,8 +531,9 @@ void GameEngine::executeOrdersPhase() {
 }
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
-	std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
+	//std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
     //std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
+    std::string mapsPath = "C:\\COMP345\\PeaceZone\\Map\\ConquestMaps";
 	std::vector<std::string> mapsFileNames;
     std::string filePathName;
     Command* currentCommand;

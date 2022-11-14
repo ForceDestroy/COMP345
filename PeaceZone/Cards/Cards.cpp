@@ -34,41 +34,11 @@ Card& Card::operator=(const Card& c) {
 }
 
 //Play function removes card from hand, returns it to deck and creates a new order to be added to player's list
-void Card::Play(Hand& h, OrdersList& o) {
+CardType Card::Play(Hand& h) {
 	h.Remove(this);
 	deck->Insert(this);
 
-	switch (type)
-	{
-	case bomb:
-	{
-		o.add(new bombOrder());
-		break;
-	}
-	case blockade:
-	{
-		o.add(new blockadeOrder());
-		break;
-	}
-	case airlift:
-	{
-		o.add(new airliftOrder());
-		break;
-	}
-	case diplomacy:
-	{
-		o.add(new negotiateOrder());
-		break;
-	}
-	case reinforcement:
-	{
-		//Add more reinforcements to the player
-			break;
-	}
-	default:
-		break;
-	}
-	
+	return type;
 }
 
 //OSstream operator - Card
