@@ -73,6 +73,13 @@ std::ostream& operator<<(std::ostream& out, Orders& orders)
     out << orders.describe() << std::endl;
     return out;
 }
+
+std::string Orders::stringToLog()
+{
+    std::string log = "LOG::Orders:: Order Executed - " + this->describe();
+    return log;
+}
+
 #pragma endregion
 
 //Class deployOrder
@@ -135,6 +142,7 @@ void deployOrder::execute()
         describe();
         std::cout << "Deploy order is executed." << std::endl;
         target->armyCount += troopNum;
+        Notify(this);
     }
     else
     {
@@ -242,6 +250,7 @@ void advanceOrder::execute()
             std::cout << "Advance order is executed." << std::endl;
             source->armyCount -= troopNum;
             target->armyCount += troopNum;
+            Notify(this);
         }
         else if (this->player->truce(this->target->owner))
         {
@@ -397,6 +406,7 @@ void bombOrder::execute()
         describe();
         std::cout << "Bomb order is executed." << std::endl;
         this->target->armyCount /= 2;
+        Notify(this);
     }
     else
     {
@@ -480,6 +490,7 @@ void blockadeOrder::execute()
         std::cout << "Blockade order is executed." << std::endl;
         this->target->armyCount *= 2;
         this->target->owner = NULL;
+        Notify(this);
     }
     else
     {
@@ -565,6 +576,7 @@ void airliftOrder::execute()
         std::cout << "Airlift order is executed." << std::endl;
         this->source->armyCount -= this->troopNum;
         this->target->armyCount += this->troopNum;
+        Notify(this);
     }
     else
     {
@@ -657,6 +669,7 @@ void negotiateOrder::execute()
         describe();
         std::cout << "Negotiate order is executed." << std::endl;
         this->player->addNegotiateList(this->target);
+        Notify(this);
     }
     else
     {
@@ -717,6 +730,7 @@ void OrdersList::add(Orders* order)
 {
     ordersList->push_back(order);
     std::cout << "An order has been added" << std::endl;
+    Notify(this);
 }
 //remove an order from the list
 void OrdersList::remove(Orders* order)
@@ -779,5 +793,11 @@ int OrdersList::findOrderIndex(std::vector<Orders*> vec, Orders* item)
 
 int OrdersList::getSize() {
     return ordersList->size();
+}
+
+std::string OrdersList::stringToLog()
+{
+    std::string log = "LOG::OrdersList:: Order Added - " + this->ordersList->back()->describe();
+    return log;
 }
 #pragma endregion

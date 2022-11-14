@@ -59,12 +59,12 @@ int main()
 
     std::cout << "\nTesting Main Game Loop" << std::endl;
 
-    testMainGameLoop(gameEngine);
+    //testMainGameLoop(gameEngine);
 
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Log Observer" << std::endl;
-    //testLoggingObserver();
+    testLoggingObserver();
     std::cout << "\n==================================================" << std::endl;
 
     delete gameEngine;
