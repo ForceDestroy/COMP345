@@ -386,10 +386,10 @@ bool GameEngine::checkCommandValidity(std::string input) {
 //Main Game Loop
 void GameEngine::mainGameLoop() {
 
+    std::cout << "Starting Main Game Loop" << std::endl;
     int iterationCounter = 0;
 
     while (playerList.size() > 1) {
-        std::cout << "Starting Main Game Loop" << std::endl;
 
         reinforcementPhase();
 
@@ -404,16 +404,15 @@ void GameEngine::mainGameLoop() {
         executeOrdersPhase();
 
         //Remove all players who do not own any territories
-        for (auto it = playerList.begin(); it != playerList.end(); it++)
+        for (auto it : playerList)
         {
-            if ((*it)->hasLost())
+            if (it->hasLost())
             {
-                std::cout << "Player " << (*it)->name << " owns no territories and has been removed from the game." << std::endl;
+                std::cout << "Player " << it->name << " owns no territories and has been removed from the game." << std::endl;
 
-                auto todelete = *it;
-                playerList.erase(it--);
+                playerList.erase(remove(playerList.begin(), playerList.end(), it), playerList.end());
 
-                delete todelete;
+                delete it;
             }
         }
 
@@ -429,9 +428,8 @@ void GameEngine::mainGameLoop() {
             checkCommandValidity("win");
         }
         iterationCounter++;
+        
     }
-
-    std::cout << activeMap << std::endl;
 }
 //ReinforcementPhase
 void GameEngine::reinforcementPhase() {
@@ -533,7 +531,9 @@ void GameEngine::executeOrdersPhase() {
 void GameEngine::startupPhase() {
 	//std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
     //std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
-    std::string mapsPath = "C:\\COMP345\\PeaceZone\\Map\\ConquestMaps";
+    // std::string mapsPath = "C:\\COMP345\\PeaceZone\\Map\\ConquestMaps";
+    std::string mapsPath = "C:\\Users\\Andrew Abbott\\Documents\\GitHub\\COMP345\\PeaceZone\\Map\\ConquestMaps";
+
 	std::vector<std::string> mapsFileNames;
     std::string filePathName;
     Command* currentCommand;

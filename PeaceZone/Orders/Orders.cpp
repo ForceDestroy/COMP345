@@ -220,7 +220,7 @@ bool advanceOrder::isNeighbor()
 //validate the order
 void advanceOrder::validate()
 {
-    if (this->source->id != this->target->id && source->owner == player && isNeighbor() && source->armyCount > 1 && source->armyCount > troopNum)
+    if (this->source->id != this->target->id && source->owner == player && isNeighbor() && source->armyCount > 1 && source->armyCount >= troopNum)
     {
         setValid(true);
         std::cout << "Advance order is valid." << std::endl;
@@ -284,8 +284,14 @@ void advanceOrder::simulateAttack()
         }
         else
         {
+            if(this->target->owner != NULL)
+            {
+                this->target->owner->removeTerritory(this->target);
+            }
+            this->player->addPlayerTerritories(this->target);
             this->target->owner = this->player;
             this->target->armyCount = this->troopNum - attackersKilled;
+
             if (!this->player->hasConqTerritory)
             {
                 this->player->hasConqTerritory = true;
@@ -479,6 +485,7 @@ void blockadeOrder::execute()
         describe();
         std::cout << "Blockade order is executed." << std::endl;
         this->target->armyCount *= 2;
+        this->target->owner->removeTerritory(this->target);
         this->target->owner = NULL;
     }
     else

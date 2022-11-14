@@ -22,8 +22,9 @@ private:
     //variables for IssueOrderPhase
     bool hasPlayedCard;
     bool hasDefended;
-    int hasAttacked;
+    bool hasAttacked;
     std::vector<Territory*>* committedTerritories;
+    std::vector<Territory*>* attackedTerritories;
 public:
     //variable for the player
     Hand* handOfCards;
@@ -52,6 +53,7 @@ public:
     std::vector<Territory*>* getTerritories();
     OrdersList* getOrdersList();
     bool truce(Player* player);
+    void removeTerritory(Territory* t);
 
     //Add players
     void addPlayerTerritories(Territory* territorie);
