@@ -62,6 +62,10 @@ public:
     //Method that implements a command based user interaction mechanism to start the game 
     void startupPhase();
 
+    void mainGameLoop();
+    void reinforcementPhase();
+    void issueOrdersPhase();
+    void executeOrdersPhase();
     //Method that updates the commandProcessor validCommands
     void updateCmdProcessor();
 

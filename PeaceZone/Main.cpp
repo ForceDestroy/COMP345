@@ -54,6 +54,11 @@ int main()
     delete gameEngine;
     gameEngine = NULL;
     
+    std::cout << "\n==================================================" << std::endl;
+
+    std::cout << "\nTesting Game Engine Main loop" << std::endl;
+
+    testMainGameLoop(gameEngine);
     
     //testGameStates(gameEngine);
 

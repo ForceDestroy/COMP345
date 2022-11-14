@@ -2,9 +2,10 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <random>
 
 #include "../Map/Map.h"
-#include "../Orders/Orders.h"
+#include "../Orders/Orders.fwd.h"
 #include "../Cards/Cards.h"
 
 #ifdef _DEBUG
@@ -17,11 +18,23 @@ class Player
 private:
     //variables for the player
     std::vector<Territory*>* territories;
-    Hand* handOfCards;
     OrdersList* listOfOrders;
+    //variables for IssueOrderPhase
+    bool hasPlayedCard;
+    bool hasDefended;
+    bool hasAttacked;
+    std::vector<Territory*>* committedTerritories;
+public:
+    //variable for the player
+    Hand* handOfCards;
     std::string name;
     int reinforcementPool;
-public:
+    //variable for IssueOrderPhase
+    bool hasFinishedIssuingOrders;
+    //checks if player has conquered at least 1 territory this turn
+    bool hasConqTerritory;
+    std::vector<Player*>* negotiateList;
+
     //Constructor
     Player();
     Player(std::string name);
@@ -31,21 +44,29 @@ public:
     //Destructor
     ~Player();
     //Player methods
-    void toAttack();
-    void toDefend();
-    void issueOrder(std::string order);
-    
+    std::vector<Territory*> toAttack();
+    std::vector<Territory*> toDefend();
+    void issueOrder();
+    bool hasLost();
+    void resetIssueOrderPhase();
+    std::vector<Territory*>* getTerritories();
+    OrdersList* getOrdersList();
+    bool truce(Player* player);
+
     //Add players
     void addPlayerTerritories(Territory* territorie);
-    
+
     // Setters
     void setPlayerHandOfCards(Hand* handOfCards);
 
-    void setPlayerListOfOrders(OrdersList* listOfOrders); 
-
-    void setArmyCount(int index, int armyCount);
+    void setPlayerListOfOrders(OrdersList* listOfOrders);
 
     void setReinforcementPool(int reinforcementPool);
+
+    void addNegotiateList(Player* player);
+
+    //Getter
+    Hand* getPlayerHandOfCards();
 
     //Overloaded operators
     Player& operator=(const Player& p);

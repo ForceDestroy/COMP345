@@ -382,6 +382,148 @@ bool GameEngine::checkCommandValidity(std::string input) {
    return true;
 }
 
+ 
+//Main Game Loop
+void GameEngine::mainGameLoop() {
+
+    while (playerList.size() > 1) {
+        std::cout << "Starting Main Game Loop" << std::endl;
+
+        reinforcementPhase();
+
+        //transition to issueOrderPhase
+        checkCommandValidity( "issueorder");
+
+        issueOrdersPhase();
+
+        //transition to executeOrdersPhase
+        checkCommandValidity("endissueorders");
+
+        executeOrdersPhase();
+
+        //Remove all players who do not own any territories
+        for (auto it = playerList.begin(); it != playerList.end(); it++)
+        {
+            if ((*it)->hasLost())
+            {
+                std::cout << "Player " << (*it)->name << " owns no territories and has been removed from the game." << std::endl;
+
+                auto todelete = *it;
+                playerList.erase(it--);
+
+                delete todelete;
+            }
+        }
+
+        if (playerList.size() > 1) {
+
+            //transition to reinforcementPhase
+            checkCommandValidity("endexecorders");
+        }
+        else
+        {
+            std::cout << "Player "<<playerList[0]->name <<" owns all territories and has won the game" << std::endl;
+            //transition to winPhase
+            checkCommandValidity("win");
+        }
+    }
+}
+//ReinforcementPhase
+void GameEngine::reinforcementPhase() {
+    std::cout << "Starting Reinforcement Phase." << std::endl;
+
+    //Loop for each player 
+    for (auto p : playerList) {
+
+        std::cout << "Calculating reinforcements for player: "<< p->name << std::endl;
+        //Players gain 1 reinformcement for each 3 territories, rounded down
+        std::cout  << p->name << " owns "<< p->getTerritories()->size() << " territories. Adding " << p->getTerritories()->size() / 3<< " reinforcements"<< std::endl;
+        int reinforcements = p->getTerritories()->size() / 3;
+
+        //Add continent bonuses when player owns all territories
+        for (auto c : activeMap->continents) {
+            if (p == activeMap->GetContinentOwner(c))
+            {
+                std::cout << p->name << " owns the continent" << c->name << ". Adding " << c->bonus << " reinforcements" << std::endl;
+                reinforcements += c->bonus;
+            }
+        }
+
+        //Minimum reinforcements is 3
+        if (reinforcements < 3)
+        {
+            std::cout << p->name << " did not meet the minimum amount of reinforcements. Setting reinforcement count to 3" << std::endl;
+            reinforcements = 3;
+        }
+
+        std::cout << "Adding a total of "<< reinforcements << " units to player " << p->name << std::endl;
+        p->reinforcementPool += reinforcements;
+
+    }
+}
+
+void GameEngine::issueOrdersPhase() {
+    std::cout << "Starting Issue Orders Phase." << std::endl;
+
+    //Reset Player trackers for new IssueOrdersPhase
+    for (auto p : playerList) {
+        p->resetIssueOrderPhase();
+    }
+
+    int remainingPlayers = -1;
+
+    //break when all players in an interation mark themselves as done
+    while (remainingPlayers != 0) {
+        remainingPlayers = playerList.size();
+
+        //Loop for each player
+        for (auto p : playerList) {
+            //issue order if player has not finished
+            if (!p->hasFinishedIssuingOrders) {
+                p->issueOrder();
+            }
+            else {
+                remainingPlayers--;
+            }
+        }
+    }
+
+}
+
+void GameEngine::executeOrdersPhase() {
+
+    std::cout << "Starting Execute Orders Phase." << std::endl;
+    int remainingPlayers = -1;
+
+    while (remainingPlayers != 0)
+    {
+        remainingPlayers = playerList.size();
+
+        //Loop for each player 
+        for (auto p : playerList) {
+            //Check the player has Orders left to execute
+            if (p->getOrdersList()->getSize() != 0)
+            {
+                //Execute the first Order in the player's OrderList
+                (*p->getOrdersList())[0]->execute();
+
+                //Remove the Order
+                Orders* o = (*p->getOrdersList())[0];
+                p->getOrdersList()->remove(o);
+            }
+            else {
+                remainingPlayers--;
+            }
+        }
+    }
+    //Loop for each player and draw a card if they conquered a territory
+    for (auto p : playerList) {
+        if (p->hasConqTerritory) {
+            p->handOfCards->Insert(gameDeck->Draw());
+        }
+    }
+
+}
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
 	std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";

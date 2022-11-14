@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "../Orders/Orders.h"
+#include "../Orders/Orders.fwd.h"
 
 class Deck;
 class Hand;
@@ -51,8 +51,8 @@ public:
 
 class Hand {
 private:
-	std::vector<Card*>* listOfCards;
 public:
+	std::vector<Card*>* listOfCards;
 	Hand();
 	Hand(const Hand& hand);
 	~Hand();
