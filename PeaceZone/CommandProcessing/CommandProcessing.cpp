@@ -186,11 +186,13 @@ std::string CommandProcessor::stringToLog()
 //private readCommand() method that gets a command from the console and returns it as a string. 
 std::string CommandProcessor::readCommand()
 {
-	std::cout << std::endl << "Please enter a valid command for the current state : " << std::endl;
+	std::cout << std::endl << "Please enter a valid command for the current state : " << std::endl << "<<<<<<<<<<<<<<<<<<<<<" << std::endl;
 
 	std::string input;
 	std::getline(std::cin,input);
 	//std::string cleanInput = stringUnifier(input);
+
+	std::cout << "<<<<<<<<<<<<<<<<<<<<<" << std::endl << std::endl;
 	return input;
 	
 }

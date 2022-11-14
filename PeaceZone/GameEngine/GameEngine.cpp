@@ -384,8 +384,8 @@ bool GameEngine::checkCommandValidity(std::string input) {
 
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
-	//std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
-    std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
+	std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
+    //std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
 	std::vector<std::string> mapsFileNames;
     std::string filePathName;
     Command* currentCommand;
@@ -428,9 +428,14 @@ void GameEngine::startupPhase() {
                 continue;
             }
 
-            if (currentCommand->name._Equal("validatemap"))
+            if (currentCommand->name._Equal("validatemap") && activeMap != NULL)
             {
                 break;
+            }
+            else if (currentCommand->name._Equal("validatemap") && activeMap == NULL) {
+                std::cout << "You cannot validatemap since you need to load another map. Please use the loadmap <filename> command to select the map that will be loaded to the game. " << std::endl;
+                hasActiveMap = false;
+                continue;
             }
             
 
@@ -452,7 +457,7 @@ void GameEngine::startupPhase() {
                     }
                     
                     //Set the active map as the loaded map
-				    activeMap = mapLoader->maps[0];
+				    activeMap = mapLoader->maps[mapLoader->maps.size()-1];
                     hasActiveMap = true;
                     
                     //Save the effect of the command
@@ -480,15 +485,19 @@ void GameEngine::startupPhase() {
         if (!isValid){
 			std::cout << "The map you have entered is invalid. Please try again with a different map. " << std::endl;
             //Deletes the loaded map from the maploaded
-            delete mapLoader->maps[0];
+            delete mapLoader->maps[mapLoader->maps.size() - 1];
             activeMap = NULL;
             //Save the effect of the command
             currentCommand->saveEffect("The loaded map is invalid.");
+            hasActiveMap = false;
             continue;
         }
+        else {
+            //Changes the current state of the game
+		    checkCommandValidity("validatemap");
 
-        //Changes the current state of the game
-		checkCommandValidity("validatemap");
+        }
+
 
     } while (!isValid);
 

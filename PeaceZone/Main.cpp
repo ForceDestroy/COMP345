@@ -49,10 +49,10 @@ int main()
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Game Engine Startup Phase" << std::endl;
-    //GameEngine* gameEngine = new GameEngine();
-    //testStartupPhase(gameEngine);
-    //delete gameEngine;
-    //gameEngine = NULL;
+    GameEngine* gameEngine = new GameEngine();
+    testStartupPhase(gameEngine);
+    delete gameEngine;
+    gameEngine = NULL;
     
     
     //testGameStates(gameEngine);
@@ -61,6 +61,6 @@ int main()
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Log Observer" << std::endl;
-    testLoggingObserver();
+//    testLoggingObserver();
     std::cout << "\n==================================================" << std::endl;
 }
