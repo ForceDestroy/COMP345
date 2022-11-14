@@ -14,6 +14,7 @@
 #include "../Map/Map.h"
 #include "../Player/Player.h"
 #include "../Orders/Orders.h" 
+#include "../LoggingObserver/LoggingObserver.h"
 
 
 #ifdef _DEBUG
@@ -38,7 +39,7 @@ public:
     friend std::ostream &operator<<(std::ostream &out, const State &State);
 };
 
-class GameEngine {
+class GameEngine : public ILoggable, public Subject{
 public:
     // Data Members
     Map* activeMap;
@@ -62,6 +63,10 @@ public:
     //Method that implements a command based user interaction mechanism to start the game 
     void startupPhase();
 
+    void mainGameLoop();
+    void reinforcementPhase();
+    void issueOrdersPhase();
+    void executeOrdersPhase();
     //Method that updates the commandProcessor validCommands
     void updateCmdProcessor();
 
@@ -70,6 +75,8 @@ public:
 
     // Method to choose between console input or file input
     void chooseInputMode();
+
+    std::string stringToLog() override;
 };
 
 class Transition{
@@ -87,13 +94,8 @@ public:
     // Methods
     Transition& operator=(const Transition &);
     friend std::ostream &operator<<(std::ostream &out, const Transition &transition);
-    
-private:
     //Transition method that changes the current state of the game
     void transitionState(GameEngine* gameEngine, int stateNumber, std::string input);
-
-
-    
 };
 
 // Free function for game state testings

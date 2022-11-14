@@ -12,6 +12,8 @@
     <ClCompile Include="Map\MapDriver.cpp" />
     <ClCompile Include="Orders\Orders.cpp" />
     <ClCompile Include="Orders\OrdersDriver.cpp" />
+    <ClCompile Include="LoggingObserver\LoggingObserver.cpp" />
+    <ClCompile Include="LoggingObserver\LoggingObserverDriver.cpp" />
     <ClCompile Include="CommandProcessing\CommandProcessing.cpp" />
     <ClCompile Include="CommandProcessing\CommandProcessingDriver.cpp" />
   </ItemGroup>
@@ -21,14 +23,15 @@
     <ClInclude Include="Orders\Orders.h" />
     <ClInclude Include="GameEngine\GameEngine.h" />
     <ClInclude Include="Cards\Cards.h" />
+    <ClInclude Include="LoggingObserver\LoggingObserver.h" />
     <ClInclude Include="CommandProcessing\CommandProcessing.h" />
+    <ClInclude Include="Orders\Orders.fwd.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Users\Sango\Downloads\Alabama.map" />
     <None Include="Map\ConquestMaps\India.map" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="CommandProcessing\CommandProcessorCommands.txt" />
     <Text Include="GameEngine\GameStartupCommands.txt" />
+    <Text Include="CommandProcessing\CommandProcessorCommands.txt" />
   </ItemGroup>
 </Project>

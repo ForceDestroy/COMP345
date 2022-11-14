@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>Default</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,12 +134,16 @@
     <ClCompile Include="CommandProcessing\CommandProcessingDriver.cpp" />
     <ClCompile Include="GameEngine\GameEngine.cpp" />
     <ClCompile Include="GameEngine\GameEngineDriver.cpp" />
+    <ClCompile Include="LoggingObserver\LoggingObserver.cpp" />
+    <ClCompile Include="LoggingObserver\LoggingObserverDriver.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Player\PlayerDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandProcessing\CommandProcessing.h" />
+    <ClInclude Include="LoggingObserver\LoggingObserver.h" />
+    <ClInclude Include="Orders\Orders.fwd.h" />
     <ClInclude Include="Player\Player.h" />
     <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Map\MapDriver.cpp" />
@@ -150,7 +155,6 @@
     <ClInclude Include="Orders\Orders.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Users\Sango\Downloads\Alabama.map" />
     <None Include="Map\ConquestMaps\India.map" />
   </ItemGroup>
   <ItemGroup>

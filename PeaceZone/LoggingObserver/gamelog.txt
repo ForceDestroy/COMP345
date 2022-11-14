@@ -1,0 +1,6 @@
+
+LOG::Command:: Save Command Effect - Command loadmap is valid for the current state
+LOG::CommandProcessor:: Command Entered - loadmap
+LOG::Orders:: Order Executed - Deploy Order moves troops from reserves to territory
+LOG::OrdersList:: Order Added - Deploy Order moves troops from reserves to territory
+LOG::GameEngine:: State Changed - Map loaded

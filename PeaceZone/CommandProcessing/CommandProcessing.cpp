@@ -48,6 +48,13 @@ std::ostream& operator<<(std::ostream& out, const Command& command)
 void Command::saveEffect(std::string effect)
 {
 	this->effect = effect;
+	Notify(this);
+}
+
+std::string Command::stringToLog()
+{
+	std::string log = "LOG::Command:: Save Command Effect - " + this->effect;
+	return log;
 }
 
 #pragma endregion
@@ -117,12 +124,22 @@ Command* CommandProcessor::getCommand()
 	return command;
 }
 
+//Public command method that can be called by other object to get a command.
+// It reads the command, create a Command object, validate it and save it to the list of commands. 
+Command* CommandProcessor::getCommand(std::string commandName)
+{
+	Command* command = new Command(commandName, "");
+	validate(command);
+	saveCommand(command);
+	return command;
+}
+
 
 //Saves the command object into the list of commands
 void CommandProcessor::saveCommand(Command* command)
 {
 	this->commandList.push_back(command);
-
+	Notify(this);
 }
 
 //Checks if a given command is valid by comparing it to the vector of valid commands. 
@@ -170,14 +187,22 @@ void CommandProcessor::validate(Command* command)
 
 }
 
+std::string CommandProcessor::stringToLog()
+{
+	std::string log = "LOG::CommandProcessor:: Command Entered - " + this->commandList.back()->name;
+	return log;
+}
+
 //private readCommand() method that gets a command from the console and returns it as a string. 
 std::string CommandProcessor::readCommand()
 {
-	std::cout << std::endl << "Please enter a valid command for the current state : " << std::endl;
+	std::cout << std::endl << "Please enter a valid command for the current state : " << std::endl << "<<<<<<<<<<<<<<<<<<<<<" << std::endl;
 
 	std::string input;
 	std::getline(std::cin,input);
 	//std::string cleanInput = stringUnifier(input);
+
+	std::cout << "<<<<<<<<<<<<<<<<<<<<<" << std::endl << std::endl;
 	return input;
 	
 }

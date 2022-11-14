@@ -213,11 +213,8 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
           std::cout << "Oh no! T.T Something went terribly wrong!" << std::endl;
           break;
         
-        
     }
  }
-
-
 #pragma endregion
 
 #pragma region GameEngine
@@ -295,7 +292,7 @@ GameEngine::GameEngine()
     //Creating the game deck
     this->gameDeck = new Deck();
 
-
+    this->activeMap = NULL;
     
 }
 
@@ -320,7 +317,9 @@ GameEngine::~GameEngine()
         s=NULL;
     }
     delete cmdProcessor;
-	delete activeMap;
+    if (activeMap != NULL) {
+	    delete activeMap;
+    }
     delete gameDeck;
     currentState=NULL;
     activeMap=NULL;
@@ -379,13 +378,162 @@ bool GameEngine::checkCommandValidity(std::string input) {
 
    // call transition to change gamestate
    transitionState(this, stateNumber, input);
+   Notify(this);
    return true;
 }
 
+ 
+//Main Game Loop
+void GameEngine::mainGameLoop() {
+
+    std::cout << "Starting Main Game Loop" << std::endl;
+    int iterationCounter = 0;
+
+    while (playerList.size() > 1) {
+
+        reinforcementPhase();
+
+        //transition to issueOrderPhase
+        checkCommandValidity( "issueorder");
+
+        issueOrdersPhase();
+
+        //transition to executeOrdersPhase
+        checkCommandValidity("endissueorders");
+
+        executeOrdersPhase();
+
+        //Remove all players who do not own any territories
+        for (auto it : playerList)
+        {
+            if (it->hasLost())
+            {
+                std::cout << "Player " << it->name << " owns no territories and has been removed from the game." << std::endl;
+
+                playerList.erase(remove(playerList.begin(), playerList.end(), it), playerList.end());
+
+                delete it;
+            }
+        }
+
+        if (playerList.size() > 1) {
+
+            //transition to reinforcementPhase
+            checkCommandValidity("endexecorders");
+        }
+        else
+        {
+            std::cout << "Player "<<playerList[0]->name <<" owns all territories and has won the game" << std::endl;
+            //transition to winPhase
+            checkCommandValidity("win");
+        }
+        iterationCounter++;
+        
+    }
+}
+//ReinforcementPhase
+void GameEngine::reinforcementPhase() {
+    std::cout << "Starting Reinforcement Phase." << std::endl;
+
+    //Loop for each player 
+    for (auto p : playerList) {
+
+        std::cout << "Calculating reinforcements for player: "<< p->name << std::endl;
+        //Players gain 1 reinformcement for each 3 territories, rounded down
+        std::cout  << p->name << " owns "<< p->getTerritories()->size() << " territories. Adding " << p->getTerritories()->size() / 3<< " reinforcements"<< std::endl;
+        int reinforcements = p->getTerritories()->size() / 3;
+
+        //Add continent bonuses when player owns all territories
+        for (auto c : activeMap->continents) {
+            if (p == activeMap->GetContinentOwner(c))
+            {
+                std::cout << p->name << " owns the continent" << c->name << ". Adding " << c->bonus << " reinforcements" << std::endl;
+                reinforcements += c->bonus;
+            }
+        }
+
+        //Minimum reinforcements is 3
+        if (reinforcements < 3)
+        {
+            std::cout << p->name << " did not meet the minimum amount of reinforcements. Setting reinforcement count to 3" << std::endl;
+            reinforcements = 3;
+        }
+
+        std::cout << "Adding a total of "<< reinforcements << " units to player " << p->name << std::endl;
+        p->reinforcementPool += reinforcements;
+
+    }
+}
+
+void GameEngine::issueOrdersPhase() {
+    std::cout << "Starting Issue Orders Phase." << std::endl;
+
+    //Reset Player trackers for new IssueOrdersPhase
+    for (auto p : playerList) {
+        p->resetIssueOrderPhase();
+    }
+
+    int remainingPlayers = -1;
+
+    //break when all players in an interation mark themselves as done
+    while (remainingPlayers != 0) {
+        remainingPlayers = playerList.size();
+
+        //Loop for each player
+        for (auto p : playerList) {
+            //issue order if player has not finished
+            if (!p->hasFinishedIssuingOrders) {
+                p->issueOrder();
+            }
+            else {
+                remainingPlayers--;
+            }
+        }
+    }
+
+}
+
+void GameEngine::executeOrdersPhase() {
+
+    std::cout << "Starting Execute Orders Phase." << std::endl;
+    int remainingPlayers = -1;
+
+    while (remainingPlayers != 0)
+    {
+        remainingPlayers = playerList.size();
+
+        //Loop for each player 
+        for (auto p : playerList) {
+            //Check the player has Orders left to execute
+            if (p->getOrdersList()->getSize() != 0)
+            {
+                //Execute the first Order in the player's OrderList
+                (*p->getOrdersList())[0]->execute();
+
+                //Remove the Order
+                Orders* o = (*p->getOrdersList())[0];
+                p->getOrdersList()->remove(o);
+            }
+            else {
+                remainingPlayers--;
+            }
+        }
+    }
+    //Loop for each player and draw a card if they conquered a territory
+    for (auto p : playerList) {
+        if (p->hasConqTerritory) {
+            p->handOfCards->Insert(gameDeck->Draw());
+        }
+    }
+
+}
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
 	//std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
-    std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
+    //std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
+    // std::string mapsPath = "C:\\COMP345\\PeaceZone\\Map\\ConquestMaps";
+    std::string mapsPath = "C:\\Users\\Andrew Abbott\\Documents\\GitHub\\COMP345\\PeaceZone\\Map\\ConquestMaps";
+
 	std::vector<std::string> mapsFileNames;
     std::string filePathName;
     Command* currentCommand;
@@ -428,9 +576,14 @@ void GameEngine::startupPhase() {
                 continue;
             }
 
-            if (currentCommand->name._Equal("validatemap"))
+            if (currentCommand->name._Equal("validatemap") && activeMap != NULL)
             {
                 break;
+            }
+            else if (currentCommand->name._Equal("validatemap") && activeMap == NULL) {
+                std::cout << "You cannot validatemap since you need to load another map. Please use the loadmap <filename> command to select the map that will be loaded to the game. " << std::endl;
+                hasActiveMap = false;
+                continue;
             }
             
 
@@ -452,7 +605,7 @@ void GameEngine::startupPhase() {
                     }
                     
                     //Set the active map as the loaded map
-				    activeMap = mapLoader->maps[0];
+				    activeMap = mapLoader->maps[mapLoader->maps.size()-1];
                     hasActiveMap = true;
                     
                     //Save the effect of the command
@@ -480,15 +633,19 @@ void GameEngine::startupPhase() {
         if (!isValid){
 			std::cout << "The map you have entered is invalid. Please try again with a different map. " << std::endl;
             //Deletes the loaded map from the maploaded
-            delete mapLoader->maps[0];
+            delete mapLoader->maps[mapLoader->maps.size() - 1];
             activeMap = NULL;
             //Save the effect of the command
             currentCommand->saveEffect("The loaded map is invalid.");
+            hasActiveMap = false;
             continue;
         }
+        else {
+            //Changes the current state of the game
+		    checkCommandValidity("validatemap");
 
-        //Changes the current state of the game
-		checkCommandValidity("validatemap");
+        }
+
 
     } while (!isValid);
 
@@ -665,6 +822,12 @@ void GameEngine::chooseInputMode() {
         std::cout << "Game engine is now using CommandProcessor." << std::endl << std::endl;
 
     }
+}
+
+std::string GameEngine::stringToLog()
+{
+    std::string log = "LOG::GameEngine:: State Changed - " + this->currentState->name;
+    return log;
 }
 #pragma endregion
 

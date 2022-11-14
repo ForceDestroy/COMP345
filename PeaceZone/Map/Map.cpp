@@ -226,6 +226,19 @@ std::ostream &operator<<(std::ostream &out, const Map &map)
     return out;
 }
 
+// Check if all territories in a continent are owned by a single Player
+Player* Map::GetContinentOwner(Continent* continent)
+{
+    Player* owner = continent->territories[0]->owner;
+    for (Territory* territory : continent->territories)
+    {
+        if (territory->owner != owner)
+            return NULL;
+    }
+
+    return owner;
+}
+
 // Visit all territories starting from a given territory
 // Used to check if a continent is connected
 void Map::VisitContinent(Territory *current, int continent)
@@ -461,6 +474,7 @@ void MapLoader::Load(const std::string &fileName)
             territory->id = territoryId;
             territory->name = name;
             territory->continent = continentId;
+            territory->armyCount = 0;
 
             map->territories.push_back(territory);
             territoryNames.push_back(name);

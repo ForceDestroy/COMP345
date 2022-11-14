@@ -54,7 +54,8 @@ void testGameStates(GameEngine* gameEngine)
 }
 
 
-void testStartupPhase(GameEngine* gameEngine){
+inline void testStartupPhase(GameEngine* gameEngine){
+    std::string input;
 
     //Ask the user which mode to read the commands from
     gameEngine->chooseInputMode();
@@ -64,4 +65,8 @@ void testStartupPhase(GameEngine* gameEngine){
        
     std::cout << "End of startup phase. "<< std::endl << std::endl;
 
+}
+
+inline void testMainGameLoop(GameEngine* gameEngine) {
+    gameEngine->mainGameLoop();
 }
