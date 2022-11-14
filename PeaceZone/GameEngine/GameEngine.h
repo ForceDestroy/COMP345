@@ -14,6 +14,7 @@
 #include "../Map/Map.h"
 #include "../Player/Player.h"
 #include "../Orders/Orders.h" 
+#include "../LoggingObserver/LoggingObserver.h"
 
 
 #ifdef _DEBUG
@@ -38,7 +39,7 @@ public:
     friend std::ostream &operator<<(std::ostream &out, const State &State);
 };
 
-class GameEngine {
+class GameEngine : public ILoggable, public Subject{
 public:
     // Data Members
     Map* activeMap;
@@ -74,6 +75,8 @@ public:
 
     // Method to choose between console input or file input
     void chooseInputMode();
+
+    std::string stringToLog() override;
 };
 
 class Transition{

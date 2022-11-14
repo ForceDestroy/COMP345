@@ -14,12 +14,13 @@
 #include "../Map/Map.h"
 #include "../Cards/Cards.h"
 #include "Orders.fwd.h"
+#include "../LoggingObserver/LoggingObserver.h"
 
 #ifdef _DEBUG
 #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
 
-class Orders
+class Orders : public ILoggable, public Subject
 {
 protected:
     bool valid = false;
@@ -40,6 +41,8 @@ public:
     void setPlayer(Player* player);
     Orders& operator=(const Orders& ord);
     friend std::ostream& operator<<(std::ostream& out, const Orders& orders);
+
+    std::string stringToLog() override;
 };
 
 // execute method for subclases not required now and will be added later
@@ -184,11 +187,10 @@ public:
 };
 
 // OrdersList class
-class OrdersList
+class OrdersList : public ILoggable, public Subject
 {
-private:
-    std::vector<Orders*>* ordersList;
 public:
+    std::vector<Orders*>* ordersList;
     // Constructors
     OrdersList();
     OrdersList(const OrdersList& ord);
@@ -207,4 +209,6 @@ public:
 
     // Helpers
     int findOrderIndex(std::vector<Orders*> vec, Orders* item);
+
+    std::string stringToLog() override;
 };

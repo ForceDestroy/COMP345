@@ -213,11 +213,8 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
           std::cout << "Oh no! T.T Something went terribly wrong!" << std::endl;
           break;
         
-        
     }
  }
-
-
 #pragma endregion
 
 #pragma region GameEngine
@@ -320,7 +317,9 @@ GameEngine::~GameEngine()
         s=NULL;
     }
     delete cmdProcessor;
-	delete activeMap;
+    if (activeMap != NULL) {
+	    delete activeMap;
+    }
     delete gameDeck;
     currentState=NULL;
     activeMap=NULL;
@@ -379,6 +378,7 @@ bool GameEngine::checkCommandValidity(std::string input) {
 
    // call transition to change gamestate
    transitionState(this, stateNumber, input);
+   Notify(this);
    return true;
 }
 
@@ -822,6 +822,12 @@ void GameEngine::chooseInputMode() {
         std::cout << "Game engine is now using CommandProcessor." << std::endl << std::endl;
 
     }
+}
+
+std::string GameEngine::stringToLog()
+{
+    std::string log = "LOG::GameEngine:: State Changed - " + this->currentState->name;
+    return log;
 }
 #pragma endregion
 
