@@ -493,19 +493,36 @@ void GameEngine::issueOrdersPhase() {
 void GameEngine::executeOrdersPhase() {
 
     std::cout << "Starting Execute Orders Phase." << std::endl;
-    //Loop for each player 
-    for (auto p : playerList) {
-        //Check the player has Orders left to execute
-        if (p->getOrdersList()->getSize() != 0)
-        {
-            //Execute the first Order in the player's OrderList
-            (*p->getOrdersList())[0]->execute();
+    int remainingPlayers = -1;
 
-            //Remove the Order
-            Orders* o = (*p->getOrdersList())[0];
-            p->getOrdersList()->remove(o);
+    while (remainingPlayers != 0)
+    {
+        remainingPlayers = playerList.size();
+
+        //Loop for each player 
+        for (auto p : playerList) {
+            //Check the player has Orders left to execute
+            if (p->getOrdersList()->getSize() != 0)
+            {
+                //Execute the first Order in the player's OrderList
+                (*p->getOrdersList())[0]->execute();
+
+                //Remove the Order
+                Orders* o = (*p->getOrdersList())[0];
+                p->getOrdersList()->remove(o);
+            }
+            else {
+                remainingPlayers--;
+            }
         }
     }
+    //Loop for each player and draw a card if they conquered a territory
+    for (auto p : playerList) {
+        if (p->hasConqTerritory) {
+            p->handOfCards->Insert(gameDeck->Draw());
+        }
+    }
+
 }
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {

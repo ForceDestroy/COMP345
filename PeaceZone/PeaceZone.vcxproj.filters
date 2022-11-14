@@ -22,6 +22,7 @@
     <ClInclude Include="GameEngine\GameEngine.h" />
     <ClInclude Include="Cards\Cards.h" />
     <ClInclude Include="CommandProcessing\CommandProcessing.h" />
+    <ClInclude Include="Orders\Orders.fwd.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Users\Sango\Downloads\Alabama.map" />

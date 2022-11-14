@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "../Orders/Orders.h"
+#include "../Orders/Orders.fwd.h"
 
 class Deck;
 class Hand;

@@ -5,7 +5,7 @@
 #include <random>
 
 #include "../Map/Map.h"
-#include "../Orders/Orders.h"
+#include "../Orders/Orders.fwd.h"
 #include "../Cards/Cards.h"
 
 #ifdef _DEBUG
@@ -18,7 +18,6 @@ class Player
 private:
     //variables for the player
     std::vector<Territory*>* territories;
-    Hand* handOfCards;
     OrdersList* listOfOrders;
     //variables for IssueOrderPhase
     bool hasPlayedCard;
@@ -27,6 +26,7 @@ private:
     std::vector<Territory*>* committedTerritories;
 public:
     //variable for the player
+    Hand* handOfCards;
     std::string name;
     int reinforcementPool;
     //variable for IssueOrderPhase

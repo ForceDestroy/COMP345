@@ -54,7 +54,7 @@ void testGameStates(GameEngine* gameEngine)
 }
 
 
-void testStartupPhase(GameEngine* gameEngine){
+inline void testStartupPhase(GameEngine* gameEngine){
     std::string input;
 
     do {
@@ -71,6 +71,6 @@ void testStartupPhase(GameEngine* gameEngine){
 
 }
 
-void testMainGameLoop(GameEngine* gameEngine) {
+inline void testMainGameLoop(GameEngine* gameEngine) {
     gameEngine->mainGameLoop();
 }

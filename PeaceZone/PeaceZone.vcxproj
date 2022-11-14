@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandProcessing\CommandProcessing.h" />
+    <ClInclude Include="Orders\Orders.fwd.h" />
     <ClInclude Include="Player\Player.h" />
     <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Map\MapDriver.cpp" />

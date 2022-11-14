@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../Orders/Orders.h"
 
 //Default constructor
 Player::Player()
@@ -244,6 +245,17 @@ void Player::resetIssueOrderPhase()
     hasConqTerritory = false;
 }
 
+//Check if the player is under negotiation
+bool Player::truce(Player* player)
+{
+    for (Player* p : *negotiateList)
+    {
+        if (p == player)
+            return true;
+    }
+    return false;
+}
+
 std::vector<Territory*>* Player::getTerritories() {
     return territories;
 }
@@ -270,7 +282,9 @@ void Player::setReinforcementPool(int reinforcementPool) {
     this->reinforcementPool = reinforcementPool;
 }
 
-
+void Player::addNegotiateList(Player* player) {
+    negotiateList->push_back(player);
+}
 //operator assignment
 Player& Player::operator=(const Player& p)
 {

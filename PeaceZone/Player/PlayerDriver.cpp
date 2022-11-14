@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../Orders/Orders.h"
 
 inline void testPlayer(){
     std::cout << "Testing Player class" << std::endl;

@@ -13,6 +13,7 @@
 #include "../Player/Player.h"
 #include "../Map/Map.h"
 #include "../Cards/Cards.h"
+#include "Orders.fwd.h"
 
 #ifdef _DEBUG
 #define new new (_NORMAL_BLOCK, __FILE__, __LINE__)
