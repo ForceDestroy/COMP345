@@ -85,7 +85,7 @@ public:
     bool isNeighbor();
     void execute();
     void validate();
-    void simulateAttack(Deck* gameDeck);
+    void simulateAttack();
     std::string describe();
     void setSource(Territory* source);
     void setTarget(Territory* target);
@@ -128,7 +128,7 @@ public:
     ~blockadeOrder();
 
     // Methods
-    void execute(Player* neutral);
+    void execute();
     void validate();
     std::string describe();
     void setTarget(Territory* target);

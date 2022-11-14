@@ -28,8 +28,8 @@ Player::Player(std::string name)
     this->hasAttacked = false;
     this->hasFinishedIssuingOrders = false;
     this->committedTerritories = new std::vector<Territory*>();
-    negotiateList = new std::vector<Player*>(3);
-    hasConqTerritory = false;
+    this->negotiateList = new std::vector<Player*>(3);
+    this->hasConqTerritory = false;
 }
 
 
@@ -49,7 +49,7 @@ Player::Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersLi
     this->negotiateList = new std::vector<Player*>(3);
     this->hasConqTerritory = false;
     this->negotiateList = new std::vector<Player*>(3);
-    this->hasConqTerritory = false
+    this->hasConqTerritory = false;
 }
 
 //Destructor
@@ -158,7 +158,7 @@ void Player::issueOrder()
         int armyCount = (std::rand() % reinforcementPool)/2 + 1;
 
         std::cout << "Player " << name << " creating Deploy Order of "<< armyCount << " units to territory "<< territoriesToDefend.at(position)->name << std::endl;
-        listOfOrders->add(new Deploy(territoriesToDefend.at(position), armyCount));
+        listOfOrders->add(new deployOrder(this,territoriesToDefend.at(position), armyCount));
         reinforcementPool -= armyCount;
 
         std::cout << "Player " << name << " has " << reinforcementPool << " reinforcements remaining" << std::endl;
@@ -190,7 +190,7 @@ void Player::issueOrder()
                     {
                         std::cout << "Player " << name << " creating Advance Order to defend " << defend->name << " from " << neighbor->name << std::endl;
                         //new advance (neighbor sending units to defend)
-                        listOfOrders->add(new Advance(defend, neighbor, (neighbor->armyCount)/2 +1));
+                        listOfOrders->add(new advanceOrder(this,defend, neighbor, (neighbor->armyCount)/2 +1));
                         hasDefended = true;
                         //so that we don't defend and attack from the same territory
                         committedTerritories->push_back(neighbor);
@@ -218,7 +218,7 @@ void Player::issueOrder()
                     if (neighbor->owner == this && std::find(committedTerritories->begin(), committedTerritories->end(), neighbor) == committedTerritories->end() && neighbor->armyCount > territoryToAttack->armyCount)
                     {
                         std::cout << "Player " << name << " creating Advance Order to attack " << territoryToAttack->name << " from " << neighbor->name << std::endl;
-                        listOfOrders->add(new Advance(territoryToAttack, neighbor, neighbor->armyCount));
+                        listOfOrders->add(new advanceOrder(this,territoryToAttack, neighbor, neighbor->armyCount));
                         break;
                     }
                 }

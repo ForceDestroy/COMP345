@@ -86,9 +86,8 @@ deployOrder::deployOrder()
     std::cout << "Deploy order has been created." << std::endl;
 }
 //Parmaterized constructor
-deployOrder::deployOrder(Player* player, Territory* target, const int troopNum)
+deployOrder::deployOrder(Player* player, Territory* target, const int troopNum):Orders(player)
 {
-    Orders(player);
     this->target = target;
     this->troopNum = troopNum;
     std::cout << "Deploy order has been created." << std::endl;
@@ -172,18 +171,16 @@ std::ostream& operator<<(std::ostream& out, deployOrder& orders)
 //Class advanceOrder
 #pragma region advanceOrder
 //Default constructor
-advanceOrder::advanceOrder()
+advanceOrder::advanceOrder():Orders()
 {
-    Orders();
     this->source = NULL;
     this->target = NULL;
     this->troopNum = 0;
     std::cout << "Advance order has been created." << std::endl;
 }
 //Parameterized constructor
-advanceOrder::advanceOrder(Player* player, Territory* source, Territory* target, const int troopNum)
+advanceOrder::advanceOrder(Player* player, Territory* source, Territory* target, const int troopNum):Orders(player)
 {
-    Orders(player);
     this->source = source;
     this->target = target;
     this->troopNum = troopNum;
@@ -262,7 +259,7 @@ void advanceOrder::execute()
     }
 }
 //simulates attacks between 2 territories
-void advanceOrder::simulateAttack(Deck* gameDeck)
+void advanceOrder::simulateAttack()
 {
     srand(time(0));
     int randNum;
@@ -291,7 +288,6 @@ void advanceOrder::simulateAttack(Deck* gameDeck)
             this->target->armyCount = this->troopNum - attackersKilled;
             if (!this->player->hasConqTerritory)
             {
-                player->setPlayerHandOfCards(player->getPlayerHandOfCards()->Insert(gameDeck->Draw()));
                 this->player->hasConqTerritory = true;
             }
             std::cout << "Attack succeeded." << std::endl;
@@ -340,9 +336,8 @@ std::ostream& operator<<(std::ostream& out, advanceOrder& orders)
 //Class bombOrder
 #pragma region bombOrder
 //Default constructor
-bombOrder::bombOrder()
+bombOrder::bombOrder():Orders()
 {
-    Orders();
     this->target = NULL;
     std::cout << "Bomb order has been created." << std::endl;
 }
@@ -355,9 +350,8 @@ bombOrder::bombOrder(const bombOrder& ord)
     std::cout << "Bomb order has been destroyed." << std::endl;
 }
 //Parameterized constructor
-bombOrder::bombOrder(Player* player, Territory* target)
+bombOrder::bombOrder(Player* player, Territory* target):Orders(player)
 {
-    Orders(player);
     this->target = target;
     std::cout << "Bomb order has been destroyed." << std::endl;
 }
@@ -433,9 +427,8 @@ std::ostream& operator<<(std::ostream& out, bombOrder& orders)
 //Class blockadeOrder
 #pragma region blockadeOrder
 //Default constructor
-blockadeOrder::blockadeOrder()
+blockadeOrder::blockadeOrder():Orders()
 {
-    Orders();
     this->target = NULL;
     std::cout << "Blockade order has been created." << std::endl;
 }
@@ -448,9 +441,8 @@ blockadeOrder::blockadeOrder(const blockadeOrder& ord)
     std::cout << "Blockade order has been created." << std::endl;
 }
 //Parameterized constructor
-blockadeOrder::blockadeOrder(Player* player, Territory* target)
+blockadeOrder::blockadeOrder(Player* player, Territory* target):Orders(player)
 {
-    Orders(player);
     this->target = target;
     std::cout << "Blockade order has been created." << std::endl;
 }
@@ -479,7 +471,7 @@ void blockadeOrder::validate()
     }
 }
 //execute the order
-void blockadeOrder::execute(Player* neutral)
+void blockadeOrder::execute()
 {
     validate();
     if (valid)
@@ -487,7 +479,7 @@ void blockadeOrder::execute(Player* neutral)
         describe();
         std::cout << "Blockade order is executed." << std::endl;
         this->target->armyCount *= 2;
-        this->target->owner = neutral;
+        this->target->owner = NULL;
     }
     else
     {
@@ -518,9 +510,8 @@ std::ostream& operator<<(std::ostream& out, blockadeOrder& orders)
 //Class airliftOrder
 #pragma region airliftOrder
 //Default constructor
-airliftOrder::airliftOrder()
+airliftOrder::airliftOrder():Orders()
 {
-    Orders();
     std::cout << "Airlift order has been created." << std::endl;
 }
 //Copy constructor
@@ -533,9 +524,8 @@ airliftOrder::airliftOrder(const airliftOrder& ord)
     this->troopNum = ord.troopNum;
     std::cout << "Airlift order has been created." << std::endl;
 }
-airliftOrder::airliftOrder(Player* player, Territory* source, Territory* target, const int troopNum)
+airliftOrder::airliftOrder(Player* player, Territory* source, Territory* target, const int troopNum) :Orders(player)
 {
-    Orders(player);
     this->source = source;
     this->target = target;
     this->troopNum = troopNum;
@@ -617,9 +607,8 @@ std::ostream& operator<<(std::ostream& out, airliftOrder& orders)
 //Class negotiateOrder
 #pragma region negotiateOrder
 //Default constructor
-negotiateOrder::negotiateOrder()
+negotiateOrder::negotiateOrder() :Orders()
 {
-    Orders();
     std::cout << "Negotiate order has been created." << std::endl;
 }
 //Copy constructor
@@ -630,9 +619,8 @@ negotiateOrder::negotiateOrder(const negotiateOrder& ord)
     std::cout << "Negotiate order has been created." << std::endl;
 }
 //Parameterized constructor
-negotiateOrder::negotiateOrder(Player* player, Player* target)
+negotiateOrder::negotiateOrder(Player* player, Player* target) :Orders(player)
 {
-    Orders(player);
     this->target = target;
     std::cout << "Negotiate order has been created." << std::endl;
 }

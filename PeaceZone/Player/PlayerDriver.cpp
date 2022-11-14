@@ -33,7 +33,7 @@ inline void testPlayer(){
     std::cout << "toDefend method" << std::endl;
     player->toDefend();
     std::cout << "issueOrder method" << std::endl;
-    player->issueOrder("deploy");
+    player->issueOrder();
     std::cout << *player << std::endl;
     std::cout << "delete player" << std::endl;
     //deleting all the territories
