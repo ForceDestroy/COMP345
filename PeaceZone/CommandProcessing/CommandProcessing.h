@@ -56,18 +56,21 @@ public:
     //public getCommand() method
     Command* getCommand();
 
+    //public getCommand() method for LoggingObserver
+    Command* getCommand(std::string commandName);
+
     //validate() method
     void validate( Command* command);
 
-	void saveCommand(Command* command);
+	
     std::string stringToLog() override;
 
-private: 
+protected: 
     //private readCommand() method
     virtual std::string readCommand();
 
 	//saveCommand() method
-
+    void saveCommand(Command* command);
    
 };
 

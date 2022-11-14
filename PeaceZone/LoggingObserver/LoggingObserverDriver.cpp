@@ -28,7 +28,7 @@ inline void testLoggingObserver()
 	// Test CommandProcessor::saveCommand
 	CommandProcessor* commandProcessor = new CommandProcessor();
 	commandProcessor->Attach(logObserver);
-	commandProcessor->saveCommand(command);
+	commandProcessor->getCommand("loadmap");
 
 	// Test Order::execute()
 	Player* p = new Player("p1");

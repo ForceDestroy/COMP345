@@ -292,7 +292,7 @@ GameEngine::GameEngine()
     //Creating the game deck
     this->gameDeck = new Deck();
 
-
+    this->activeMap = NULL;
     
 }
 

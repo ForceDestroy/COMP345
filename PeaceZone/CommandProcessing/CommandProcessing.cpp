@@ -124,6 +124,16 @@ Command* CommandProcessor::getCommand()
 	return command;
 }
 
+//Public command method that can be called by other object to get a command.
+// It reads the command, create a Command object, validate it and save it to the list of commands. 
+Command* CommandProcessor::getCommand(std::string commandName)
+{
+	Command* command = new Command(commandName, "");
+	validate(command);
+	saveCommand(command);
+	return command;
+}
+
 
 //Saves the command object into the list of commands
 void CommandProcessor::saveCommand(Command* command)
