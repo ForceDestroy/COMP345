@@ -132,5 +132,8 @@ inline void testOrderExecution()
 	std::cout << "T1's current owner: " << *t1->owner << std::endl;
 	blockadeOrder* bo1 = new blockadeOrder(p1, t1);
 	bo1->execute();
-	std::cout << "T1's new owner: " << *t1->owner << std::endl;
+	if(t1->owner == NULL)
+	{
+		std::cout << "T1 is neutral" << std::endl;
+	}
 }
