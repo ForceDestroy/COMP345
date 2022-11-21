@@ -26,7 +26,7 @@ inline void testPlayer(){
     OrdersList* listOfOrders = new OrdersList();
 
     //creating player
-    Player* player = new Player(territories, handOfCards, listOfOrders);
+    Player* player = new Player(territories, handOfCards, listOfOrders, NULL);
     std::cout << *player << std::endl;
     //testing the methods in player
     std::cout << "toAttack method" << std::endl;
