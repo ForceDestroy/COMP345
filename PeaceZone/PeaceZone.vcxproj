@@ -139,6 +139,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Player\PlayerDriver.cpp" />
+    <ClCompile Include="Player\PlayerStrategies.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandProcessing\CommandProcessing.h" />
@@ -149,6 +150,7 @@
     <ClCompile Include="Map\MapDriver.cpp" />
     <ClCompile Include="Orders\Orders.cpp" />
     <ClCompile Include="Orders\OrdersDriver.cpp" />
+    <ClInclude Include="Player\PlayerStrategies.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Map\Map.h" />

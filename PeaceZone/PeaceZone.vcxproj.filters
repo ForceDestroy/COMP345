@@ -16,6 +16,7 @@
     <ClCompile Include="LoggingObserver\LoggingObserverDriver.cpp" />
     <ClCompile Include="CommandProcessing\CommandProcessing.cpp" />
     <ClCompile Include="CommandProcessing\CommandProcessingDriver.cpp" />
+    <ClCompile Include="Player\PlayerStrategies.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\Player.h" />
@@ -26,6 +27,7 @@
     <ClInclude Include="LoggingObserver\LoggingObserver.h" />
     <ClInclude Include="CommandProcessing\CommandProcessing.h" />
     <ClInclude Include="Orders\Orders.fwd.h" />
+    <ClInclude Include="Player\PlayerStrategies.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Map\ConquestMaps\India.map" />

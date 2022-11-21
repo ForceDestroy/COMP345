@@ -7,6 +7,8 @@
 #include "../Map/Map.h"
 #include "../Orders/Orders.fwd.h"
 #include "../Cards/Cards.h"
+#include "../Cards/Cards.h"
+#include "PlayerStrategies.h"
 
 #ifdef _DEBUG
 #define new new( _NORMAL_BLOCK , __FILE__ , __LINE__ )
@@ -15,7 +17,7 @@
 //Player class
 class Player
 {
-private:
+public:
     //variables for the player
     std::vector<Territory*>* territories;
     OrdersList* listOfOrders;
@@ -25,7 +27,7 @@ private:
     bool hasAttacked;
     std::vector<Territory*>* committedTerritories;
     std::vector<Territory*>* attackedTerritories;
-public:
+
     //variable for the player
     Hand* handOfCards;
     std::string name;
@@ -35,11 +37,12 @@ public:
     //checks if player has conquered at least 1 territory this turn
     bool hasConqTerritory;
     std::vector<Player*>* negotiateList;
+    PlayerStrategy* strategy;
 
     //Constructor
     Player();
     Player(std::string name);
-    Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersList* listOfOrders);
+    Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersList* listOfOrders,PlayerStrategy* strategy);
     //Copy constructor
     Player(const Player& player);
     //Destructor
