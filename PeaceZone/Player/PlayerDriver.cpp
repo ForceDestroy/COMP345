@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../Orders/Orders.h"
 
 inline void testPlayer(){
     std::cout << "Testing Player class" << std::endl;
@@ -25,7 +26,7 @@ inline void testPlayer(){
     OrdersList* listOfOrders = new OrdersList();
 
     //creating player
-    Player* player = new Player(territories, handOfCards, listOfOrders);
+    Player* player = new Player(territories, handOfCards, listOfOrders, NULL);
     std::cout << *player << std::endl;
     //testing the methods in player
     std::cout << "toAttack method" << std::endl;
@@ -33,7 +34,7 @@ inline void testPlayer(){
     std::cout << "toDefend method" << std::endl;
     player->toDefend();
     std::cout << "issueOrder method" << std::endl;
-    player->issueOrder("deploy");
+    player->issueOrder();
     std::cout << *player << std::endl;
     std::cout << "delete player" << std::endl;
     //deleting all the territories

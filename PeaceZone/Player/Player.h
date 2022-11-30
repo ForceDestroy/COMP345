@@ -5,8 +5,10 @@
 #include <random>
 
 #include "../Map/Map.h"
-#include "../Orders/Orders.h"
+#include "../Orders/Orders.fwd.h"
 #include "../Cards/Cards.h"
+#include "../Cards/Cards.h"
+#include "PlayerStrategies.h"
 
 #ifdef _DEBUG
 #define new new( _NORMAL_BLOCK , __FILE__ , __LINE__ )
@@ -15,31 +17,32 @@
 //Player class
 class Player
 {
-private:
+public:
     //variables for the player
     std::vector<Territory*>* territories;
-    Hand* handOfCards;
     OrdersList* listOfOrders;
-    std::string name;
     //variables for IssueOrderPhase
     bool hasPlayedCard;
     bool hasDefended;
     bool hasAttacked;
-    std::vector<Territory*> *committedTerritories;
-    //List of players affected by Negotiate order this turn.
-    std::vector<Player*> *negotiateList;
-public:
+    std::vector<Territory*>* committedTerritories;
+    std::vector<Territory*>* attackedTerritories;
+
     //variable for the player
+    Hand* handOfCards;
+    std::string name;
     int reinforcementPool;
     //variable for IssueOrderPhase
     bool hasFinishedIssuingOrders;
     //checks if player has conquered at least 1 territory this turn
     bool hasConqTerritory;
+    std::vector<Player*>* negotiateList;
+    PlayerStrategy* strategy;
 
     //Constructor
     Player();
     Player(std::string name);
-    Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersList* listOfOrders);
+    Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersList* listOfOrders,PlayerStrategy* strategy);
     //Copy constructor
     Player(const Player& player);
     //Destructor
@@ -50,24 +53,24 @@ public:
     void issueOrder();
     bool hasLost();
     void resetIssueOrderPhase();
-    bool truce(Player* player);
     std::vector<Territory*>* getTerritories();
     OrdersList* getOrdersList();
-    
+    bool truce(Player* player);
+    void removeTerritory(Territory* t);
+
     //Add players
-    void addPlayerTerritowries(Territory* territorie);
-    
+    void addPlayerTerritories(Territory* territorie);
+
     // Setters
     void setPlayerHandOfCards(Hand* handOfCards);
 
-    void setPlayerListOfOrders(OrdersList* listOfOrders); 
+    void setPlayerListOfOrders(OrdersList* listOfOrders);
 
     void setReinforcementPool(int reinforcementPool);
 
     void addNegotiateList(Player* player);
 
-    // Getter
-
+    //Getter
     Hand* getPlayerHandOfCards();
 
     //Overloaded operators
