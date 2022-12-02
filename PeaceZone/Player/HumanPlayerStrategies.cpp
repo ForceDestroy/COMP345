@@ -1,8 +1,8 @@
 #include "HumanPlayerStrategies.h"
-#include "PlayerStrategy.h"
+#include "PlayerStrategies.h"
 #include "Player.h"
 #include "../Cards/Cards.h"
-#include "../GameEnginer/GameEngine.h"
+#include "../GameEngine/GameEngine.h"
 
 
 #pragma region HumanPlayerStrategies
