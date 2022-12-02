@@ -1,8 +1,8 @@
 #pragma once
-#include "PlayerStrategy.h"
+#include "PlayerStrategies.h"
 #include "Player.h"
 #include "../Cards/Cards.h"
-#include "../GameEnginer/GameEngine.h"
+#include "../GameEngine/GameEngine.h"
 class HumanPlayerStrategy : public PlayerStrategy {
 public:
 	// terToAttack and terToDefend stores an appropriate territory every time an order is issued
