@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "../Orders/Orders.h"
+#include "../Orders/Orders.fwd.h"
 
 class Deck;
 class Hand;
@@ -24,7 +24,7 @@ public:
 	Card(const Card& c);
 	~Card();
 	Card& operator=(const Card& p);
-	void Play( Hand& h, OrdersList& o);
+	CardType Play(Hand& h);
 	friend std::ostream& operator<<(std::ostream& os, const Card& c);
 };
 
@@ -32,11 +32,11 @@ class Deck {
 private:
 	std::vector<Card*>* listOfCards;
 	void PopulateDeck();
-	const int NUMBER_BOMB_CARDS = 2;
-	const int NUMBER_BLOCKADE_CARDS = 2;
-	const int NUMBER_AIRLIFT_CARDS = 2;
-	const int NUMBER_DIPLOMACY_CARDS = 2;
-	const int NUMBER_REINFORCEMENT_CARDS = 2;
+	const int NUMBER_BOMB_CARDS = 3;
+	const int NUMBER_BLOCKADE_CARDS = 3;
+	const int NUMBER_AIRLIFT_CARDS = 3;
+	const int NUMBER_DIPLOMACY_CARDS = 3;
+	const int NUMBER_REINFORCEMENT_CARDS = 3;
 public:
 	Deck();
 	Deck(const Deck& deck);
@@ -51,8 +51,8 @@ public:
 
 class Hand {
 private:
-	std::vector<Card*>* listOfCards;
 public:
+	std::vector<Card*>* listOfCards;
 	Hand();
 	Hand(const Hand& hand);
 	~Hand();

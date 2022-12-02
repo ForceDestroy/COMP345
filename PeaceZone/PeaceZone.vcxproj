@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,25 +130,33 @@
   <ItemGroup>
     <ClCompile Include="Cards\Cards.cpp" />
     <ClCompile Include="Cards\CardsDriver.cpp" />
+    <ClCompile Include="CommandProcessing\CommandProcessing.cpp" />
+    <ClCompile Include="CommandProcessing\CommandProcessingDriver.cpp" />
     <ClCompile Include="GameEngine\GameEngine.cpp" />
     <ClCompile Include="GameEngine\GameEngineDriver.cpp" />
+    <ClCompile Include="LoggingObserver\LoggingObserver.cpp" />
+    <ClCompile Include="LoggingObserver\LoggingObserverDriver.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player\Player.cpp" />
     <ClCompile Include="Player\PlayerDriver.cpp" />
+    <ClCompile Include="Player\PlayerStrategies.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommandProcessing\CommandProcessing.h" />
+    <ClInclude Include="LoggingObserver\LoggingObserver.h" />
+    <ClInclude Include="Orders\Orders.fwd.h" />
     <ClInclude Include="Player\Player.h" />
     <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Map\MapDriver.cpp" />
     <ClCompile Include="Orders\Orders.cpp" />
     <ClCompile Include="Orders\OrdersDriver.cpp" />
+    <ClInclude Include="Player\PlayerStrategies.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Orders\Orders.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Users\Sango\Downloads\Alabama.map" />
     <None Include="Map\ConquestMaps\India.map" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +164,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cards\Cards.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CommandProcessing\CommandProcessorCommands.txt" />
+    <Text Include="GameEngine\GameStartupCommands.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -226,6 +226,19 @@ std::ostream &operator<<(std::ostream &out, const Map &map)
     return out;
 }
 
+// Check if all territories in a continent are owned by a single Player
+Player* Map::GetContinentOwner(Continent* continent)
+{
+    Player* owner = continent->territories[0]->owner;
+    for (Territory* territory : continent->territories)
+    {
+        if (territory->owner != owner)
+            return NULL;
+    }
+
+    return owner;
+}
+
 // Visit all territories starting from a given territory
 // Used to check if a continent is connected
 void Map::VisitContinent(Territory *current, int continent)
@@ -383,7 +396,7 @@ void MapLoader::Load(const std::string &fileName)
     // Start map object to populate
     Map *map = new Map();
     bool parsedMap = false;
-
+    
     try {
         size_t lastdot = fileName.find_last_of(".");
         size_t lastslash = fileName.find_last_of("\\");
@@ -393,6 +406,8 @@ void MapLoader::Load(const std::string &fileName)
         else {
             map->name = fileName.substr(lastslash + 1, lastdot);
         }
+
+        
 
         prepareMapFile(fileName);
 
@@ -411,6 +426,7 @@ void MapLoader::Load(const std::string &fileName)
             }
         }
 
+        
         std::vector<std::string> continentNames;
 
         // Read the continents
@@ -434,7 +450,6 @@ void MapLoader::Load(const std::string &fileName)
         }
 
         std::vector<std::string> territoryNames;
-
         // Read the territories - No Neighbors
         int territoryId = 0;
         while (std::getline(input, line))
@@ -459,6 +474,7 @@ void MapLoader::Load(const std::string &fileName)
             territory->id = territoryId;
             territory->name = name;
             territory->continent = continentId;
+            territory->armyCount = 0;
 
             map->territories.push_back(territory);
             territoryNames.push_back(name);
@@ -505,21 +521,26 @@ void MapLoader::Load(const std::string &fileName)
     }
 
     if (!parsedMap) {
-        std::cout << map->name << " is not a valid map: Parser Error" << std::endl;
+        std::cout << map->name << "Failed to load: Parser Error" << std::endl;
         delete map;
 
-        return;
-    }
-
-    // Validate the map before adding
-    if (map->Validate()) {
-        maps.push_back(map);
-        std::cout << map->name << " is a valid map" << std::endl;
     }
     else {
-        std::cout << map->name << " is not a valid map: Validation Error" << std::endl;
-        delete map;
+        maps.push_back(map);
+        std::cout << map->name << " has been loaded" << std::endl;
+
     }
+
+
+    //Validate the map before adding
+    //if (map->Validate()) {
+    //    maps.push_back(map);
+    //    std::cout << map->name << " is a valid map" << std::endl;
+    //}
+    //else {
+    //    std::cout << map->name << " is not a valid map: Validation Error" << std::endl;
+    //    delete map;
+    //}
 
 }
 

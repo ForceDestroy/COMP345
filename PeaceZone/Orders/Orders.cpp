@@ -60,19 +60,26 @@ void Orders::execute()
     }
 }
 //Overloaded operators
-Orders& Orders::operator=(const Orders &ord)
+Orders& Orders::operator=(const Orders& ord)
 {
     this->player = ord.player;
     this->valid = ord.valid;
     return *this;
 }
 //Assignment operator
-std::ostream& operator<<(std::ostream &out, Orders &orders)
+std::ostream& operator<<(std::ostream& out, Orders& orders)
 {
-    
+
     out << orders.describe() << std::endl;
     return out;
 }
+
+std::string Orders::stringToLog()
+{
+    std::string log = "LOG::Orders:: Order Executed - " + this->describe();
+    return log;
+}
+
 #pragma endregion
 
 //Class deployOrder
@@ -86,10 +93,8 @@ deployOrder::deployOrder()
     std::cout << "Deploy order has been created." << std::endl;
 }
 //Parmaterized constructor
-deployOrder::deployOrder(Player* playr, Territory* target, const int troopNum)
+deployOrder::deployOrder(Player* player, Territory* target, const int troopNum):Orders(player)
 {
-    this->valid = false;
-    this->player = player;
     this->target = target;
     this->troopNum = troopNum;
     std::cout << "Deploy order has been created." << std::endl;
@@ -117,7 +122,7 @@ std::string deployOrder::describe()
 //validate the order
 void deployOrder::validate()
 {
-    if(target->owner == this->player && this->player->reinforcementPool >= this->troopNum)
+    if (target->owner == this->player)
     {
         setValid(true);
         std::cout << "Deploy order is valid." << std::endl;
@@ -137,6 +142,7 @@ void deployOrder::execute()
         describe();
         std::cout << "Deploy order is executed." << std::endl;
         target->armyCount += troopNum;
+        Notify(this);
     }
     else
     {
@@ -154,7 +160,7 @@ void deployOrder::setTroops(const int troopNum)
     this->troopNum = troopNum;
 }
 //Overloaded operators
-deployOrder& deployOrder::operator=(const deployOrder &ord)
+deployOrder& deployOrder::operator=(const deployOrder& ord)
 {
     this->valid = ord.valid;
     this->player = ord.player;
@@ -163,7 +169,7 @@ deployOrder& deployOrder::operator=(const deployOrder &ord)
     return *this;
 }
 //assigment operator
-std::ostream& operator<<(std::ostream &out, deployOrder &orders)
+std::ostream& operator<<(std::ostream& out, deployOrder& orders)
 {
     out << orders.describe() << std::endl;
     return out;
@@ -173,19 +179,16 @@ std::ostream& operator<<(std::ostream &out, deployOrder &orders)
 //Class advanceOrder
 #pragma region advanceOrder
 //Default constructor
-advanceOrder::advanceOrder()
+advanceOrder::advanceOrder():Orders()
 {
-    Orders();
     this->source = NULL;
     this->target = NULL;
     this->troopNum = 0;
     std::cout << "Advance order has been created." << std::endl;
 }
 //Parameterized constructor
-advanceOrder::advanceOrder(Player* player, Territory* source, Territory* target, const int troopNum)
+advanceOrder::advanceOrder(Player* player, Territory* source, Territory* target, const int troopNum):Orders(player)
 {
-    this->valid = false;
-    this->player = player;
     this->source = source;
     this->target = target;
     this->troopNum = troopNum;
@@ -215,7 +218,7 @@ std::string advanceOrder::describe()
 //checks if the source and target territory is adjacent
 bool advanceOrder::isNeighbor()
 {
-    for (Territory* t: this->source->neighbors)
+    for (Territory* t : this->source->neighbors)
     {
         if (t->id == target->id)
             return true;
@@ -225,7 +228,7 @@ bool advanceOrder::isNeighbor()
 //validate the order
 void advanceOrder::validate()
 {
-    if(this->source->id != this->target->id && source->owner == player && isNeighbor() && source->armyCount > 1 && source->armyCount > troopNum)
+    if (this->source->id != this->target->id && source->owner == player && isNeighbor() && source->armyCount > 1 && source->armyCount >= troopNum)
     {
         setValid(true);
         std::cout << "Advance order is valid." << std::endl;
@@ -236,7 +239,7 @@ void advanceOrder::validate()
     }
 }
 //execute the order
-void advanceOrder::execute(Deck* gameDeck)
+void advanceOrder::execute()
 {
     validate();
     if (valid)
@@ -247,6 +250,7 @@ void advanceOrder::execute(Deck* gameDeck)
             std::cout << "Advance order is executed." << std::endl;
             source->armyCount -= troopNum;
             target->armyCount += troopNum;
+            Notify(this);
         }
         else if (this->player->truce(this->target->owner))
         {
@@ -255,7 +259,7 @@ void advanceOrder::execute(Deck* gameDeck)
         else
         {
             std::cout << "Advance order is executed." << std::endl;
-            simulateAttack(gameDeck);
+            simulateAttack();
         }
     }
     else
@@ -264,19 +268,19 @@ void advanceOrder::execute(Deck* gameDeck)
     }
 }
 //simulates attacks between 2 territories
-void advanceOrder::simulateAttack(Deck* gameDeck)
+void advanceOrder::simulateAttack()
 {
     srand(time(0));
-    int randNum;
+    int randNum = 0;
     int attackersKilled = 0, defendersKilled = 0;
     for (int i = 0; i < troopNum; i++)
     {
-        if (rand()%10 > 3) // This represents a 60% chance to kill a defender 
+        if (rand() % 10 > 3) // This represents a 60% chance to kill a defender 
             defendersKilled++;
     }
-    for (int k = 0 ; k < target->armyCount; k++)
+    for (int k = 0; k < target->armyCount; k++)
     {
-        if (rand()%10 > 2) // This represents a 70% chance to kill an attacker
+        if (rand() % 10 > 2) // This represents a 70% chance to kill an attacker
             attackersKilled++;
     }
     if (defendersKilled >= target->armyCount)
@@ -289,12 +293,16 @@ void advanceOrder::simulateAttack(Deck* gameDeck)
         }
         else
         {
+            if(this->target->owner != NULL)
+            {
+                this->target->owner->removeTerritory(this->target);
+            }
+            this->player->addPlayerTerritories(this->target);
             this->target->owner = this->player;
             this->target->armyCount = this->troopNum - attackersKilled;
-            if(!this->player->hasConqTerritory)
+
+            if (!this->player->hasConqTerritory)
             {
-                Hand* temp = player->getPlayerHandOfCards();
-                temp->Insert(gameDeck->Draw());
                 this->player->hasConqTerritory = true;
             }
             std::cout << "Attack succeeded." << std::endl;
@@ -323,7 +331,7 @@ void advanceOrder::setTroops(const int troopNum)
     this->troopNum = troopNum;
 }
 //Overloaded operators
-advanceOrder& advanceOrder::operator=(const advanceOrder &ord)
+advanceOrder& advanceOrder::operator=(const advanceOrder& ord)
 {
     this->valid = ord.valid;
     this->player = ord.player;
@@ -333,7 +341,7 @@ advanceOrder& advanceOrder::operator=(const advanceOrder &ord)
     return *this;
 }
 //assignment operator
-std::ostream& operator<<(std::ostream &out, advanceOrder &orders)
+std::ostream& operator<<(std::ostream& out, advanceOrder& orders)
 {
     out << orders.describe() << std::endl;
     return out;
@@ -343,9 +351,8 @@ std::ostream& operator<<(std::ostream &out, advanceOrder &orders)
 //Class bombOrder
 #pragma region bombOrder
 //Default constructor
-bombOrder::bombOrder()
+bombOrder::bombOrder():Orders()
 {
-    Orders();
     this->target = NULL;
     std::cout << "Bomb order has been created." << std::endl;
 }
@@ -358,10 +365,8 @@ bombOrder::bombOrder(const bombOrder& ord)
     std::cout << "Bomb order has been destroyed." << std::endl;
 }
 //Parameterized constructor
-bombOrder::bombOrder(Player* playr, Territory* target)
+bombOrder::bombOrder(Player* player, Territory* target):Orders(player)
 {
-    this->valid = false;
-    this->player=  player;
     this->target = target;
     std::cout << "Bomb order has been destroyed." << std::endl;
 }
@@ -373,7 +378,7 @@ bombOrder::~bombOrder()
 //description of order
 bool bombOrder::isAdjacent()
 {
-    for (Territory* t: this->target->neighbors)
+    for (Territory* t : this->target->neighbors)
     {
         if (t->owner == player)
             return true;
@@ -407,6 +412,7 @@ void bombOrder::execute()
         describe();
         std::cout << "Bomb order is executed." << std::endl;
         this->target->armyCount /= 2;
+        Notify(this);
     }
     else
     {
@@ -419,7 +425,7 @@ void bombOrder::setTarget(Territory* target)
     this->target = target;
 }
 //Overloaded operators
-bombOrder& bombOrder::operator=(const bombOrder &ord)
+bombOrder& bombOrder::operator=(const bombOrder& ord)
 {
     this->valid = ord.valid;
     this->player = ord.player;
@@ -427,7 +433,7 @@ bombOrder& bombOrder::operator=(const bombOrder &ord)
     return *this;
 }
 //Assignment operator
-std::ostream& operator<<(std::ostream &out, bombOrder &orders)
+std::ostream& operator<<(std::ostream& out, bombOrder& orders)
 {
     out << orders.describe() << std::endl;
     return out;
@@ -437,9 +443,8 @@ std::ostream& operator<<(std::ostream &out, bombOrder &orders)
 //Class blockadeOrder
 #pragma region blockadeOrder
 //Default constructor
-blockadeOrder::blockadeOrder()
+blockadeOrder::blockadeOrder():Orders()
 {
-    Orders();
     this->target = NULL;
     std::cout << "Blockade order has been created." << std::endl;
 }
@@ -452,10 +457,8 @@ blockadeOrder::blockadeOrder(const blockadeOrder& ord)
     std::cout << "Blockade order has been created." << std::endl;
 }
 //Parameterized constructor
-blockadeOrder::blockadeOrder(Player* player, Territory* target)
+blockadeOrder::blockadeOrder(Player* player, Territory* target):Orders(player)
 {
-    this->valid = false;
-    this->player = player;
     this->target = target;
     std::cout << "Blockade order has been created." << std::endl;
 }
@@ -484,7 +487,7 @@ void blockadeOrder::validate()
     }
 }
 //execute the order
-void blockadeOrder::execute(Player* neutral)
+void blockadeOrder::execute()
 {
     validate();
     if (valid)
@@ -492,7 +495,9 @@ void blockadeOrder::execute(Player* neutral)
         describe();
         std::cout << "Blockade order is executed." << std::endl;
         this->target->armyCount *= 2;
-        this->target->owner = neutral;
+        this->target->owner->removeTerritory(this->target);
+        this->target->owner = NULL;
+        Notify(this);
     }
     else
     {
@@ -505,7 +510,7 @@ void blockadeOrder::setTarget(Territory* target)
     this->target = target;
 }
 //Overloaded operators
-blockadeOrder& blockadeOrder::operator=(const blockadeOrder &ord)
+blockadeOrder& blockadeOrder::operator=(const blockadeOrder& ord)
 {
     this->valid = ord.valid;
     this->player = ord.player;
@@ -513,7 +518,7 @@ blockadeOrder& blockadeOrder::operator=(const blockadeOrder &ord)
     return *this;
 }
 //Assignment operator
-std::ostream& operator<<(std::ostream &out, blockadeOrder &orders)
+std::ostream& operator<<(std::ostream& out, blockadeOrder& orders)
 {
     out << orders.describe() << std::endl;
     return out;
@@ -523,9 +528,8 @@ std::ostream& operator<<(std::ostream &out, blockadeOrder &orders)
 //Class airliftOrder
 #pragma region airliftOrder
 //Default constructor
-airliftOrder::airliftOrder()
+airliftOrder::airliftOrder():Orders()
 {
-    Orders();
     std::cout << "Airlift order has been created." << std::endl;
 }
 //Copy constructor
@@ -538,10 +542,8 @@ airliftOrder::airliftOrder(const airliftOrder& ord)
     this->troopNum = ord.troopNum;
     std::cout << "Airlift order has been created." << std::endl;
 }
-airliftOrder::airliftOrder(Player* player ,Territory* source, Territory* target, const int troopNum)
+airliftOrder::airliftOrder(Player* player, Territory* source, Territory* target, const int troopNum) :Orders(player)
 {
-    this->valid = false;
-    this->player = player;
     this->source = source;
     this->target = target;
     this->troopNum = troopNum;
@@ -560,7 +562,7 @@ std::string airliftOrder::describe()
 //validate the order
 void airliftOrder::validate()
 {
-    if (this->target->id != this->source->id && this->target->owner == this->player && this->source->owner == player && this->source->armyCount > 1 && this->source->armyCount > this->troopNum) 
+    if (this->target->id != this->source->id && this->target->owner == this->player && this->source->owner == player && this->source->armyCount > 1 && this->source->armyCount > this->troopNum)
     {
         setValid(true);
         std::cout << "Airlift order is valid." << std::endl;
@@ -581,6 +583,7 @@ void airliftOrder::execute()
         std::cout << "Airlift order is executed." << std::endl;
         this->source->armyCount -= this->troopNum;
         this->target->armyCount += this->troopNum;
+        Notify(this);
     }
     else
     {
@@ -603,7 +606,7 @@ void airliftOrder::setTroops(const int troopNum)
     this->troopNum = troopNum;
 }
 //Overloaded operators
-airliftOrder& airliftOrder::operator=(const airliftOrder &ord)
+airliftOrder& airliftOrder::operator=(const airliftOrder& ord)
 {
     this->valid = ord.valid;
     this->player = ord.player;
@@ -613,7 +616,7 @@ airliftOrder& airliftOrder::operator=(const airliftOrder &ord)
     return *this;
 }
 //Assignment operator
-std::ostream& operator<<(std::ostream &out, airliftOrder &orders)
+std::ostream& operator<<(std::ostream& out, airliftOrder& orders)
 {
     out << orders.describe() << std::endl;
     return out;
@@ -623,9 +626,8 @@ std::ostream& operator<<(std::ostream &out, airliftOrder &orders)
 //Class negotiateOrder
 #pragma region negotiateOrder
 //Default constructor
-negotiateOrder::negotiateOrder()
+negotiateOrder::negotiateOrder() :Orders()
 {
-    Orders();
     std::cout << "Negotiate order has been created." << std::endl;
 }
 //Copy constructor
@@ -636,10 +638,8 @@ negotiateOrder::negotiateOrder(const negotiateOrder& ord)
     std::cout << "Negotiate order has been created." << std::endl;
 }
 //Parameterized constructor
-negotiateOrder::negotiateOrder(Player* player, Player* target)
+negotiateOrder::negotiateOrder(Player* player, Player* target) :Orders(player)
 {
-    this->valid = false;
-    this->player = player;
     this->target = target;
     std::cout << "Negotiate order has been created." << std::endl;
 }
@@ -651,7 +651,7 @@ negotiateOrder::~negotiateOrder()
 //description of order
 std::string negotiateOrder::describe()
 {
-   return "The negotiate order prevents the target player from attacking you this turn.";
+    return "The negotiate order prevents the target player from attacking you this turn.";
 }
 //validate the order
 void negotiateOrder::validate()
@@ -676,6 +676,7 @@ void negotiateOrder::execute()
         describe();
         std::cout << "Negotiate order is executed." << std::endl;
         this->player->addNegotiateList(this->target);
+        Notify(this);
     }
     else
     {
@@ -688,7 +689,7 @@ void negotiateOrder::setTarget(Player* player)
     this->target = target;
 }
 //Overloaded operators
-negotiateOrder& negotiateOrder::operator=(const negotiateOrder &ord)
+negotiateOrder& negotiateOrder::operator=(const negotiateOrder& ord)
 {
     this->valid = ord.valid;
     this->player = ord.player;
@@ -696,7 +697,7 @@ negotiateOrder& negotiateOrder::operator=(const negotiateOrder &ord)
     return *this;
 }
 //Assignment operator
-std::ostream& operator<<(std::ostream &out, negotiateOrder& orders)
+std::ostream& operator<<(std::ostream& out, negotiateOrder& orders)
 {
     out << orders.describe() << std::endl;
     return out;
@@ -724,7 +725,7 @@ OrdersList::OrdersList(const OrdersList& ord)
 //Destructor
 OrdersList::~OrdersList()
 {
-    for ( Orders* o : *ordersList)
+    for (Orders* o : *ordersList)
     {
         delete o;
     }
@@ -736,6 +737,7 @@ void OrdersList::add(Orders* order)
 {
     ordersList->push_back(order);
     std::cout << "An order has been added" << std::endl;
+    Notify(this);
 }
 //remove an order from the list
 void OrdersList::remove(Orders* order)
@@ -744,7 +746,7 @@ void OrdersList::remove(Orders* order)
     {
         if (ordersList->at(i) == order)
         {
-            Orders *temp = ordersList->at(i);
+            Orders* temp = ordersList->at(i);
             ordersList->erase(ordersList->begin() + i);
             delete temp;
             std::cout << "An order has been removed" << std::endl;
@@ -762,7 +764,7 @@ void OrdersList::move(Orders* order, int position)
     std::cout << "The order has been moved" << std::endl;
 }
 //Overloaded operators
-OrdersList& OrdersList::operator=(const OrdersList &ord)
+OrdersList& OrdersList::operator=(const OrdersList& ord)
 {
     ordersList = new std::vector<Orders*>();
     for (int i = 0; i < ord.ordersList->size(); i++)
@@ -772,12 +774,12 @@ OrdersList& OrdersList::operator=(const OrdersList &ord)
     return *this;
 }
 
-std::ostream& operator<<(std::ostream &out, const OrdersList &orders)
+std::ostream& operator<<(std::ostream& out, const OrdersList& orders)
 {
     out << "The list of orders:" << std::endl;
-    for(Orders* o: *orders.ordersList)
+    for (Orders* o : *orders.ordersList)
     {
-        out << "Order: "<< *o;
+        out << "Order: " << *o;
     }
     return out;
 }
@@ -794,5 +796,15 @@ int OrdersList::findOrderIndex(std::vector<Orders*> vec, Orders* item)
         throw std::invalid_argument("CannotFindItem");
     }
     return std::distance(vec.begin(), it);
+}
+
+int OrdersList::getSize() {
+    return ordersList->size();
+}
+
+std::string OrdersList::stringToLog()
+{
+    std::string log = "LOG::OrdersList:: Order Added - " + this->ordersList->back()->describe();
+    return log;
 }
 #pragma endregion

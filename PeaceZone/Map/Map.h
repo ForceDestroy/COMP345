@@ -68,6 +68,7 @@ public:
     // Methods
     Map &operator=(const Map &);
     friend std::ostream &operator<<(std::ostream &out, const Map &map);
+    Player* GetContinentOwner(Continent* continent);
 
     bool Validate();
 

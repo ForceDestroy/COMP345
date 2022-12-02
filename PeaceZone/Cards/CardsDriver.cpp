@@ -21,9 +21,9 @@ inline void testCards() {
 	std::cout << *h << std::endl;
 
 	//Play the cards in hand
-	(*h)[0]->Play(*h, *o);
-	(*h)[0]->Play(*h, *o);
-	(*h)[0]->Play(*h, *o);
+	//(*h)[0]->Play(*h, *o);
+	//(*h)[0]->Play(*h, *o);
+	//(*h)[0]->Play(*h, *o);
 
 	//Display the contents of the deck
 	std::cout << *d << std::endl;

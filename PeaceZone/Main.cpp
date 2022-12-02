@@ -13,6 +13,8 @@
 #include "Map/MapDriver.cpp"
 #include "Player/PlayerDriver.cpp"
 #include "Orders/OrdersDriver.cpp"
+#include "CommandProcessing/CommandProcessingDriver.cpp" 
+#include "LoggingObserver/LoggingObserverDriver.cpp"
 
 int main()
 {
@@ -22,30 +24,53 @@ int main()
 
     //Map Tester
     std::cout << "\nTesting Map Loader" << std::endl;
-    testLoadMaps();
+    //testLoadMaps();
     std::cout << "\n==================================================" << std::endl;
 
     //Orders Tester
     std::cout << "\nTesting Orders" << std::endl;
-    testOrdersList();
+    //testOrdersList();
     std::cout << "\n==================================================" << std::endl;
     
     //Card Tester
     std::cout << "\nTesting Cards" << std::endl;
-    testCards();
+    //testCards();
     std::cout << "\n==================================================" << std::endl;
 
     //Player Tester
     std::cout << "\nTesting Player" << std::endl;
-    testPlayer();
+    //testPlayer();
     std::cout << "\n==================================================" << std::endl;
 
     //GameEngine Tester
-    std::cout << "\nTesting Game Engine" << std::endl;
-    GameEngine* gameEngine = new GameEngine();
+    std::cout << "\nTesting Command Processor" << std::endl;
+    //testCommandProcessor();
 
-    testGameStates(gameEngine);
+    std::cout << "\n==================================================" << std::endl;
+
+    std::cout << "\nTesting Game Engine Startup Phase" << std::endl;
+    GameEngine* gameEngine = new GameEngine();
+    
+    testStartupPhase(gameEngine);
+
+    //testGameStates(gameEngine);
+
+    std::cout << "\n==================================================" << std::endl;
+
+    std::cout << "\nTesting Main Game Loop" << std::endl;
+
+    testMainGameLoop(gameEngine);
+
+    std::cout << "\n==================================================" << std::endl;
+
+    std::cout << "\nTesting Log Observer" << std::endl;
+    testLoggingObserver();
+    std::cout << "\n==================================================" << std::endl;
+
+    std::cout << "\nTesting Order" << std::endl;
+
+    testOrderExecution();
 
     delete gameEngine;
-    std::cout << "\n==================================================" << std::endl;
+    gameEngine = NULL;
 }
