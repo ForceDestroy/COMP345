@@ -52,7 +52,9 @@ int main()
     std::cout << "\nTesting Game Engine Startup Phase" << std::endl;
     GameEngine* gameEngine = new GameEngine();
 
-    testComputerStrategies(gameEngine);
+    testTournament(gameEngine);
+	
+    //testComputerStrategies(gameEngine);
     
     //testStartupPhase(gameEngine);
 

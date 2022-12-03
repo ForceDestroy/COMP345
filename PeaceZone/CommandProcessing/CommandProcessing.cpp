@@ -153,28 +153,138 @@ void CommandProcessor::validate(Command* command)
 
 	for (int i = 0; i < this->validCommands.size(); i++)
 	{
-		if (this->validCommands[i]->name._Equal(command->name)) {
+		if (this->validCommands[i]->name._Equal(command->name) && !command->name._Equal("loadmap") && !command->name._Equal("addplayer") && !command->name._Equal("tournament") ){
 			count++;
 		}else{
 			std::string space = " ";
-			std::string inputCommand = command->name.substr(0, command->name.find(space));
-			std::string restOfCommand = command->name.substr(command->name.find(space) + 1, command->name.size());
+			std::string inputCommand = command->name;
+			std::string restOfCommand = "";
+
+			if (command->name.find(space) != std::string::npos) {
+				inputCommand = command->name.substr(0, command->name.find(space));
+				restOfCommand = command->name.substr(command->name.find(space) + 1, command->name.size());
+
+			}
 			
-			//validating commands loadmap <mapfile> and addplayer <playername> 
-			if (this->validCommands[i]->name._Equal(inputCommand) && (inputCommand._Equal("loadmap") && restOfCommand.find(space) == std::string::npos) ){
+			//validating commands loadmap <mapfile> 
+			if (this->validCommands[i]->name._Equal(inputCommand) && (inputCommand._Equal("loadmap") && restOfCommand.find(space) == std::string::npos && !restOfCommand._Equal(""))) {
 				count++;
 				output = "Command " + command->name + " is valid for the current state";
 				command->saveEffect(output);
 			}
-			else if(this->validCommands[i]->name._Equal(inputCommand) && inputCommand._Equal("addplayer")) {
+			else if(inputCommand._Equal("loadmap") && restOfCommand.find(space) != std::string::npos) {
+				output = "Error: Invalid loadmap <mapfile> command (" + command->name + "). Only one map file name must be entered with the command. ";
+				command->saveEffect(output);
+				return;
+			}
+			else if (inputCommand._Equal("loadmap") && restOfCommand.empty()) {
+				output = "Error: Invalid loadmap <mapfile> command (" + command->name + "). Rest of command is needed to load a map. ";
+				command->saveEffect(output);
+				return;
+			}
+
+			//validating commands addplayer <playername> 
+			else if (this->validCommands[i]->name._Equal(inputCommand) && inputCommand._Equal("addplayer")) {
 				count++;
 				output = "Command " + command->name + " is valid for the current state";
 				command->saveEffect(output);
 
-			}else if(inputCommand._Equal("loadmap") && restOfCommand.find(space) != std::string::npos) {
-				output = "Error: Invalid loadmap <mapfile> command (" + command->name + "). Only one map file name must be entered with the command. ";
+			}else if(inputCommand._Equal("addplayer") && restOfCommand.empty()) {
+				output = "Error: Invalid addplayer <playername> command (" + command->name + "). Rest of command is needed to add a player. ";
 				command->saveEffect(output);
 				return;
+
+			}
+			//validating commands tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>
+			// tournament -M Alabama, Montreal, Canada -P Benevolent, Cheater, Aggressive -G 4 -D 50 
+
+			else if (this->validCommands[i]->name._Equal(inputCommand) && inputCommand._Equal("tournament")) {
+
+				if (restOfCommand.empty()) {
+					output = "Error: Invalid tournament command (" + command->name + "). Rest of command is empty. Make sure it follows this format: tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns> ";
+					command->saveEffect(output);
+					return;
+				}
+
+				// Checking if all parameters are present
+				if (restOfCommand.find("-M") != std::string::npos 
+					&& restOfCommand.find("-P") != std::string::npos 
+					&& restOfCommand.find("-G") != std::string::npos 
+					&& restOfCommand.find("-D") != std::string::npos
+					&& restOfCommand.find("-M") < restOfCommand.find("-P") < restOfCommand.find("-G") < restOfCommand.find("-D")) {
+
+					std::string map = restOfCommand.substr(restOfCommand.find("-M "), restOfCommand.find(" -P"));
+					std::string playerStrategies = restOfCommand.substr(restOfCommand.find("-P "), restOfCommand.find(" -G"));
+					std::string games = restOfCommand.substr(restOfCommand.find("-G "), restOfCommand.find(" -D"));
+					std::string turns = restOfCommand.substr(restOfCommand.find("-D "), restOfCommand.size());
+
+					// Validating each parameter is of correct format: 
+					// Validating map
+					std::vector<std::string> mapList;
+					std::string delimiter = ", ";
+					size_t pos = 0;
+					std::string token;
+					while ((pos = map.find(delimiter)) != std::string::npos) {
+						token = map.substr(0, pos);
+						mapList.push_back(token);
+						map.erase(0, pos + delimiter.length());
+					}
+
+					if (1 > mapList.size() || mapList.size() > 5) {
+						output = "Error: Invalid tournament command (" + command->name + "). You have either too many maps (more than 5) or not enough maps (less than 1). ";
+						command->saveEffect(output);
+						return;
+					}
+
+					// Validating player strategies
+					std::vector<std::string> strategiesList;
+					delimiter = ", ";
+					pos = 0;
+					token = "";
+					while ((pos = map.find(delimiter)) != std::string::npos) {
+						token = map.substr(0, pos);
+						strategiesList.push_back(token);
+						map.erase(0, pos + delimiter.length());
+					}
+
+					if (2 > strategiesList.size() || strategiesList.size() > 4) {
+						output = "Error: Invalid tournament command (" + command->name + "). You have either too many strategies (more than 4) or not enough strategies (less than 2). ";
+						command->saveEffect(output);
+						return;
+					}
+
+					// Validating number of games
+
+					int gamesInt = stoi(games);
+					if (1 > gamesInt || gamesInt > 5) {
+						output = "Error: Invalid tournament command (" + command->name + "). You have either too many games (more than 5) or not enough games (less than 1). ";
+						command->saveEffect(output);
+						return;
+
+					}
+
+					// Validating max of number of turns
+
+					int turnsInt = stoi(turns);
+					if (10 > turnsInt || turnsInt > 50) {
+						output = "Error: Invalid tournament command (" + command->name + "). You have either too many turns (more than 50) or not enough turns (less than 10). ";
+						command->saveEffect(output);
+						return;
+
+					}
+
+					// Everything passed
+					count++;
+					output = "Command " + command->name + " is valid for the current state";
+					command->saveEffect(output);
+
+
+				}
+				else {
+					output = "Error: Invalid tournament command (" + command->name + "). Missing a parameter for the tournament command. Make sure it follows this format: tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns> ";
+					command->saveEffect(output);
+					return;
+				}
 			}
 		}
 	}

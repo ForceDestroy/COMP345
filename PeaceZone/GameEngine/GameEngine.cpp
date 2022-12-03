@@ -223,6 +223,7 @@ void transitionState(GameEngine* gameEngine, int stateNumber, std::string input 
 GameEngine::GameEngine()
 {
      //Commands creation
+	Command* tournament = new Command("tournament");
     Command* loadMap = new Command("loadmap");
     Command* validateMap = new Command("validatemap");
     Command* addPlayer = new Command("addplayer");
@@ -236,6 +237,7 @@ GameEngine::GameEngine()
     Command* end = new Command("end");
 
     //Creating the vector of game commands
+	this->gameCommands.push_back(tournament);
     this->gameCommands.push_back(loadMap);
     this->gameCommands.push_back(validateMap);
     this->gameCommands.push_back(addPlayer);
@@ -251,7 +253,7 @@ GameEngine::GameEngine()
 
 
     //Creating valid commands vector for each state
-    std::vector<Command*> startValidCommands = {loadMap};
+    std::vector<Command*> startValidCommands = {loadMap, tournament};
     std::vector<Command*> mapLoadedValidCommands = {loadMap, validateMap};
     std::vector<Command*> mapValidatedValidCommands = {addPlayer};
     std::vector<Command*> playersAddedValidCommands = {addPlayer, gameStart};
@@ -555,10 +557,10 @@ void GameEngine::executeOrdersPhase() {
 }
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
-	//std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
+	std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
     //std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
     // std::string mapsPath = "C:\\COMP345\\PeaceZone\\Map\\ConquestMaps";
-    std::string mapsPath = "C:\\Users\\Andrew Abbott\\Documents\\GitHub\\COMP345\\PeaceZone\\Map\\ConquestMaps";
+    //std::string mapsPath = "C:\\Users\\Andrew Abbott\\Documents\\GitHub\\COMP345\\PeaceZone\\Map\\ConquestMaps";
 
 	std::vector<std::string> mapsFileNames;
     std::string filePathName;
