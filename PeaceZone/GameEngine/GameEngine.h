@@ -49,6 +49,7 @@ public:
     CommandProcessor* cmdProcessor;
     std::vector<Player*> playerList;
     Deck* gameDeck;
+    Player* neutralPlayer;
 
     // Constructors
     GameEngine();

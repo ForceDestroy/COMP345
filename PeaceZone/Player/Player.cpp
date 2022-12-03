@@ -28,7 +28,7 @@ Player::Player(std::string name)
     this->reinforcementPool = 0;
     this->hasPlayedCard = false;
     this->hasDefended = false;
-    this->hasAttacked = 3;
+    this->hasAttacked = false;
     this->hasFinishedIssuingOrders = false;
     this->committedTerritories = new std::vector<Territory*>();
     this->attackedTerritories = new std::vector<Territory*>();
@@ -47,7 +47,7 @@ Player::Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersLi
     this->reinforcementPool = 0;
     this->hasPlayedCard = false;
     this->hasDefended = false;
-    this->hasAttacked = 1;
+    this->hasAttacked = false;
     this->hasFinishedIssuingOrders = false;
     this->committedTerritories = new std::vector<Territory*>();
     this->negotiateList = new std::vector<Player*>(3);
@@ -63,6 +63,7 @@ Player::~Player()
     delete territories;
     delete handOfCards;
     delete listOfOrders;
+    delete strategy;
 }
 
 //Copy constructor
@@ -177,6 +178,9 @@ Player& Player::operator=(const Player& p)
 //osstream operator
 std::ostream& operator<<(std::ostream& os, const Player& p)
 {
+    os << p.name << "'s Strategy: " << std::endl;
+    os << p.strategy<<std::endl;
+
     os << p.name << "'s territories: " << std::endl;
     for (Territory* territory : *p.territories)
     {

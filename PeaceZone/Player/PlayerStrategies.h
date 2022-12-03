@@ -2,10 +2,14 @@
 #include "Player.h"
 class PlayerStrategy {
 public:
-		virtual std::vector<Territory*> toAttack(Player* player) = 0;
-		virtual std::vector<Territory*> toDefend(Player* player) = 0;
-		virtual void issueOrder(Player* player) = 0;
-		virtual void resetIssueOrderPhase() = 0;
+	std::string type;
+	virtual std::vector<Territory*> toAttack(Player* player) = 0;
+	virtual std::vector<Territory*> toDefend(Player* player) = 0;
+	virtual void issueOrder(Player* player) = 0;
+	virtual void resetIssueOrderPhase() = 0;
+	virtual std::string describe() = 0 ;
+
+	friend std::ostream& operator<<(std::ostream& out, const PlayerStrategy& p);
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy{
@@ -21,8 +25,8 @@ public:
 	std::vector<Territory*> toDefend(Player* player);
 	void issueOrder(Player* player);
 	void resetIssueOrderPhase();
+	std::string describe();
 	AggressivePlayerStrategy& operator=(const AggressivePlayerStrategy& a);
-	friend std::ostream& operator<<(std::ostream& out, const AggressivePlayerStrategy& a);
 };
 
 class BenevolentPlayerStrategy : public PlayerStrategy {
@@ -37,8 +41,8 @@ public:
 	std::vector<Territory*> toDefend(Player* player);
 	void issueOrder(Player* player);
 	void resetIssueOrderPhase();
+	std::string describe() ;
 	BenevolentPlayerStrategy& operator=(const BenevolentPlayerStrategy& b);
-	friend std::ostream& operator<<(std::ostream& out, const BenevolentPlayerStrategy& b);
 };
 
 
@@ -54,8 +58,8 @@ public:
 	std::vector<Territory*> toDefend(Player* player);
 	void issueOrder(Player* player);
 	void resetIssueOrderPhase();
+	std::string describe();
 	NeutralPlayerStrategy& operator=(const NeutralPlayerStrategy& n);
-	friend std::ostream& operator<<(std::ostream& out, const NeutralPlayerStrategy& n);
 };
 
 class CheaterPlayerStrategy : public PlayerStrategy {
@@ -71,6 +75,6 @@ public:
 	std::vector<Territory*> toDefend(Player* player);
 	void issueOrder(Player* player);
 	void resetIssueOrderPhase();
+	std::string describe();
 	CheaterPlayerStrategy& operator=(const CheaterPlayerStrategy& c);
-	friend std::ostream& operator<<(std::ostream& out, const CheaterPlayerStrategy& c);
 };
