@@ -270,6 +270,13 @@ void advanceOrder::execute()
 //simulates attacks between 2 territories
 void advanceOrder::simulateAttack()
 {
+    if (target->owner->strategy->type == "Neutral") 
+    {
+        std::cout << "Neutral player " << target->owner->name <<" changing Strategy to Aggressive after being attacked" << std::endl;
+        delete target->owner->strategy;
+        target->owner->strategy = new AggressivePlayerStrategy();
+    }
+
     srand(time(0));
     int randNum;
     int attackersKilled = 0, defendersKilled = 0;
@@ -407,10 +414,18 @@ void bombOrder::validate()
 void bombOrder::execute()
 {
     validate();
+
     if (valid)
     {
         describe();
         std::cout << "Bomb order is executed." << std::endl;
+        if (target->owner->strategy->type == "Neutral")
+        {
+            std::cout << "Neutral player " << target->owner->name << " changing Strategy to Aggressive after being attacked" << std::endl;
+            delete target->owner->strategy;
+            target->owner->strategy = new AggressivePlayerStrategy();
+        }
+
         this->target->armyCount /= 2;
         Notify(this);
     }

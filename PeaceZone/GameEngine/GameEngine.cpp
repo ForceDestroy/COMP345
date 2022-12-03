@@ -249,6 +249,7 @@ GameEngine::GameEngine()
     this->gameCommands.push_back(end);
 
 
+
     //Creating valid commands vector for each state
     std::vector<Command*> startValidCommands = {loadMap};
     std::vector<Command*> mapLoadedValidCommands = {loadMap, validateMap};
@@ -271,6 +272,9 @@ GameEngine::GameEngine()
     State* win=new State("Win", winValidCommands);
     State* endState = new State("End", endValidCommands);
 
+    //Create the Neutral Player
+    neutralPlayer = new Player("Neutral");
+    neutralPlayer->strategy = new NeutralPlayerStrategy();
 
     //creating a vector of states
     std::vector<State*> gameStates={start, mapLoaded, mapValidated, playersAdded, assignReinforcement, issueOrders, executeOrders, win, endState };
@@ -320,6 +324,7 @@ GameEngine::~GameEngine()
     if (activeMap != NULL) {
 	    delete activeMap;
     }
+    delete neutralPlayer;
     delete gameDeck;
     currentState=NULL;
     activeMap=NULL;
@@ -412,7 +417,9 @@ void GameEngine::mainGameLoop() {
 
                 playerList.erase(remove(playerList.begin(), playerList.end(), it), playerList.end());
 
-                delete it;
+                if (it->strategy->type != "Neutral") {
+                    delete it;
+                }
             }
         }
 
@@ -513,10 +520,29 @@ void GameEngine::executeOrdersPhase() {
                 //Remove the Order
                 Orders* o = (*p->getOrdersList())[0];
                 p->getOrdersList()->remove(o);
+
             }
             else {
                 remainingPlayers--;
             }
+        }
+        //If a null territory exists set it's owner to the neutral player and add it to the player list
+        for (auto t : activeMap->territories) {
+            if (t->owner == NULL)
+            {
+                t->owner = neutralPlayer;
+                if (std::find(playerList.begin(), playerList.end(), neutralPlayer) == playerList.end())
+                {
+                    std::cout << "Adding Neutral Player to PlayerList" << std::endl;
+                    playerList.push_back(neutralPlayer);
+                }
+            }
+        }
+
+        //If Neutral player is no longer Neutral create a new one
+        if (neutralPlayer->strategy->type != "Neutral") {
+            neutralPlayer = new Player(neutralPlayer->name + "_");
+            neutralPlayer->strategy == new NeutralPlayerStrategy();
         }
     }
     //Loop for each player and draw a card if they conquered a territory

@@ -15,6 +15,7 @@
 #include "Orders/OrdersDriver.cpp"
 #include "CommandProcessing/CommandProcessingDriver.cpp" 
 #include "LoggingObserver/LoggingObserverDriver.cpp"
+#include "Player/PlayerStrategiesDriver.cpp"
 
 int main()
 {
@@ -50,8 +51,10 @@ int main()
 
     std::cout << "\nTesting Game Engine Startup Phase" << std::endl;
     GameEngine* gameEngine = new GameEngine();
+
+    testComputerStrategies(gameEngine);
     
-    testStartupPhase(gameEngine);
+    //testStartupPhase(gameEngine);
 
     //testGameStates(gameEngine);
 
@@ -59,17 +62,17 @@ int main()
 
     std::cout << "\nTesting Main Game Loop" << std::endl;
 
-    testMainGameLoop(gameEngine);
+    //testMainGameLoop(gameEngine);
 
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Log Observer" << std::endl;
-    testLoggingObserver();
+    //testLoggingObserver();
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Order" << std::endl;
 
-    testOrderExecution();
+    //testOrderExecution();
 
     delete gameEngine;
     gameEngine = NULL;

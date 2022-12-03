@@ -7,13 +7,12 @@
 #include "../Map/Map.h"
 #include "../Orders/Orders.fwd.h"
 #include "../Cards/Cards.h"
-#include "../Cards/Cards.h"
-#include "PlayerStrategies.h"
 
 #ifdef _DEBUG
 #define new new( _NORMAL_BLOCK , __FILE__ , __LINE__ )
 #endif
 
+class PlayerStrategy;
 //Player class
 class Player
 {
