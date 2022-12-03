@@ -9,8 +9,6 @@
 // Default constructor
 HumanPlayerStrategy::HumanPlayerStrategy()
 {
-	terToAttack = new std::vector<Territory*>();
-	terToDefend = new std::vector<Territory*>();
 }
 
 // Copy constructor
@@ -23,8 +21,8 @@ HumanPlayerStrategy::HumanPlayerStrategy(HumanPlayerStrategy* hps)
 // Destructor
 HumanPlayerStrategy::~HumanPlayerStrategy()
 {
-	delete terToAttack;
-	delete terToDefend;
+	terToAttack.~vector();
+	terToDefend.~vector();
 }
 
 // Returns territories being attacked/bombed
@@ -44,10 +42,10 @@ std::vector<Territory*> HumanPlayerStrategy::toDefend(Player* p)
 // If not return null
 Territory* HumanPlayerStrategy::getTerByName(Player* p, std::string name)
 {
-	for (Territory* t : p->territories)
+	for (int i = 0; i < p->territories->size(); i++)
 	{
-		if (t->name = name)
-			return t;
+		if (p->territories->at(i)->name == name)
+			return p->territories->at(i);
 	}
 	return NULL;
 }
@@ -62,12 +60,12 @@ std::string HumanPlayerStrategy::getName(Player* p)
 	std::cout << "Enter a territory name(\"back\" to go back): " << std::endl;
 	while (!nameFound)
 	{
-		std::cin << terName;
+		std::cin >> terName;
 		if (terName == "back")
 			return terName;
-		for (std::string n : p->territories->name)
+		for (int i = 0; i < p->territories->size(); i ++)
 		{
-			if (terName == n)
+			if (terName == p->territories->at(i)->name)
 			{
 				return terName;
 			}
@@ -84,11 +82,11 @@ int HumanPlayerStrategy::getTroops(Player* p, int troopLim)
 {
 	int troops = 0;
 	std::cout << "Enter number of troops to deploy (0 to go back): " << std::endl;
-	std::cin << troops;
+	std::cin >> troops;
 	while (troops < 0 || troops > troopLim)
 	{
 		std::cout << "Invalid troop number. Try again (0 to go back): " << std::endl;
-		std::cin << troops;
+		std::cin >> troops;
 	}
 	return troops;
 }
@@ -101,14 +99,14 @@ int HumanPlayerStrategy::getTroops(Player* p, int troopLim)
 // This will looop until the player chooses a valid option
 char HumanPlayerStrategy::getOption()
 {
-	char option = '';
+	char option = ' ';
 	std::cout << "Please enter your option: 'a' to attack, 'd' to defend, 'c' to play a card, 's' to skip" << std::endl;
-	std::cin << option;
+	std::cin >> option;
 	while (option != 'a' || option != 'd' || option != 's' || option != 'c')
 	{
 		std::cout << "Invalid option, please try again." << std::endl;
 		std::cout << "Please enter your option 'a' to attack, 'd' to defend, 'c' to play a card, 's' to skip" << std::endl;
-		std::cin << option;
+		std::cin >> option;
 	}
 	return option;
 }
@@ -118,8 +116,8 @@ char HumanPlayerStrategy::getOption()
 // Then it will go to ask players for their actions until the user decides to finish
 void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 {
-	std::cout "Issue order phase start." << std::endl;
-	std::cout "Deploy phase." << std::endl;
+	std::cout << "Issue order phase start." << std::endl;
+	std::cout << "Deploy phase." << std::endl;
 	terToAttack.clear();
 	terToDefend.clear();
 	std::string name;
@@ -140,7 +138,7 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 			troops = getTroops(p, p->reinforcementPool);
 		}
 		// Adds a deploy order of "troops" troops to the territory with "name" name
-		p->listOfOrders->add(new deployOrder(p, getTerByName(p, name), troops);
+		p->listOfOrders->add(new deployOrder(p, getTerByName(p, name), troops));
 		p->reinforcementPool -= troops;
 		terToDefend.push_back(getTerByName(p, name));
 		std::cout << "Order added." << std::endl;
@@ -151,7 +149,8 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 	// bool done is used to check if players are finished with their issue order phaes
 	bool done = false;
 	// source and target denotes the source and target territory of an order
-	Territory* source = NULL, target = NULL;
+	Territory* source = NULL;
+	Territory* target = NULL;
 	bool nameValid = false, validSourceAndTarget = false;;
 	while (!done)
 	{
@@ -176,7 +175,7 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 				std::cout << "Please choose a card number to play, from 1 to " << p->handOfCards->listOfCards->size() << std::endl;
 				std::cout << "Type 0 to go back." << std::endl;
 				int cardNum = 0;
-				std::cin << cardNum;
+				std::cin >> cardNum;
 				// Checks if the user enters a valid number (between 1 and the hand size)
 				while (cardNum > p->handOfCards->listOfCards->size() || cardNum < 0)
 				{
@@ -184,19 +183,19 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 						// goto finish will make it so that the user return to getOption() to choose a different action
 						goto finish;
 					std::cout << "Wrong number, please try again (0 to go back): ";
-					std::cin << cardNum;
+					std::cin >> cardNum;
 				}
 				Card* toPlay = p->handOfCards->listOfCards->at(cardNum - 1);
 				// Different cases depending on which card the player decides to play
 				// Cases: bomb, airlift, blockade, negotiate
-				switch (toPlay)
+				switch (toPlay->Play(*p->handOfCards))
 				{
 				// Bomb card
 				case bomb:
 				{ 
 					std::cout << "You've chosen to play the bomb card." << std::endl;
 					std::cout << "Enter bomb target territory name (\"back\" to go back): " << std::endl;
-					std::cin << name;
+					std::cin >> name;
 					nameValid = false;
 					// Looped until valid name is entered or user choose to go back
 					while (!nameValid)
@@ -205,9 +204,9 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 						if (name == "back")
 							goto finish;
 						// Checks if the territory is not owned by the player and is adjacent to an owned territory
-						for (Territory* t : p->territories)
+						for (int i = 0; i < p->territories->size(); i++)
 						{
-							for (Territory* n : p->territories->neighbors)
+							for (Territory* n : p->territories->at(i)->neighbors)
 							{
 								if (name == n->name && getTerByName(p, name) == NULL)
 								{
@@ -218,10 +217,10 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 						}
 						if (!nameValid)
 							std::cout << "Not valid territory, try again(\"back\" to go back): " << std::endl;
-						std::cin << name;
+						std::cin >> name;
 					}
 					// Adds a bomb order and adds a the target territory to terToAttack
-					p->listOfOrders->add(new bombOrder(this, target));
+					p->listOfOrders->add(new bombOrder(p, target));
 					terToAttack.push_back(getTerByName(p, name));
 					std::cout << "Bomb order added." << std::endl;
 				}
@@ -233,7 +232,7 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 					// Get target territory name (must be owned by player)
 					name = getName(p);
 					// Add a blockade order an add target territory to terToDefend
-					p->listOfOrders->add(new blockadeOrder(this, getTerByName(p, name)));
+					p->listOfOrders->add(new blockadeOrder(p, getTerByName(p, name)));
 					terToDefend.push_back(getTerByName(p, name));
 					std::cout << "Blockade order added." << std::endl;
 				}
@@ -277,7 +276,7 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 						}
 					}
 					// Adds a new airlift order and adds the target territory to terToDefend
-					p->listOfOrders->add(new airliftOrder(this, source, target, troops);
+					p->listOfOrders->add(new airliftOrder(p, source, target, troops));
 					terToDefend.push_back(getTerByName(p, name));
 					std::cout << "Airlift order added." << std::endl;
 				}
@@ -291,14 +290,14 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 					// Looped until a valid player is acquired or going back
 					while (!nameValid)
 					{
-						std::cin << name;
+						std::cin >> name;
 						// Checks for the player name on the list of players and checks if the target player is not the one playing the card
 						for (Player* n : ge->playerList)
 						{
 							if (n->name == name && p->name != name)
 							{
 								nameValid = true;
-								p->listOfOrders->add(new negotiateOrder(this, n));
+								p->listOfOrders->add(new negotiateOrder(p, n));
 							}
 						}
 						if (!nameValid)
@@ -340,14 +339,14 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 				name = getName(p);
 				// Checks if player wants to go back to order choosing
 				if (name == "back")
-					goto:finish;
+					goto finish;
 				source = getTerByName(p, name);
 				// Get name of target
 				std::cout << "Select territory to attack: ";
-				std::cin << name;
+				std::cin >> name;
 				while (!nameValid) {
 					// If the player wants to go back, program returns to choosing source territory
-					std::cin << name;
+					std::cin >> name;
 					if (name == "back")
 						nameValid = true;
 					else
@@ -361,7 +360,7 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 								target = t;
 							}
 						}
-						else
+						if (!nameValid)
 						{
 							std::cout << "Invalid inputs, please try again (\"back\" to go back): " << std::endl;
 						}
@@ -401,7 +400,7 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 					name = getName(p);
 					// Checks if player wants to go back to order choosing
 					if (name == "back")
-						goto:finish;
+						goto finish;
 					source = getTerByName(p, name);
 					// Get name of target
 					std::cout << "Select territory to transfer troops to: ";
@@ -411,19 +410,11 @@ void HumanPlayerStrategy::issueOrder(Player* p, GameEngine* ge)
 					if (name != "back")
 					// if name == "back" go back to getOption()
 					{
-						if (source == p && target == p)
-						{	
-							// Order is invalid if source and target are the same
-							std::cout << "Invalid inputs, please try again" << std::endl;
-						}
-						else
+						//neighbors check
+						for (Territory* t : source->neighbors)
 						{
-							//neighbors check
-							for (Territory* t : source->neighbors)
-							{
-								if (t == target)
-									validSourceAndTarget = true;
-							}
+							if (t == target)
+								validSourceAndTarget = true;
 						}
 					}
 				}
