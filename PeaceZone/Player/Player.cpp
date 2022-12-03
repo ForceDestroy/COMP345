@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "../Orders/Orders.h"
+#include "PlayerStrategies.h"
 
 //Default constructor
 Player::Player()
@@ -111,6 +112,7 @@ void Player::resetIssueOrderPhase()
     attackedTerritories->clear();
     negotiateList->clear();
     hasConqTerritory = false;
+    strategy->resetIssueOrderPhase();
 }
 
 //Check if the player is under negotiation
