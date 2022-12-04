@@ -1,0 +1,7 @@
+loadmap Mars.map
+validatemap
+addplayer Benevolent0
+addplayer Neutral1
+addplayer Cheater2
+addplayer Aggressive3
+gamestart
