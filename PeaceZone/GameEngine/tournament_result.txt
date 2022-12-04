@@ -1,7 +1,7 @@
 TOURNAMENT MODE
 
-Maps: Alabama, Gibraltar, SouthAmerica, 
-Players: Aggressive, Benevolent, Cheater, Neutral, 
+Maps: Alabama, Gibraltar, SouthAmerica, Asia, Mars, 
+Players: Benevolent0, Neutral1, Cheater2, Aggressive3, 
 Rounds: 3
 Turn Limit: 50
 
@@ -14,4 +14,10 @@ Winner of Gibraltar - Round 3 is Cheater2
 Winner of SouthAmerica - Round 1 is Cheater2
 Winner of SouthAmerica - Round 2 is Cheater2
 Winner of SouthAmerica - Round 3 is Cheater2
+Winner of Asia - Round 1 is Cheater2
+Winner of Asia - Round 2 is Cheater2
+Winner of Asia - Round 3 is Cheater2
+Winner of Mars - Round 1 is Cheater2
+Winner of Mars - Round 2 is Cheater2
+Winner of Mars - Round 3 is Cheater2
 

@@ -413,17 +413,24 @@ std::string GameEngine::mainGameLoop(int turnLimit) {
 		executeOrdersPhase();
 
 		//Remove all players who do not own any territories
+		std::vector<Player*> toDelete;
+
 		for (auto it : playerList)
 		{
 			if (it->hasLost())
 			{
 				std::cout << "Player " << it->name << " owns no territories and has been removed from the game." << std::endl;
 
-				playerList.erase(remove(playerList.begin(), playerList.end(), it), playerList.end());
-				
-				if (it->name != "Neutral") {
-					delete it;
-				}
+				toDelete.push_back(it);
+			}
+		}
+
+		for (auto it : toDelete)
+		{
+			playerList.erase(remove(playerList.begin(), playerList.end(), it), playerList.end());
+
+			if (it != neutralPlayer) {
+				delete it;
 			}
 		}
 
@@ -443,7 +450,7 @@ std::string GameEngine::mainGameLoop(int turnLimit) {
 
 		if (iterationCounter == 0)
 		{
-			return "Draw";
+			return "~DRAW~";
 		}
 
 	}
@@ -559,7 +566,7 @@ void GameEngine::executeOrdersPhase() {
 		//If Neutral player is no longer Neutral create a new one
 			if (neutralPlayer->strategy->type != "Neutral") {
 				neutralPlayer = new Player(neutralPlayer->name + "_");
-				neutralPlayer->strategy == new NeutralPlayerStrategy();
+				neutralPlayer->strategy = new NeutralPlayerStrategy();
 			}
 	}
 	//Loop for each player and draw a card if they conquered a territory
@@ -926,7 +933,6 @@ void Tournament::tournamentMode(std::string tournamentString) {
 
 	playerStrategies.pop_back();
 	strategiesList.push_back(playerStrategies);
-	std::sort(strategiesList.begin(), strategiesList.end());
 
 	// Parse into number of games per map
 	gamesNumber = stoi(games);
@@ -937,6 +943,8 @@ void Tournament::tournamentMode(std::string tournamentString) {
 
 	// Final Array
 	std::vector<std::vector<std::string>> report(mapNumber, std::vector<std::string>(gamesNumber));
+	
+	// Tournament Result String
 	std::string reportString = "TOURNAMENT MODE\n\n";
 	reportString += "Maps: ";
 
@@ -949,37 +957,45 @@ void Tournament::tournamentMode(std::string tournamentString) {
 
 	for (int i = 0; i < strategiesList.size(); i++)
 	{
-		reportString += strategiesList.at(i) + ", ";
+		reportString += strategiesList.at(i) + std::to_string(i) + ", ";
 	}
 
 	reportString += "\nRounds: " + std::to_string(gamesNumber) + "\nTurn Limit: " + std::to_string(turnLimit) + "\n\n";
 
+	// Tournament Loop
+
+	// For each map
 	for (int i = 0; i < mapNumber; i++)
 	{
+		// Create a command file for the map
+
+		std::string commandFile = "C:\\COMP345\\PeaceZone\\GameEngine\\tournament_run.txt";
+		std::ofstream output;
+
+		std::string listOfCommands = "loadmap " + mapList[i] + ".map\n";
+		listOfCommands.append("validatemap\n");
+
+		for (int k = 0; k < strategiesList.size(); k++)
+		{
+			listOfCommands.append("addplayer " + strategiesList.at(k) + std::to_string(k) + "\n");
+		}
+
+		listOfCommands.append("gamestart");
+
+		// Write the round commands to the file
+		output.open(commandFile, std::ios_base::out);
+		output << listOfCommands << std::endl;
+		output.close();
+
+		// For each Round
 		for (int j = 0; j < gamesNumber; j++)
 		{
-			std::string commandFile = "C:\\COMP345\\PeaceZone\\GameEngine\\tournament_run.txt";
-			std::ofstream output;
-
-			std::string listOfCommands = "loadmap " + mapList[i] + ".map\n";
-			listOfCommands.append("validatemap\n");
-			
-			for (int k = 0; k < strategiesList.size(); k++)
-			{
-				listOfCommands.append("addplayer " + strategiesList.at(k) + std::to_string(k) + "\n");
-			}
-
-			listOfCommands.append("gamestart");
-
-			// Write the round commands to the file
-			output.open(commandFile, std::ios_base::out);
-			output << listOfCommands << std::endl;
-			output.close();
-
+			// Start the game
 			GameEngine* gameEngine = new GameEngine();
 			gameEngine->chooseInputMode(commandFile);
 			gameEngine->startupPhase();
 
+			// Add the proper player strategies
 			for (int k = 0; k < strategiesList.size(); k++)
 			{
 				if (gameEngine->playerList.at(k)->name.find("Aggressive") != std::string::npos)
@@ -1000,14 +1016,19 @@ void Tournament::tournamentMode(std::string tournamentString) {
 				}
 			}
 
+			// Play the Game
 			std::string winner = gameEngine->mainGameLoop(turnLimit);
+			
+			// Confirm the Winner
 			report.at(i).push_back(winner);
 			reportString += "Winner of " + mapList[i] + " - Round " + std::to_string(j+1) + " is " + winner + "\n";
 
+			// Delete the Game
 			delete gameEngine;
 		}
 	}
 
+	// Save Result to File
 	std::string reportFile = "C:\\COMP345\\PeaceZone\\GameEngine\\tournament_result.txt";
 	std::ofstream output;
 

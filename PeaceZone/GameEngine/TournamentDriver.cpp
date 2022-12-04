@@ -14,9 +14,10 @@ inline void testTournament(GameEngine* gameEngine) {
     }
     else {
         std::cout << "Command is valid" << std::endl;
+
+        std::string tournamentString = currentCommand->name;
+
+        Tournament::tournamentMode(tournamentString);
     }
 
-    std::string tournamentString = currentCommand->name;
-
-    Tournament::tournamentMode(tournamentString);
 }

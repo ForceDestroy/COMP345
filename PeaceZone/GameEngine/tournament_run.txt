@@ -1,7 +1,7 @@
-loadmap SouthAmerica.map
+loadmap Mars.map
 validatemap
-addplayer Aggressive0
-addplayer Benevolent1
-addplayer Neutral2
-addplayer Neutral3
+addplayer Benevolent0
+addplayer Neutral1
+addplayer Cheater2
+addplayer Aggressive3
 gamestart
