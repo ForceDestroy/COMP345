@@ -451,36 +451,40 @@ std::string GameEngine::mainGameLoop(int turnLimit) {
 }
 //ReinforcementPhase
 void GameEngine::reinforcementPhase() {
-	std::cout << "Starting Reinforcement Phase." << std::endl;
+    std::cout << "Starting Reinforcement Phase." << std::endl;
 
-	//Loop for each player 
-	for (auto p : playerList) {
+    //Loop for each player 
+    for (auto p : playerList) {
 
-		std::cout << "Calculating reinforcements for player: " << p->name << std::endl;
-		//Players gain 1 reinformcement for each 3 territories, rounded down
-		std::cout << p->name << " owns " << p->getTerritories()->size() << " territories. Adding " << p->getTerritories()->size() / 3 << " reinforcements" << std::endl;
-		int reinforcements = p->getTerritories()->size() / 3;
+        std::cout << "Calculating reinforcements for player: "<< p->name << std::endl;
+        //Players gain 1 reinformcement for each 3 territories, rounded down
+        std::cout  << p->name << " owns "<< p->getTerritories()->size() << " territories. Adding " << p->getTerritories()->size() / 3<< " reinforcements"<< std::endl;
+        int reinforcements = p->getTerritories()->size() / 3;
 
-		//Add continent bonuses when player owns all territories
-		for (auto c : activeMap->continents) {
-			if (p == activeMap->GetContinentOwner(c))
-			{
-				std::cout << p->name << " owns the continent" << c->name << ". Adding " << c->bonus << " reinforcements" << std::endl;
-				reinforcements += c->bonus;
-			}
-		}
+        //Add continent bonuses when player owns all territories
+        for (auto c : activeMap->continents) {
+            if (p == activeMap->GetContinentOwner(c))
+            {
+                std::cout << p->name << " owns the continent" << c->name << ". Adding " << c->bonus << " reinforcements" << std::endl;
+                reinforcements += c->bonus;
+            }
+        }
 
-		//Minimum reinforcements is 3
-		if (reinforcements < 3)
-		{
-			std::cout << p->name << " did not meet the minimum amount of reinforcements. Setting reinforcement count to 3" << std::endl;
-			reinforcements = 3;
-		}
+        //Minimum reinforcements is 3
+        if (reinforcements < 3)
+        {
+            std::cout << p->name << " did not meet the minimum amount of reinforcements. Setting reinforcement count to 3" << std::endl;
+            reinforcements = 3;
+        }
 
-		std::cout << "Adding a total of " << reinforcements << " units to player " << p->name << std::endl;
-		p->reinforcementPool += reinforcements;
+        std::cout << "Adding a total of "<< reinforcements << " units to player " << p->name << std::endl;
+        p->reinforcementPool += reinforcements;
+        std::cout << std::endl << "=====" << std::endl << std::endl;
 
-	}
+
+    }
+
+    std::cout << "End of the Reinforcement Phase." << std::endl << "=====" << std::endl << std::endl;
 }
 
 void GameEngine::issueOrdersPhase() {
@@ -508,6 +512,8 @@ void GameEngine::issueOrdersPhase() {
 			}
 		}
 	}
+
+    std::cout << "End of the issue orders Phase." << std::endl << "=====" << std::endl << std::endl;
 
 }
 
@@ -563,6 +569,7 @@ void GameEngine::executeOrdersPhase() {
 		}
 	}
 
+    std::cout << "End of the execute orders Phase." << std::endl << "=====" << std::endl << std::endl;
 }
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
@@ -732,49 +739,43 @@ void GameEngine::startupPhase() {
 		std::cout << "Enter the command \"addplayer <playername>\" to add another player or the command \"gamestart\" to start the game" << std::endl;
 		std::cout << "You are currently in the State: " << this->currentState->name << std::endl << std::endl;
 
-		//While loop that ensures the right amount of players has been added before allowing the user to start the game
-	} while (!currentCommand->name._Equal("gamestart") || this->playerList.size() < 2 || this->playerList.size() > 6);
+		
+        //While loop that ensures the right amount of players has been added before allowing the user to start the game
+    } while (!currentCommand->name._Equal("gamestart")||this->playerList.size() < 2 || this->playerList.size() > 6);
 
-	currentCommand->saveEffect("The game has started.");
+    currentCommand->saveEffect("The game has started.");
 
-	//Fairly distribute all the territories to the players 
-	//Shuffle the territories in the map object
-	auto rng = std::default_random_engine{};
-	std::shuffle(std::begin(this->activeMap->territories), std::end(this->activeMap->territories), rng);
+    //Fairly distribute all the territories to the players 
+    //Shuffle the territories in the map object
+    auto rng = std::default_random_engine{};
+    std::shuffle(std::begin(this->activeMap->territories), std::end(this->activeMap->territories), rng);
 
-	//Distribute territories to players
-	int numberOfTerritoriesPerPlayer = std::floor(this->activeMap->territories.size() / this->playerList.size());
-	int territoriesCount = 0;
+    //Distribute territories to players
+    int numberOfTerritoriesPerPlayer = std::floor(this->activeMap->territories.size() / this->playerList.size());
+    int territoriesCount = 0;
+    
+    std::cout << "Distributing territories to players... " << std::endl;
 
-	//Dirtributing the same number of territories to each player
-	for (Player* player : this->playerList)
-	{
-		for (int i = 0; i < numberOfTerritoriesPerPlayer; i++)
-		{
-			player->addPlayerTerritories(this->activeMap->territories[territoriesCount++]);
-		}
-	}
-	int nbOfLeftOverTerritories = this->activeMap->territories.size() - territoriesCount;
-
-	//In the case of left-over territories
-	if (nbOfLeftOverTerritories > 0) {
-		for (int i = 0; i < nbOfLeftOverTerritories; i++) {
+    //Dirtributing the same number of territories to each player
+    for (Player* player : this->playerList) 
+    {
+        for (int i = 0; i < numberOfTerritoriesPerPlayer; i++) 
+        {
+            player->addPlayerTerritories(this->activeMap->territories[territoriesCount++]);
+        }
+    }
+    int nbOfLeftOverTerritories = this->activeMap->territories.size() - territoriesCount;
+    
+    //In the case of left-over territories
+    if (nbOfLeftOverTerritories>0){
+        for (int i = 0; i < nbOfLeftOverTerritories; i++) {
 
 			playerList[i]->addPlayerTerritories(this->activeMap->territories[territoriesCount++]);
 		}
 	}
-
-	//Print players territories
-	std::cout << "Printing players' territories: " << std::endl;
-
-	for (Player* player : this->playerList) {
-		std::cout << *player << std::endl;
-	}
-
-
-	std::cout << "Done printing players' territories: " << std::endl;
-	std::cout << "=====" << std::endl << std::endl;
-
+    std::cout << "Territories distribution is finished. " << std::endl;
+    std::cout << "=====" << std::endl << std::endl;
+    
 	// Determining order of players randomly by shuffling randomly the player list
 	auto rngOrder = std::default_random_engine{};
 	std::shuffle(std::begin(this->playerList), std::end(this->playerList), rngOrder);
@@ -785,27 +786,27 @@ void GameEngine::startupPhase() {
 		player->setReinforcementPool(50);
 
 	}
-	std::cout << "An initial reinforcement pool of 50 army unit has been given to each player " << std::endl;
+    std::cout << "An initial reinforcement pool of 50 army unit has been given to each player " << std::endl;
 
-	//Each player is drawing 2 initial cards from the deck 
-	//Creates a hand for each player and draw 2 cards from the gameDeck
-	for (Player* player : this->playerList)
-	{
-		Hand* handOfCard = new Hand();
-		handOfCard->Insert(this->gameDeck->Draw());
-		handOfCard->Insert(this->gameDeck->Draw());
-		player->setPlayerHandOfCards(handOfCard);
+    //Each player is drawing 2 initial cards from the deck 
+    //Creates a hand for each player and draw 2 cards from the gameDeck
+    for (Player* player : this->playerList)
+    {
+        Hand* handOfCard = new Hand();
+        handOfCard->Insert(this->gameDeck->Draw());
+        handOfCard->Insert(this->gameDeck->Draw());
+        player->setPlayerHandOfCards(handOfCard);
 
-	}
-	std::cout << "Two initial cards has been given to each player.  " << std::endl;
-	std::cout << "Now let the game start! Printing players' information:" << std::endl;
+    }
+    std::cout << "Two initial cards has been given to each player.  " << std::endl;
+    std::cout << "Now let the game start! Printing players' information:" << std::endl << std::endl;
 
-	//Prints the players information
-	for (Player* player : this->playerList) {
-		std::cout << *player << std::endl;
-	}
+    //Prints the players information
+    for (Player* player : this->playerList) {
+        std::cout << *player << std::endl;
+    }
 
-	//Updates the current state of the game
+    //Updates the current state of the game
 	checkCommandValidity("gamestart");
 }
 
