@@ -11,6 +11,7 @@
 
 #include "../GameEngine/GameEngine.h"
 #include "../Player/Player.h"
+#include "../Player/PlayerStrategies.h"
 #include "../Map/Map.h"
 #include "../Cards/Cards.h"
 #include "Orders.fwd.h"

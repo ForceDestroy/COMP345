@@ -15,10 +15,11 @@ enum CardType
 };
 class Card {
 private:
-	CardType type;
+	
 	//Cards should remember what deck they are from since Play function needs to return card to deck
 	Deck* deck;
 public:
+	CardType type;
 	//Do not want a default constructor because order types should be specified
 	Card(CardType type, Deck* deck);
 	Card(const Card& c);

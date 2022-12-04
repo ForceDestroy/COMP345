@@ -17,6 +17,7 @@
     <ClCompile Include="CommandProcessing\CommandProcessing.cpp" />
     <ClCompile Include="CommandProcessing\CommandProcessingDriver.cpp" />
     <ClCompile Include="Player\PlayerStrategies.cpp" />
+    <ClCompile Include="Player\PlayerStrategiesDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\Player.h" />

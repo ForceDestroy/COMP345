@@ -7,26 +7,22 @@ Orders::Orders()
 {
     player = NULL;
     valid = false;
-    std::cout << "An order has been created." << std::endl;
 }
 //Parameterized constructor
 Orders::Orders(Player* player)
 {
     this->player = player;
     valid = false;
-    std::cout << "An order has been created." << std::endl;
 }
 //Copy constructor
 Orders::Orders(const Orders& ord)
 {
     player = ord.player;
     valid = ord.valid;
-    std::cout << "An order has been created." << std::endl;
 }
 //Destructor
 Orders::~Orders()
 {
-    std::cout << "Order has been destroyed." << std::endl;
 }
 //valid setter
 void Orders::setValid(bool isValid)
@@ -111,7 +107,6 @@ deployOrder::deployOrder(const deployOrder& ord)
 //Destructor
 deployOrder::~deployOrder()
 {
-    std::cout << "Deploy order has been destroyed." << std::endl;
 }
 
 //description of order
@@ -125,12 +120,10 @@ void deployOrder::validate()
     if (target->owner == this->player)
     {
         setValid(true);
-        std::cout << "Deploy order is valid." << std::endl;
     }
     else
     {
         setValid(false);
-        std::cout << "Deploy order is not valid." << std::endl;
     }
 }
 //execute the order
@@ -207,7 +200,6 @@ advanceOrder::advanceOrder(const advanceOrder& ord)
 //Destructor
 advanceOrder::~advanceOrder()
 {
-    std::cout << "Advance order has been destroyed." << std::endl;
 }
 
 //description of order
@@ -231,11 +223,9 @@ void advanceOrder::validate()
     if (this->source->id != this->target->id && source->owner == player && isNeighbor() && source->armyCount > 1 && source->armyCount >= troopNum)
     {
         setValid(true);
-        std::cout << "Advance order is valid." << std::endl;
     }
     else
     {
-        std::cout << "Advance order is not valid." << std::endl;
     }
 }
 //execute the order
@@ -270,8 +260,15 @@ void advanceOrder::execute()
 //simulates attacks between 2 territories
 void advanceOrder::simulateAttack()
 {
+    if (target->owner->strategy->type == "Neutral") 
+    {
+        std::cout << "Neutral player " << target->owner->name <<" changing Strategy to Aggressive after being attacked" << std::endl;
+        delete target->owner->strategy;
+        target->owner->strategy = new AggressivePlayerStrategy();
+    }
+
     srand(time(0));
-    int randNum = 0;
+    int randNum;
     int attackersKilled = 0, defendersKilled = 0;
     for (int i = 0; i < troopNum; i++)
     {
@@ -362,18 +359,15 @@ bombOrder::bombOrder(const bombOrder& ord)
     this->valid = ord.valid;
     this->player = ord.player;
     this->target = ord.target;
-    std::cout << "Bomb order has been destroyed." << std::endl;
 }
 //Parameterized constructor
 bombOrder::bombOrder(Player* player, Territory* target):Orders(player)
 {
     this->target = target;
-    std::cout << "Bomb order has been destroyed." << std::endl;
 }
 //Destructor
 bombOrder::~bombOrder()
 {
-    std::cout << "Bomb order has been destroyed." << std::endl;
 }
 //description of order
 bool bombOrder::isAdjacent()
@@ -395,22 +389,28 @@ void bombOrder::validate()
     if (this->target->owner != player && isAdjacent())
     {
         setValid(true);
-        std::cout << "Bomb order is valid." << std::endl;
     }
     else
     {
         setValid(false);
-        std::cout << "Bomb order is not valid." << std::endl;
     }
 }
 //execute the order
 void bombOrder::execute()
 {
     validate();
+
     if (valid)
     {
         describe();
         std::cout << "Bomb order is executed." << std::endl;
+        if (target->owner->strategy->type == "Neutral")
+        {
+            std::cout << "Neutral player " << target->owner->name << " changing Strategy to Aggressive after being attacked" << std::endl;
+            delete target->owner->strategy;
+            target->owner->strategy = new AggressivePlayerStrategy();
+        }
+
         this->target->armyCount /= 2;
         Notify(this);
     }
@@ -465,7 +465,6 @@ blockadeOrder::blockadeOrder(Player* player, Territory* target):Orders(player)
 //Destructor
 blockadeOrder::~blockadeOrder()
 {
-    std::cout << "Blockade order has been destroyed." << std::endl;
 }
 //description of order
 std::string blockadeOrder::describe()
@@ -478,12 +477,10 @@ void blockadeOrder::validate()
     if (target->owner == player)
     {
         setValid(true);
-        std::cout << "Blockade order is valid." << std::endl;
     }
     else
     {
         setValid(false);
-        std::cout << "Blockdade order is not valid." << std::endl;
     }
 }
 //execute the order
@@ -552,7 +549,6 @@ airliftOrder::airliftOrder(Player* player, Territory* source, Territory* target,
 //Destructor
 airliftOrder::~airliftOrder()
 {
-    std::cout << "Airlift order has been destroyed." << std::endl;
 }
 //description of order
 std::string airliftOrder::describe()
@@ -565,12 +561,10 @@ void airliftOrder::validate()
     if (this->target->id != this->source->id && this->target->owner == this->player && this->source->owner == player && this->source->armyCount > 1 && this->source->armyCount > this->troopNum)
     {
         setValid(true);
-        std::cout << "Airlift order is valid." << std::endl;
     }
     else
     {
         setValid(false);
-        std::cout << "Airlift order is not valid." << std::endl;
     }
 }
 //execute the order
@@ -646,7 +640,6 @@ negotiateOrder::negotiateOrder(Player* player, Player* target) :Orders(player)
 //Destructor
 negotiateOrder::~negotiateOrder()
 {
-    std::cout << "Negotiate order has been destroyed." << std::endl;
 }
 //description of order
 std::string negotiateOrder::describe()
@@ -659,12 +652,10 @@ void negotiateOrder::validate()
     if (this->player != this->target)
     {
         setValid(true);
-        std::cout << "Negotiate order is valid." << std::endl;
     }
     else
     {
         setValid(false);
-        std::cout << "Negotiate order is not valid." << std::endl;
     }
 }
 //execute the order
@@ -710,7 +701,6 @@ std::ostream& operator<<(std::ostream& out, negotiateOrder& orders)
 OrdersList::OrdersList()
 {
     ordersList = new std::vector<Orders*>();
-    std::cout << "An order list has been created." << std::endl;
 }
 //Copy constructor
 OrdersList::OrdersList(const OrdersList& ord)
@@ -720,7 +710,6 @@ OrdersList::OrdersList(const OrdersList& ord)
     {
         ordersList->push_back(ord.ordersList->at(i));
     }
-    std::cout << "An order list has been created." << std::endl;
 }
 //Destructor
 OrdersList::~OrdersList()
@@ -730,13 +719,11 @@ OrdersList::~OrdersList()
         delete o;
     }
     delete ordersList;
-    std::cout << "Order list has been destroyed." << std::endl;
 }
 //add an order to the list
 void OrdersList::add(Orders* order)
 {
     ordersList->push_back(order);
-    std::cout << "An order has been added" << std::endl;
     Notify(this);
 }
 //remove an order from the list
@@ -749,7 +736,6 @@ void OrdersList::remove(Orders* order)
             Orders* temp = ordersList->at(i);
             ordersList->erase(ordersList->begin() + i);
             delete temp;
-            std::cout << "An order has been removed" << std::endl;
         }
     }
 }
@@ -776,10 +762,15 @@ OrdersList& OrdersList::operator=(const OrdersList& ord)
 
 std::ostream& operator<<(std::ostream& out, const OrdersList& orders)
 {
-    out << "The list of orders:" << std::endl;
-    for (Orders* o : *orders.ordersList)
-    {
-        out << "Order: " << *o;
+    if (orders.ordersList->empty()){
+        out << "empty";
+    }
+    else {
+        out << "The list of orders:" << std::endl;
+        for (Orders* o : *orders.ordersList)
+        {
+            out << "Order: " << *o;
+        }
     }
     return out;
 }

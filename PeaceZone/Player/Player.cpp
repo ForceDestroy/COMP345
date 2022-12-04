@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "../Orders/Orders.h"
+#include "PlayerStrategies.h"
 
 //Default constructor
 Player::Player()
@@ -27,7 +28,7 @@ Player::Player(std::string name)
     this->reinforcementPool = 0;
     this->hasPlayedCard = false;
     this->hasDefended = false;
-    this->hasAttacked = 3;
+    this->hasAttacked = false;
     this->hasFinishedIssuingOrders = false;
     this->committedTerritories = new std::vector<Territory*>();
     this->attackedTerritories = new std::vector<Territory*>();
@@ -46,7 +47,7 @@ Player::Player(std::vector<Territory*>* territories, Hand* handOfCards, OrdersLi
     this->reinforcementPool = 0;
     this->hasPlayedCard = false;
     this->hasDefended = false;
-    this->hasAttacked = 1;
+    this->hasAttacked = false;
     this->hasFinishedIssuingOrders = false;
     this->committedTerritories = new std::vector<Territory*>();
     this->negotiateList = new std::vector<Player*>(3);
@@ -62,6 +63,7 @@ Player::~Player()
     delete territories;
     delete handOfCards;
     delete listOfOrders;
+    delete strategy;
 }
 
 //Copy constructor
@@ -111,6 +113,7 @@ void Player::resetIssueOrderPhase()
     attackedTerritories->clear();
     negotiateList->clear();
     hasConqTerritory = false;
+    strategy->resetIssueOrderPhase();
 }
 
 //Check if the player is under negotiation
@@ -173,8 +176,9 @@ Player& Player::operator=(const Player& p)
 }
 
 //osstream operator
-std::ostream& operator<<(std::ostream& os, const Player& p)
+std::ostream& operator<<(std::ostream& os, Player& p)
 {
+
     os << p.name << "'s territories: " << std::endl;
     for (Territory* territory : *p.territories)
     {
@@ -183,6 +187,8 @@ std::ostream& operator<<(std::ostream& os, const Player& p)
     os << p.name << "'s hand of cards: " << *p.handOfCards << std::endl;
     os << p.name << "'s list of orders: " << *p.listOfOrders <<std::endl;
     os << p.name << "'s reinforcement pool: " << p.reinforcementPool << std::endl;
+
+    os << std::endl<< "****************************************** "  << std::endl << std::endl;
 
     return os;
 }

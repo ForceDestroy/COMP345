@@ -249,6 +249,7 @@ GameEngine::GameEngine()
     this->gameCommands.push_back(end);
 
 
+
     //Creating valid commands vector for each state
     std::vector<Command*> startValidCommands = {loadMap};
     std::vector<Command*> mapLoadedValidCommands = {loadMap, validateMap};
@@ -271,6 +272,9 @@ GameEngine::GameEngine()
     State* win=new State("Win", winValidCommands);
     State* endState = new State("End", endValidCommands);
 
+    //Create the Neutral Player
+    neutralPlayer = new Player("Neutral");
+    neutralPlayer->strategy = new NeutralPlayerStrategy();
 
     //creating a vector of states
     std::vector<State*> gameStates={start, mapLoaded, mapValidated, playersAdded, assignReinforcement, issueOrders, executeOrders, win, endState };
@@ -320,6 +324,7 @@ GameEngine::~GameEngine()
     if (activeMap != NULL) {
 	    delete activeMap;
     }
+    delete neutralPlayer;
     delete gameDeck;
     currentState=NULL;
     activeMap=NULL;
@@ -386,7 +391,7 @@ bool GameEngine::checkCommandValidity(std::string input) {
 //Main Game Loop
 void GameEngine::mainGameLoop() {
 
-    std::cout << "Starting Main Game Loop" << std::endl;
+    std::cout << "Starting Main Game Loop" << std::endl <<"====="<< std::endl << std::endl;
     int iterationCounter = 0;
 
     while (playerList.size() > 1) {
@@ -412,7 +417,9 @@ void GameEngine::mainGameLoop() {
 
                 playerList.erase(remove(playerList.begin(), playerList.end(), it), playerList.end());
 
-                delete it;
+                if (it->strategy->type != "Neutral") {
+                    delete it;
+                }
             }
         }
 
@@ -461,8 +468,13 @@ void GameEngine::reinforcementPhase() {
 
         std::cout << "Adding a total of "<< reinforcements << " units to player " << p->name << std::endl;
         p->reinforcementPool += reinforcements;
+        std::cout << std::endl << "=====" << std::endl << std::endl;
+
 
     }
+
+    std::cout << "End of the Reinforcement Phase." << std::endl << "=====" << std::endl << std::endl;
+
 }
 
 void GameEngine::issueOrdersPhase() {
@@ -491,6 +503,8 @@ void GameEngine::issueOrdersPhase() {
         }
     }
 
+    std::cout << "End of the issue orders Phase." << std::endl << "=====" << std::endl << std::endl;
+
 }
 
 void GameEngine::executeOrdersPhase() {
@@ -513,10 +527,29 @@ void GameEngine::executeOrdersPhase() {
                 //Remove the Order
                 Orders* o = (*p->getOrdersList())[0];
                 p->getOrdersList()->remove(o);
+
             }
             else {
                 remainingPlayers--;
             }
+        }
+        //If a null territory exists set it's owner to the neutral player and add it to the player list
+        for (auto t : activeMap->territories) {
+            if (t->owner == NULL)
+            {
+                t->owner = neutralPlayer;
+                if (std::find(playerList.begin(), playerList.end(), neutralPlayer) == playerList.end())
+                {
+                    std::cout << "Adding Neutral Player to PlayerList" << std::endl;
+                    playerList.push_back(neutralPlayer);
+                }
+            }
+        }
+
+        //If Neutral player is no longer Neutral create a new one
+        if (neutralPlayer->strategy->type != "Neutral") {
+            neutralPlayer = new Player(neutralPlayer->name + "_");
+            neutralPlayer->strategy == new NeutralPlayerStrategy();
         }
     }
     //Loop for each player and draw a card if they conquered a territory
@@ -526,13 +559,14 @@ void GameEngine::executeOrdersPhase() {
         }
     }
 
+    std::cout << "End of the execute orders Phase." << std::endl << "=====" << std::endl << std::endl;
 }
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
 	//std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
-    //std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
+    std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
     // std::string mapsPath = "C:\\COMP345\\PeaceZone\\Map\\ConquestMaps";
-    std::string mapsPath = "C:\\Users\\Andrew Abbott\\Documents\\GitHub\\COMP345\\PeaceZone\\Map\\ConquestMaps";
+    //std::string mapsPath = "C:\\Users\\Andrew Abbott\\Documents\\GitHub\\COMP345\\PeaceZone\\Map\\ConquestMaps";
 
 	std::vector<std::string> mapsFileNames;
     std::string filePathName;
@@ -709,6 +743,8 @@ void GameEngine::startupPhase() {
     int numberOfTerritoriesPerPlayer = std::floor(this->activeMap->territories.size() / this->playerList.size());
     int territoriesCount = 0;
     
+    std::cout << "Distributing territories to players... " << std::endl;
+
     //Dirtributing the same number of territories to each player
     for (Player* player : this->playerList) 
     {
@@ -727,15 +763,7 @@ void GameEngine::startupPhase() {
         }
     }
 
-    //Print players territories
-	std::cout << "Printing players' territories: " << std::endl;
-
-    for (Player* player : this->playerList) {
-        std::cout << *player << std::endl;
-    }
-
-
-	std::cout << "Done printing players' territories: " << std::endl;
+    std::cout << "Territories distribution is finished. " << std::endl;
     std::cout << "=====" << std::endl << std::endl;
 
     // Determining order of players randomly by shuffling randomly the player list
@@ -761,7 +789,7 @@ void GameEngine::startupPhase() {
 
     }
     std::cout << "Two initial cards has been given to each player.  " << std::endl;
-    std::cout << "Now let the game start! Printing players' information:" << std::endl;
+    std::cout << "Now let the game start! Printing players' information:" << std::endl << std::endl;
 
     //Prints the players information
     for (Player* player : this->playerList) {
