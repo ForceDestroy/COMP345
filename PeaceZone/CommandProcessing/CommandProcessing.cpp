@@ -213,10 +213,15 @@ void CommandProcessor::validate(Command* command)
 					&& restOfCommand.find("-D") != std::string::npos
 					&& restOfCommand.find("-M") < restOfCommand.find("-P") < restOfCommand.find("-G") < restOfCommand.find("-D")) {
 
-					std::string map = restOfCommand.substr(restOfCommand.find("-M "), restOfCommand.find(" -P"));
-					std::string playerStrategies = restOfCommand.substr(restOfCommand.find("-P "), restOfCommand.find(" -G"));
-					std::string games = restOfCommand.substr(restOfCommand.find("-G "), restOfCommand.find(" -D"));
-					std::string turns = restOfCommand.substr(restOfCommand.find("-D "), restOfCommand.size());
+					std::string map = restOfCommand.substr(restOfCommand.find("-M ") + 3, restOfCommand.find("-P") - (restOfCommand.find("-M ") + 3));
+					std::string playerStrategies = restOfCommand.substr(restOfCommand.find("-P ") + 3, restOfCommand.find("-G")-(restOfCommand.find("-P ") + 3));
+					std::string games = restOfCommand.substr(restOfCommand.find("-G ") + 3, restOfCommand.find("-D") - (restOfCommand.find("-G ") + 3));
+					std::string turns = restOfCommand.substr(restOfCommand.find("-D ") + 3, restOfCommand.size() - restOfCommand.find("-D ") + 3);
+
+					/*std::cout << "Map: " << map << std::endl;
+					std::cout << "Player Strategies: " << playerStrategies << std::endl;
+					std::cout << "Games: " << games << std::endl;
+					std::cout << "Turns: " << turns << std::endl;*/
 
 					// Validating each parameter is of correct format: 
 					// Validating map
@@ -241,16 +246,31 @@ void CommandProcessor::validate(Command* command)
 					delimiter = ", ";
 					pos = 0;
 					token = "";
-					while ((pos = map.find(delimiter)) != std::string::npos) {
-						token = map.substr(0, pos);
+
+					
+
+					while ((pos = playerStrategies.find(delimiter)) != std::string::npos) {
+						token = playerStrategies.substr(0, pos);
 						strategiesList.push_back(token);
-						map.erase(0, pos + delimiter.length());
+						playerStrategies.erase(0, pos + delimiter.length());
 					}
 
 					if (2 > strategiesList.size() || strategiesList.size() > 4) {
-						output = "Error: Invalid tournament command (" + command->name + "). You have either too many strategies (more than 4) or not enough strategies (less than 2). ";
+						output = "Error: Invalid tournament command (" + command->name + "). You have either too many strategies (more than 4) or not enough strategies (less than 2). Strategies seen:  ";
+						for (std::string strategy : strategiesList) {
+							output += strategy + ", ";
+							//std::cout << strategy << std::endl;
+						}
 						command->saveEffect(output);
 						return;
+					}
+
+					for (std::string strategy : strategiesList) {
+						if (!(strategy._Equal("Aggressive") || strategy._Equal("Benevolent") || strategy._Equal("Neutral") || strategy._Equal("Cheater"))) {
+							output = "Error: Invalid tournament command (" + command->name + "). Strategy " + strategy + " is not part of the valid strategies: Aggressive, Benevolent, Neutral, Cheater.";
+							command->saveEffect(output);
+							return;
+						}
 					}
 
 					// Validating number of games
