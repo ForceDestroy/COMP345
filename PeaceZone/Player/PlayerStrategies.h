@@ -1,5 +1,6 @@
 #pragma once
 #include "Player.h"
+class GameEngine;
 class PlayerStrategy {
 public:
 	std::string type;
@@ -90,16 +91,15 @@ public:
 	// Destructors
 	~HumanPlayerStrategy();
 	// Get territory by name
-	Territory* getTerByName(Player* player, std::string name);
+	static Territory* getTerByName(Player* player, std::string name);
 	// Get name of an owned territory
-	std::string getName(Player* player);
+	static std::string getName(Player* player);
 	// Get number of troops
-	int getTroops(Player* player, int troopLim);
+	static int getTroops(Player* player, int troopLim);
 	// Get the action of the player
-	char getOption();
+	static char getOption();
 	// toAttack and toDefend are only decided after a player has finish issuing order since orders are manually input
 	std::vector<Territory*> toAttack(Player* player) override;
 	std::vector<Territory*> toDefend(Player* player) override;
-	void issueOrder(Player* player, GameEngine* ge);
+	void issueOrder(Player* player, GameEngine* gameEngine);
 };
-
