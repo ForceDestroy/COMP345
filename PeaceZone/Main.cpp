@@ -50,6 +50,7 @@ int main()
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Game Engine Startup Phase" << std::endl;
+    //file C:\Users\Mimi\Documents\GitHub\COMP345\PeaceZone\CommandProcessing\CommandProcessorCommands.txt
     GameEngine* gameEngine = new GameEngine();
 
     testComputerStrategies(gameEngine);
@@ -73,6 +74,7 @@ int main()
     std::cout << "\nTesting Order" << std::endl;
 
     //testOrderExecution();
+
 
     delete gameEngine;
     gameEngine = NULL;

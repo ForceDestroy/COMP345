@@ -176,10 +176,8 @@ Player& Player::operator=(const Player& p)
 }
 
 //osstream operator
-std::ostream& operator<<(std::ostream& os, const Player& p)
+std::ostream& operator<<(std::ostream& os, Player& p)
 {
-    os << p.name << "'s Strategy: " << std::endl;
-    os << p.strategy<<std::endl;
 
     os << p.name << "'s territories: " << std::endl;
     for (Territory* territory : *p.territories)
@@ -189,6 +187,8 @@ std::ostream& operator<<(std::ostream& os, const Player& p)
     os << p.name << "'s hand of cards: " << *p.handOfCards << std::endl;
     os << p.name << "'s list of orders: " << *p.listOfOrders <<std::endl;
     os << p.name << "'s reinforcement pool: " << p.reinforcementPool << std::endl;
+
+    os << std::endl<< "****************************************** "  << std::endl << std::endl;
 
     return os;
 }

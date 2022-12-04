@@ -391,7 +391,7 @@ bool GameEngine::checkCommandValidity(std::string input) {
 //Main Game Loop
 void GameEngine::mainGameLoop() {
 
-    std::cout << "Starting Main Game Loop" << std::endl;
+    std::cout << "Starting Main Game Loop" << std::endl <<"====="<< std::endl << std::endl;
     int iterationCounter = 0;
 
     while (playerList.size() > 1) {
@@ -468,8 +468,13 @@ void GameEngine::reinforcementPhase() {
 
         std::cout << "Adding a total of "<< reinforcements << " units to player " << p->name << std::endl;
         p->reinforcementPool += reinforcements;
+        std::cout << std::endl << "=====" << std::endl << std::endl;
+
 
     }
+
+    std::cout << "End of the Reinforcement Phase." << std::endl << "=====" << std::endl << std::endl;
+
 }
 
 void GameEngine::issueOrdersPhase() {
@@ -497,6 +502,8 @@ void GameEngine::issueOrdersPhase() {
             }
         }
     }
+
+    std::cout << "End of the issue orders Phase." << std::endl << "=====" << std::endl << std::endl;
 
 }
 
@@ -552,13 +559,14 @@ void GameEngine::executeOrdersPhase() {
         }
     }
 
+    std::cout << "End of the execute orders Phase." << std::endl << "=====" << std::endl << std::endl;
 }
 //Implements a command-based user inteaction mechanism for the game start 
 void GameEngine::startupPhase() {
 	//std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
-    //std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
+    std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
     // std::string mapsPath = "C:\\COMP345\\PeaceZone\\Map\\ConquestMaps";
-    std::string mapsPath = "C:\\Users\\Andrew Abbott\\Documents\\GitHub\\COMP345\\PeaceZone\\Map\\ConquestMaps";
+    //std::string mapsPath = "C:\\Users\\Andrew Abbott\\Documents\\GitHub\\COMP345\\PeaceZone\\Map\\ConquestMaps";
 
 	std::vector<std::string> mapsFileNames;
     std::string filePathName;
@@ -735,6 +743,8 @@ void GameEngine::startupPhase() {
     int numberOfTerritoriesPerPlayer = std::floor(this->activeMap->territories.size() / this->playerList.size());
     int territoriesCount = 0;
     
+    std::cout << "Distributing territories to players... " << std::endl;
+
     //Dirtributing the same number of territories to each player
     for (Player* player : this->playerList) 
     {
@@ -753,15 +763,7 @@ void GameEngine::startupPhase() {
         }
     }
 
-    //Print players territories
-	std::cout << "Printing players' territories: " << std::endl;
-
-    for (Player* player : this->playerList) {
-        std::cout << *player << std::endl;
-    }
-
-
-	std::cout << "Done printing players' territories: " << std::endl;
+    std::cout << "Territories distribution is finished. " << std::endl;
     std::cout << "=====" << std::endl << std::endl;
 
     // Determining order of players randomly by shuffling randomly the player list
@@ -787,7 +789,7 @@ void GameEngine::startupPhase() {
 
     }
     std::cout << "Two initial cards has been given to each player.  " << std::endl;
-    std::cout << "Now let the game start! Printing players' information:" << std::endl;
+    std::cout << "Now let the game start! Printing players' information:" << std::endl << std::endl;
 
     //Prints the players information
     for (Player* player : this->playerList) {
