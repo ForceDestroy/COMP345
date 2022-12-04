@@ -71,6 +71,7 @@ std::vector<Territory*> AggressivePlayerStrategy::toDefend(Player* player) {
 
 //Nothing t
 void AggressivePlayerStrategy::issueOrder(Player* player) {
+    std::cout << std::endl << "******************************************" << std::endl;
     if (player->territories->size() == 0) {
         player->hasFinishedIssuingOrders = true;
         return;
@@ -285,6 +286,7 @@ std::vector<Territory*> BenevolentPlayerStrategy::toDefend(Player* player) {
 
 
 void BenevolentPlayerStrategy::issueOrder(Player* player) {
+    std::cout << std::endl << "******************************************" << std::endl;
     if (player->territories->size() == 0) {
         player->hasFinishedIssuingOrders = true;
         return;
@@ -556,7 +558,7 @@ std::vector<Territory*> CheaterPlayerStrategy::toDefend(Player* player) {
 
 //Cheater player ends its turn without issuing any orders
 void CheaterPlayerStrategy::issueOrder(Player* player) {
-
+    std::cout << std::endl << "******************************************" << std::endl;
     //Set the territories to attack and defend
     std::vector<Territory*> territoriesToDefend = toDefend(player);
     std::vector<Territory*> territoriesToAttack = toAttack(player);

@@ -74,5 +74,5 @@ public:
 
     //Overloaded operators
     Player& operator=(const Player& p);
-    friend std::ostream& operator<<(std::ostream& out, const Player& p);
+    friend std::ostream& operator<<(std::ostream& out, Player& p);
 };

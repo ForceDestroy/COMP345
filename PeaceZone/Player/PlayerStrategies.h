@@ -9,7 +9,7 @@ public:
 	virtual void resetIssueOrderPhase() = 0;
 	virtual std::string describe() = 0 ;
 
-	friend std::ostream& operator<<(std::ostream& out, const PlayerStrategy& p);
+	friend std::ostream& operator<<(std::ostream& out, PlayerStrategy& p);
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy{
