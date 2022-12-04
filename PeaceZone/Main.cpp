@@ -56,7 +56,7 @@ int main()
 
     testTournament(gameEngine);
 
-    //testTournament(gameEngine);
+    testHumanStrategies();
 	
     //testComputerStrategies(gameEngine);
     
