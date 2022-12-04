@@ -1,0 +1,7 @@
+loadmap SouthAmerica.map
+validatemap
+addplayer Aggressive0
+addplayer Benevolent1
+addplayer Neutral2
+addplayer Neutral3
+gamestart

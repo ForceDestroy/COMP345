@@ -235,6 +235,9 @@ void CommandProcessor::validate(Command* command)
 						map.erase(0, pos + delimiter.length());
 					}
 
+					map.pop_back();
+					mapList.push_back(map);
+
 					if (1 > mapList.size() || mapList.size() > 5) {
 						output = "Error: Invalid tournament command (" + command->name + "). You have either too many maps (more than 5) or not enough maps (less than 1). ";
 						command->saveEffect(output);
@@ -254,6 +257,9 @@ void CommandProcessor::validate(Command* command)
 						strategiesList.push_back(token);
 						playerStrategies.erase(0, pos + delimiter.length());
 					}
+
+					playerStrategies.pop_back();
+					strategiesList.push_back(playerStrategies);
 
 					if (2 > strategiesList.size() || strategiesList.size() > 4) {
 						output = "Error: Invalid tournament command (" + command->name + "). You have either too many strategies (more than 4) or not enough strategies (less than 2). Strategies seen:  ";
