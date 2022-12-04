@@ -9,6 +9,7 @@
 
 #include "GameEngine/GameEngine.h"
 #include "GameEngine/GameEngineDriver.cpp"
+#include "GameEngine/TournamentDriver.cpp"
 #include "Cards/CardsDriver.cpp"
 #include "Map/MapDriver.cpp"
 #include "Player/PlayerDriver.cpp"
@@ -50,11 +51,14 @@ int main()
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Game Engine Startup Phase" << std::endl;
+    //file C:\Users\Mimi\Documents\GitHub\COMP345\PeaceZone\CommandProcessing\CommandProcessorCommands.txt
     GameEngine* gameEngine = new GameEngine();
 
-    //testComputerStrategies(gameEngine);
+    testTournament(gameEngine);
 
     testHumanStrategies();
+	
+    //testComputerStrategies(gameEngine);
     
     //testStartupPhase(gameEngine);
 
@@ -69,12 +73,15 @@ int main()
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Log Observer" << std::endl;
+
     //testLoggingObserver();
+
     std::cout << "\n==================================================" << std::endl;
 
     std::cout << "\nTesting Order" << std::endl;
 
     //testOrderExecution();
+
 
     delete gameEngine;
     gameEngine = NULL;

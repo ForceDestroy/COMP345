@@ -9,7 +9,7 @@
 #include <experimental/filesystem>
 #include <algorithm>
 #include <random>
-#include <cmath> 
+#include <cmath>
 #include "../CommandProcessing/CommandProcessing.h"
 #include "../Map/Map.h"
 #include "../Player/Player.h"
@@ -64,7 +64,7 @@ public:
     //Method that implements a command based user interaction mechanism to start the game 
     void startupPhase();
 
-    void mainGameLoop();
+    std::string mainGameLoop(int turnLimit = -1);
     void reinforcementPhase();
     void issueOrdersPhase();
     void executeOrdersPhase();
@@ -75,7 +75,7 @@ public:
     void addPlayer(std::string playerName);
 
     // Method to choose between console input or file input
-    void chooseInputMode();
+    void chooseInputMode(std::string inputString = "");
 
     std::string stringToLog() override;
 };
@@ -97,6 +97,11 @@ public:
     friend std::ostream &operator<<(std::ostream &out, const Transition &transition);
     //Transition method that changes the current state of the game
     void transitionState(GameEngine* gameEngine, int stateNumber, std::string input);
+};
+
+class Tournament {
+public:
+    static void tournamentMode(std::string tournamentMode);
 };
 
 // Free function for game state testings
