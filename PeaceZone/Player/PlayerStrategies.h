@@ -1,5 +1,6 @@
 #pragma once
 #include "Player.h"
+class GameEngine;
 class PlayerStrategy {
 public:
 	std::string type;
@@ -9,7 +10,7 @@ public:
 	virtual void resetIssueOrderPhase() = 0;
 	virtual std::string describe() = 0 ;
 
-	friend std::ostream& operator<<(std::ostream& out, PlayerStrategy& p);
+	friend std::ostream& operator<<(std::ostream& out, const PlayerStrategy& p);
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy{
@@ -77,4 +78,33 @@ public:
 	void resetIssueOrderPhase();
 	std::string describe();
 	CheaterPlayerStrategy& operator=(const CheaterPlayerStrategy& c);
+};
+
+class HumanPlayerStrategy : public PlayerStrategy {
+private:
+	// Get territory by name
+	static Territory* getTerByName(Player* player, std::string name);
+	// Get name of an owned territory
+	static std::string getName(Player* player);
+	// Get number of troops
+	static int getTroops(Player* player);
+	// Get the action of the player
+	static char getOption();
+	static std::vector<Player*> getNearbyPlayers(Player* player);
+public:
+	// terToAttack and terToDefend stores an appropriate territory every time an order is issued
+	std::vector<Territory*> terToAttack;
+	std::vector<Territory*> terToDefend;
+	// Constructors
+	HumanPlayerStrategy();
+	HumanPlayerStrategy(HumanPlayerStrategy* hps);
+	// Destructors
+	~HumanPlayerStrategy();
+	// toAttack and toDefend are only decided after a player has finish issuing order since orders are manually input
+	std::vector<Territory*> toAttack(Player* player) override;
+	std::vector<Territory*> toDefend(Player* player) override;
+	void resetIssueOrderPhase() override;
+	std::string describe() override;
+	void issueOrder(Player* player) override;
+	HumanPlayerStrategy& operator=(const HumanPlayerStrategy hps);
 };

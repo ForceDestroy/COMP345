@@ -14,6 +14,7 @@ inline void testComputerStrategies(GameEngine *gameEngine)
     gameEngine->playerList.at(0)->strategy = new CheaterPlayerStrategy();
     gameEngine->playerList.at(1)->strategy = new BenevolentPlayerStrategy();
     gameEngine->playerList.at(2)->strategy = new AggressivePlayerStrategy();
+    gameEngine->playerList.at(3)->strategy = new HumanPlayerStrategy();
 
     gameEngine->mainGameLoop();
 
