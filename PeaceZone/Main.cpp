@@ -54,11 +54,13 @@ int main()
     //file C:\Users\Mimi\Documents\GitHub\COMP345\PeaceZone\CommandProcessing\CommandProcessorCommands.txt
     GameEngine* gameEngine = new GameEngine();
 
-    testTournament(gameEngine);
+    GameEngine* gameEngine2 = new GameEngine();
 
     //testTournament(gameEngine);
 	
-    //testComputerStrategies(gameEngine);
+    testComputerStrategies(gameEngine);
+
+    testHumanStrategies(gameEngine2);
     
     //testStartupPhase(gameEngine);
 
@@ -82,7 +84,8 @@ int main()
 
     //testOrderExecution();
 
-
+    delete gameEngine2;
     delete gameEngine;
     gameEngine = NULL;
+    gameEngine2 = NULL;
 }

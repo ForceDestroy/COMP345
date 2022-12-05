@@ -582,7 +582,7 @@ void GameEngine::executeOrdersPhase() {
 void GameEngine::startupPhase() {
 	//std::string mapsPath = "C:/ProjectSchool/COMP 345/COMP345/PeaceZone/Map/ConquestMaps";
 	//std::string mapsPath = "C:/Users/Mimi/Documents/GitHub/COMP345/PeaceZone/Map/ConquestMaps";
-	 std::string mapsPath = "C:\\COMP345\\PeaceZone\\Map\\ConquestMaps";
+	 std::string mapsPath = "C:/Users/vuong/source/repos/COMP345_proj2/PeaceZone/Map/ConquestMaps";
 	//std::string mapsPath = "C:\\Users\\Andrew Abbott\\Documents\\GitHub\\COMP345\\PeaceZone\\Map\\ConquestMaps";
 
 	std::vector<std::string> mapsFileNames;

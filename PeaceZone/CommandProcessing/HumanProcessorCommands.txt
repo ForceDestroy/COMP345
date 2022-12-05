@@ -1,0 +1,7 @@
+loadmap Alabama.map
+validatemap
+addplayer Maryam
+addplayer Rayane
+addplayer Sango
+addplayer Minh
+gamestart
