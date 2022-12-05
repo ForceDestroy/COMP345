@@ -3,4 +3,5 @@ validatemap
 addplayer Maryam
 addplayer Rayane
 addplayer Sango
+addplayer Minh
 gamestart
