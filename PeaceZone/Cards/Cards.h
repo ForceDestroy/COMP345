@@ -33,11 +33,11 @@ class Deck {
 private:
 	std::vector<Card*>* listOfCards;
 	void PopulateDeck();
-	const int NUMBER_BOMB_CARDS = 3;
-	const int NUMBER_BLOCKADE_CARDS = 3;
-	const int NUMBER_AIRLIFT_CARDS = 3;
-	const int NUMBER_DIPLOMACY_CARDS = 3;
-	const int NUMBER_REINFORCEMENT_CARDS = 3;
+	const int NUMBER_BOMB_CARDS = 4;
+	const int NUMBER_BLOCKADE_CARDS = 4;
+	const int NUMBER_AIRLIFT_CARDS = 4;
+	const int NUMBER_DIPLOMACY_CARDS = 4;
+	const int NUMBER_REINFORCEMENT_CARDS = 0;
 public:
 	Deck();
 	Deck(const Deck& deck);
